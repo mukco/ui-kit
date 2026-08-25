@@ -26,6 +26,9 @@ export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/S
 export { SettingsGroup } from "./primitives/SettingsGroup";
 export { UpdateToast } from "./primitives/UpdateToast";
 export { SortedList } from "./primitives/SortedList";
+export { StatusDot, StatusGrid, SEVERITY_ORDER } from "./primitives/Status";
+export { TriageList } from "./primitives/TriageList";
+export { TimeRangePicker, DEFAULT_TIME_RANGES } from "./primitives/TimeRangePicker";
 export { InlineStatRow, PercentileBar, StatCard } from "./primitives/StatCard";
 export { ThemeToggle, useTheme } from "./primitives/ThemeToggle";
 export { Tabs } from "./primitives/Tabs";
