@@ -33,6 +33,23 @@ export function TriageList({ items, emptyLabel = "Nothing needs attention.", cla
     }
     return (_jsx("ul", { className: cn("ui-triage", className), children: sorted.map((item) => {
             const when = item.at ? age(item.at) : null;
-            return (_jsxs("li", { className: cn("ui-triage-row", `ui-triage-row--${item.severity}`), children: [_jsx(StatusDot, { tone: item.severity, className: "ui-triage-dot" }), _jsxs("span", { className: "ui-triage-body", children: [_jsx("span", { className: "ui-triage-title", children: item.title }), item.detail != null && _jsx("span", { className: "ui-triage-detail", children: item.detail })] }), when && _jsx("time", { className: "ui-triage-age", dateTime: item.at ?? undefined, children: when }), item.action && (_jsx(Button, { size: "sm", href: item.action.href, external: Boolean(item.action.href), onClick: item.action.onClick, className: "ui-triage-action", children: item.action.label }))] }, item.id));
+            // A row that opens something *is* the button. A separate grey box
+            // labelled "Open" sitting inside it is a second target for the same
+            // intent, it reads as inert next to the text it belongs to, and on a
+            // phone it takes a quarter of the row to say what a chevron says.
+            const opens = Boolean(item.action?.onClick);
+            return (_jsxs("li", { className: cn("ui-triage-row", `ui-triage-row--${item.severity}`, opens && "ui-triage-row--opens"), ...(opens
+                    ? {
+                        role: "button",
+                        tabIndex: 0,
+                        onClick: item.action?.onClick,
+                        onKeyDown: (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                item.action?.onClick?.();
+                            }
+                        },
+                    }
+                    : {}), children: [_jsx(StatusDot, { tone: item.severity, className: "ui-triage-dot" }), _jsxs("span", { className: "ui-triage-body", children: [_jsx("span", { className: "ui-triage-title", children: item.title }), item.detail != null && _jsx("span", { className: "ui-triage-detail", children: item.detail })] }), when && _jsx("time", { className: "ui-triage-age", dateTime: item.at ?? undefined, children: when }), item.action?.href ? (_jsx(Button, { size: "sm", href: item.action.href, external: true, className: "ui-triage-action", children: item.action.label })) : opens ? (_jsx("span", { className: "ui-triage-chevron", "aria-hidden": "true", children: "\u203A" })) : null] }, item.id));
         }) }));
 }

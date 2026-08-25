@@ -3378,3 +3378,34 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 @media (max-width: 639px) {
   .ui-bell-btn { min-height: 44px; }
 }
+
+/* A triage row that opens something is itself the target. The grey "Open" box
+   that used to sit inside it was a second control for the same intent, read as
+   inert beside the text it belonged to, and on a phone took a quarter of the
+   row to say what a chevron says. */
+.ui-triage-row--opens {
+  cursor: pointer;
+}
+
+.ui-triage-row--opens:hover {
+  background: color-mix(in srgb, var(--brand) 6%, var(--surface));
+}
+
+.ui-triage-row--opens:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+
+/* Severity tints have to win over the hover, or a critical row goes blue when
+   you point at it and stops looking critical. */
+.ui-triage-row--critical:hover { background: color-mix(in srgb, var(--sev-error) 10%, var(--surface)); }
+.ui-triage-row--warn:hover { background: color-mix(in srgb, var(--sev-warn) 10%, var(--surface)); }
+
+.ui-triage-chevron {
+  align-self: center;
+  color: var(--muted);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.ui-triage-row--opens:hover .ui-triage-chevron { color: var(--text); }
