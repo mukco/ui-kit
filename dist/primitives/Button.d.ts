@@ -9,6 +9,10 @@ interface Props {
     external?: boolean;
     tone?: ButtonTone;
     size?: "sm" | "md";
+    /** A square, borderless button holding one glyph. Toolbars are full of
+        these — search, sign out, a bell — and without the idiom each one gets
+        invented separately and they end up three different shapes in a row. */
+    icon?: boolean;
     disabled?: boolean;
     title?: string;
     type?: "button" | "submit";
@@ -27,5 +31,5 @@ interface Props {
  * nothing. Sizes rather than pixels, because the only two that have ever been
  * wanted are "in a row of text" and "on its own".
  */
-export declare function Button({ children, onClick, href, external, tone, size, disabled, title, type, className, }: Props): import("react").JSX.Element;
+export declare function Button({ children, onClick, href, external, tone, size, icon, disabled, title, type, className, }: Props): import("react").JSX.Element;
 export {};

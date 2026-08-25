@@ -13,8 +13,8 @@ import { cn } from "../cn";
  * nothing. Sizes rather than pixels, because the only two that have ever been
  * wanted are "in a row of text" and "on its own".
  */
-export function Button({ children, onClick, href, external, tone = "quiet", size = "md", disabled, title, type = "button", className, }) {
-    const classes = cn("ui-btn", `ui-btn--${tone}`, size === "sm" && "ui-btn--sm", className);
+export function Button({ children, onClick, href, external, tone = "quiet", size = "md", icon, disabled, title, type = "button", className, }) {
+    const classes = cn("ui-btn", `ui-btn--${tone}`, size === "sm" && "ui-btn--sm", icon && "ui-btn--icon", className);
     if (href && !disabled) {
         return (_jsxs("a", { className: classes, href: href, title: title, ...(external ? { target: "_blank", rel: "noreferrer" } : {}), children: [children, external && _jsx("span", { "aria-hidden": "true", children: " \u2197" })] }));
     }
