@@ -3284,3 +3284,39 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   .ui-btn { min-height: 44px; }
   .ui-btn--sm { min-height: 40px; }
 }
+
+/* ---------- Legibility floors ----------
+   The kit's own rules say 44px touch targets and a text-size floor under
+   640px, and several of its components had quietly drifted under both. Found
+   by measuring every rendered element in a 390px viewport rather than by
+   looking: 11px labels on stat rows and table numbers, a 26px toggle, a 32px
+   chip you are meant to tap. Each is legible on a desktop and each is a
+   squint or a miss on a phone. */
+
+@media (max-width: 639px) {
+  /* Nothing that carries meaning goes under 12px. These are the labels on
+     figures — the word that says what the number is — so they are exactly the
+     text you cannot afford to lose. */
+  .ui-inline-stat-label,
+  .ui-stat-sub,
+  .ui-stat-label,
+  .ui-th,
+  .ui-td,
+  .ui-facts dt,
+  .ui-row-meta {
+    font-size: max(0.75rem, 12px);
+  }
+
+  /* A switch is a thing you hit with a thumb. 26px is a thing you hit twice. */
+  .ui-toggle {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* A chip that is only a label may stay small; one that opens something is a
+     button and gets a button's height. */
+  .ui-chipbadge--button {
+    min-height: 40px;
+    padding: 0 0.7rem;
+  }
+}
