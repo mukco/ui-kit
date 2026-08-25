@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import type { KeyboardEvent, ReactNode } from "react"
 import { cn } from "../cn"
 import { Button } from "./Button"
 import { SEVERITY_ORDER, StatusDot, type Severity } from "./Status"
@@ -61,25 +61,56 @@ export function TriageList({
     <ul className={cn("ui-triage", className)}>
       {sorted.map((item) => {
         const when = item.at ? age(item.at) : null
+        // A row that opens something *is* the button. A separate grey box
+        // labelled "Open" sitting inside it is a second target for the same
+        // intent, it reads as inert next to the text it belongs to, and on a
+        // phone it takes a quarter of the row to say what a chevron says.
+        const opens = Boolean(item.action?.onClick)
         return (
-          <li key={item.id} className={cn("ui-triage-row", `ui-triage-row--${item.severity}`)}>
+          <li
+            key={item.id}
+            className={cn(
+              "ui-triage-row",
+              `ui-triage-row--${item.severity}`,
+              opens && "ui-triage-row--opens",
+            )}
+            {...(opens
+              ? {
+                  role: "button",
+                  tabIndex: 0,
+                  onClick: item.action?.onClick,
+                  onKeyDown: (e: KeyboardEvent) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      item.action?.onClick?.()
+                    }
+                  },
+                }
+              : {})}
+          >
             <StatusDot tone={item.severity} className="ui-triage-dot" />
             <span className="ui-triage-body">
               <span className="ui-triage-title">{item.title}</span>
               {item.detail != null && <span className="ui-triage-detail">{item.detail}</span>}
             </span>
             {when && <time className="ui-triage-age" dateTime={item.at ?? undefined}>{when}</time>}
-            {item.action && (
+            {/* A link goes somewhere else and stays a link — it opens in a new
+                tab and should say so. A row that navigates within the app gets
+                a chevron, because the row itself is the target. */}
+            {item.action?.href ? (
               <Button
                 size="sm"
                 href={item.action.href}
-                external={Boolean(item.action.href)}
-                onClick={item.action.onClick}
+                external
                 className="ui-triage-action"
               >
                 {item.action.label}
               </Button>
-            )}
+            ) : opens ? (
+              <span className="ui-triage-chevron" aria-hidden="true">
+                ›
+              </span>
+            ) : null}
           </li>
         )
       })}
