@@ -678,12 +678,16 @@ export function UiDemo() {
             <Button disabled>Not yet</Button>
             <Button size="sm">Small</Button>
             <Button href="https://github.com" external size="sm">Run</Button>
+            <Button icon title="Search">⌕</Button>
+            <Button icon title="Sign out">⏻</Button>
           </div>
           <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
             Every app had invented its own — <code>.btn</code>, <code>.mac-btn</code>,
             <code>.ui-triage-action</code> — which is why actions looked like they came from
             different applications. An action with an href renders as a link, because one that
-            goes somewhere should be openable in a new tab.
+            goes somewhere should be openable in a new tab. The last two are icon buttons — a
+            toolbar is mostly these, and without the idiom a search, a bell and a sign-out end up
+            three different shapes in a row.
           </p>
         </Card>
       </section>

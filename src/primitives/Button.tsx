@@ -12,6 +12,10 @@ interface Props {
   external?: boolean
   tone?: ButtonTone
   size?: "sm" | "md"
+  /** A square, borderless button holding one glyph. Toolbars are full of
+      these — search, sign out, a bell — and without the idiom each one gets
+      invented separately and they end up three different shapes in a row. */
+  icon?: boolean
   disabled?: boolean
   title?: string
   type?: "button" | "submit"
@@ -38,12 +42,19 @@ export function Button({
   external,
   tone = "quiet",
   size = "md",
+  icon,
   disabled,
   title,
   type = "button",
   className,
 }: Props) {
-  const classes = cn("ui-btn", `ui-btn--${tone}`, size === "sm" && "ui-btn--sm", className)
+  const classes = cn(
+    "ui-btn",
+    `ui-btn--${tone}`,
+    size === "sm" && "ui-btn--sm",
+    icon && "ui-btn--icon",
+    className,
+  )
 
   if (href && !disabled) {
     return (
