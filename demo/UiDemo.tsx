@@ -14,6 +14,7 @@ import {
   DynamicChart,
   EmptyState,
   ExpandableCard,
+  FactGrid,
   HelpTip,
   InlineStatRow,
   InsightsCard,
@@ -662,6 +663,25 @@ export function UiDemo() {
             onUpdateSql={() => {}}
           />
         </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>FactGrid — what a thing is</h2>
+        <Card>
+          <FactGrid
+            facts={[
+              { label: "Image", value: "ghcr.io/mukco/estate/baseball:latest", mono: true },
+              { label: "Container", value: "baseball-web", mono: true },
+              { label: "Shipped by", value: "CI, on merge to main" },
+              { label: "Repo", value: "mukco/baseball" },
+              { label: "Nothing here", value: null },
+            ]}
+          />
+          <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+            A null value drops its row entirely — a blank row is worse than none. Narrow the
+            window and the labels move above their values.
+          </p>
+        </Card>
       </section>
 
       <section className="uidemo-section">

@@ -33,7 +33,7 @@ pin).
 
 | Area | Exports |
 |---|---|
-| Primitives | Card, StatCard, PercentileBar, InlineStatRow, BasicTable, DataTable + HeatPill, Tabs, NavBar, PageHeader, Drawer, ExpandableCard, CardStrip, MatchupCard, AwardCard, Avatar, SearchSelect, AutoLinkedText, DateNav, HelpTip, GlossaryTip, Loading, EmptyState, InsightsCard, Assistant, NotificationBell, UpdateToast, LogStream, ThemeToggle, StatusDot, StatusGrid, TriageList, TimeRangePicker |
+| Primitives | Card, StatCard, PercentileBar, InlineStatRow, BasicTable, DataTable + HeatPill, Tabs, NavBar, PageHeader, Drawer, ExpandableCard, CardStrip, MatchupCard, AwardCard, Avatar, SearchSelect, AutoLinkedText, DateNav, HelpTip, GlossaryTip, Loading, EmptyState, InsightsCard, Assistant, NotificationBell, UpdateToast, LogStream, ThemeToggle, StatusDot, StatusGrid, TriageList, TimeRangePicker, FactGrid |
 | Settings | Toggle, SettingRow, TextField, SelectField, Chip, SettingsGroup (compose under PageHeader = whole page) |
 | Charts | DynamicChart, RollingAverageChart, SparklineChart, PercentileGauge |
 | SQL workbench | SandboxCell, SandboxChart, SandboxPivot, SandboxContext |

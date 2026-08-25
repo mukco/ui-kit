@@ -2703,6 +2703,11 @@ button.ui-matchup--link {
 .ui-log-body {
   max-height: 60vh;
   overflow: auto;
+  /* The scroll stops here rather than continuing into the page behind it.
+     Without this a flick that reaches the end of the log carries on scrolling
+     whatever contains it, which is what makes nested scrolling feel broken. */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 0.375rem 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -2802,11 +2807,13 @@ button.ui-matchup--link {
 }
 
 @media (max-width: 639px) {
-  /* The page is the only scroll surface. A scrollable box inside a scrolling
-     page means every swipe is a guess about which one moves. */
   .ui-log-body {
-    max-height: none;
-    overflow: visible;
+    /* Shorter than the desktop pane, not absent. Letting three hundred lines
+       flow into the page made the page enormous and buried everything under
+       it; the fear that drove that — a box inside a page fighting the thumb —
+       is answered by overscroll-behavior above, which stops the scroll at the
+       box's end instead of chaining it to the page. */
+    max-height: 60vh;
     font-size: 0.8125rem; /* 13px floor — this is the smallest text on the page */
   }
 
@@ -3116,4 +3123,41 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   }
 
   .ui-range-opt { min-height: 44px; }
+}
+
+/* ---------- FactGrid ---------- */
+
+.ui-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+}
+
+.ui-facts-row {
+  display: contents;
+}
+
+.ui-facts dt {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ui-facts dd {
+  margin: 0;
+  color: var(--text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ui-facts-mono {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+@media (max-width: 639px) {
+  /* The label column is a third of a phone. The label goes above its value. */
+  .ui-facts { grid-template-columns: 1fr; gap: 0; }
+  .ui-facts dt { margin-top: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
 }
