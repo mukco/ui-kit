@@ -62,6 +62,9 @@ Memorize these before writing consumer code — they are not guesses:
            footer="300 lines · written 2m ago" clampLines={6} />
 <ThemeToggle />                                              // self-contained; no value/onChange pair
 const { theme, resolved, setTheme } = useTheme()              // same state, for your own UI
+<StatusGrid items={tiles} selected={id} />                   // tone: ok|warn|critical|unknown
+<TriageList items={rows} />                                  // sorts itself, worst first
+<TimeRangePicker value={id} onChange={(r) => setHours(r.hours)} />
 ```
 
 Status colour is `--sev-ok/-warn/-error/-unknown`, never `--stat-*` — that ramp
