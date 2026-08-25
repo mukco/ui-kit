@@ -3052,19 +3052,9 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   white-space: nowrap;
 }
 
-.ui-triage-action {
-  padding: 0 0.5rem;
-  min-height: 32px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
-  color: var(--text);
-  font: inherit;
-  font-size: 0.78rem;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-}
+/* Layout only — Button paints it, so a triage action and every other action
+   in every app are finally the same object. */
+.ui-triage-action { align-self: center; }
 
 .ui-triage-clear {
   display: flex;
@@ -3241,4 +3231,56 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 @media (max-width: 639px) {
   .ui-row { padding: 0.55rem 0.6rem; }
   .ui-chipbadge--button { min-height: 32px; }
+}
+
+/* ---------- Button ---------- */
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ui-btn:hover { border-color: var(--border-strong); }
+
+.ui-btn:disabled,
+.ui-btn[aria-disabled="true"] { opacity: 0.5; cursor: default; }
+
+.ui-btn--primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.ui-btn--primary:hover { filter: brightness(1.08); border-color: var(--brand); }
+
+.ui-btn--danger {
+  background: color-mix(in srgb, var(--sev-error) 12%, transparent);
+  border-color: color-mix(in srgb, var(--sev-error) 40%, transparent);
+  color: var(--sev-error);
+}
+
+.ui-btn--sm {
+  min-height: 32px;
+  padding: 0 0.6rem;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 639px) {
+  /* Anything you tap gets a thumb's worth of height, whatever it says. */
+  .ui-btn { min-height: 44px; }
+  .ui-btn--sm { min-height: 40px; }
 }

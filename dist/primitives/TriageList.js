@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cn } from "../cn";
+import { Button } from "./Button";
 import { SEVERITY_ORDER, StatusDot } from "./Status";
 function age(iso) {
     const then = Date.parse(iso);
@@ -32,7 +33,6 @@ export function TriageList({ items, emptyLabel = "Nothing needs attention.", cla
     }
     return (_jsx("ul", { className: cn("ui-triage", className), children: sorted.map((item) => {
             const when = item.at ? age(item.at) : null;
-            return (_jsxs("li", { className: cn("ui-triage-row", `ui-triage-row--${item.severity}`), children: [_jsx(StatusDot, { tone: item.severity, className: "ui-triage-dot" }), _jsxs("span", { className: "ui-triage-body", children: [_jsx("span", { className: "ui-triage-title", children: item.title }), item.detail != null && _jsx("span", { className: "ui-triage-detail", children: item.detail })] }), when && _jsx("time", { className: "ui-triage-age", dateTime: item.at ?? undefined, children: when }), item.action &&
-                        (item.action.href ? (_jsx("a", { className: "ui-triage-action", href: item.action.href, children: item.action.label })) : (_jsx("button", { type: "button", className: "ui-triage-action", onClick: item.action.onClick, children: item.action.label })))] }, item.id));
+            return (_jsxs("li", { className: cn("ui-triage-row", `ui-triage-row--${item.severity}`), children: [_jsx(StatusDot, { tone: item.severity, className: "ui-triage-dot" }), _jsxs("span", { className: "ui-triage-body", children: [_jsx("span", { className: "ui-triage-title", children: item.title }), item.detail != null && _jsx("span", { className: "ui-triage-detail", children: item.detail })] }), when && _jsx("time", { className: "ui-triage-age", dateTime: item.at ?? undefined, children: when }), item.action && (_jsx(Button, { size: "sm", href: item.action.href, external: Boolean(item.action.href), onClick: item.action.onClick, className: "ui-triage-action", children: item.action.label }))] }, item.id));
         }) }));
 }

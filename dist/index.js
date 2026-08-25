@@ -6,6 +6,7 @@ export { Assistant } from "./primitives/Assistant";
 export { AutoLinkedText } from "./primitives/AutoLinkedText";
 export { Avatar } from "./primitives/Avatar";
 export { BasicTable } from "./primitives/BasicTable";
+export { Button } from "./primitives/Button";
 export { Card } from "./primitives/Card";
 export { CardStrip } from "./primitives/CardStrip";
 export { DataTable, HeatPill } from "./primitives/DataTable";
