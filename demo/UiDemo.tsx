@@ -1,0 +1,693 @@
+import { useEffect, useState } from "react"
+import {
+  Assistant,
+  AwardCard,
+  AutoLinkedText,
+  Avatar,
+  BasicTable,
+  Card,
+  CardStrip,
+  Chip,
+  DataTable,
+  DateNav,
+  Drawer,
+  DynamicChart,
+  EmptyState,
+  ExpandableCard,
+  HelpTip,
+  InlineStatRow,
+  InsightsCard,
+  Loading,
+  MatchupCard,
+  ModelResults,
+  NavBar,
+  NotificationBell,
+  PageHeader,
+  PercentileGauge,
+  PlayerLink,
+  RollingAverageChart,
+  SandboxCell,
+  SandboxChart,
+  SearchSelect,
+  SelectField,
+  SettingRow,
+  SettingsGroup,
+  SparklineChart,
+  StatCard,
+  Tabs,
+  TeamIcon,
+  TeamLink,
+  TextField,
+  Toggle,
+  UpdateToast,
+  configureSports,
+  type ChartRow,
+} from "../src"
+import "./demo.css"
+
+/* ---------- Offline test identity: SVG data URIs, no network needed. ---------- */
+
+function hash(s: string): number {
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
+  return h
+}
+
+const DEMO_COLORS = ["#1e66e4", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#14B8A6"]
+
+function demoPhoto(id: string | number | null | undefined, size = 80): string {
+  const seed = String(id ?? 0)
+  const color = DEMO_COLORS[hash(seed) % DEMO_COLORS.length]
+  const initials = seed.slice(-2).toUpperCase()
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="100%" height="100%" fill="${color}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.round(size / 2.6)}" font-weight="700" fill="#fff">${initials}</text></svg>`
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`
+}
+
+function demoLogo(teamId: string | number): string {
+  const seed = String(teamId)
+  const color = DEMO_COLORS[hash(seed) % DEMO_COLORS.length]
+  const letter = seed[0]?.toUpperCase() ?? "?"
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><circle cx="32" cy="32" r="30" fill="${color}"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="30" font-weight="800" fill="#fff">${letter}</text></svg>`
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`
+}
+
+configureSports({
+  photoUrl: demoPhoto,
+  logoUrl: demoLogo,
+  playerHref: (id) => `#player-${id}`,
+  teamHref: (teamId) => `#team-${teamId}`,
+  resolvePlayer: async (name) => ({ id: `resolved-${name.split(" ")[0]}` }),
+})
+
+/* ---------- Test data ---------- */
+
+const barData: ChartRow[] = [
+  { name: "Mon", value: 12 },
+  { name: "Tue", value: 19 },
+  { name: "Wed", value: 7 },
+  { name: "Thu", value: 15 },
+  { name: "Fri", value: 22 },
+  { name: "Sat", value: 9 },
+  { name: "Sun", value: 17 },
+]
+
+const hbarData: ChartRow[] = [
+  { name: "Walks", value: 48 },
+  { name: "Strikeouts", value: 91 },
+  { name: "Homers", value: 23 },
+  { name: "Stolen bases", value: 12 },
+]
+
+const scatterData: ChartRow[] = Array.from({ length: 24 }, (_, i) => ({
+  name: `P${i + 1}`,
+  speed: 88 + ((i * 7) % 15),
+  break: 2 + ((i * 5) % 9),
+}))
+
+function gameLog(): ChartRow[] {
+  let v = 0.72
+  return Array.from({ length: 28 }, (_, i) => {
+    v = Math.min(1.25, Math.max(0.45, v + (Math.sin(i * 2.7) + Math.cos(i * 1.3)) * 0.045))
+    return { date: `2026-07-${String((i % 30) + 1).padStart(2, "0")}`, opponent: ["RIV", "NOR", "EAS", "WEST"][i % 4], isHome: i % 2 === 0, ops: Number(v.toFixed(3)) }
+  })
+}
+
+const PLAYERS = [
+  { id: "p101", name: "Ava Martinez" },
+  { id: "p102", name: "Ben Okafor" },
+  { name: "Cleo Nguyen" }, // no id → resolves through resolvePlayer
+]
+
+const DEMO_PLAYERS = [
+  { name: "Ava Martinez", pos: "SP" },
+  { name: "Ben Okafor", pos: "CF" },
+  { name: "Cleo Nguyen", pos: "SS" },
+  { name: "Dmitri Volkov", pos: "C" },
+  { name: "Esperanza Diaz", pos: "1B" },
+]
+
+const TEAMS: Array<[string, string]> = [
+  ["north", "Northside"],
+  ["east", "Eastgate"],
+  ["west", "Westend"],
+]
+
+const TEAM_STATS = [
+  { name: "Northside", ops: 0.812, era: 3.42, runs: 412, errors: 38 },
+  { name: "Riverton", ops: 0.744, era: 4.01, runs: 377, errors: 52 },
+  { name: "Eastgate", ops: 0.69, era: 3.88, runs: 341, errors: 61 },
+  { name: "Westend", ops: 0.755, era: 3.15, runs: 395, errors: 44 },
+]
+
+const DEMO_NOTIFS = [
+  { id: "n1", icon: "⚾", title: "Final: Northside 6–4 Riverton", body: "HR: Ben Okafor (12)", time: "2h ago" },
+  { id: "n2", icon: "🤖", title: "Weekly insights ready", time: "Yesterday" },
+]
+
+const SB_COLUMNS = ["name", "season", "games", "rating"]
+const SB_ROWS: unknown[][] = Array.from({ length: 60 }, (_, i) => [
+  ["A. Martinez", "B. Okafor", "C. Nguyen"][i % 3],
+  2021 + (i % 5),
+  40 + ((i * 7) % 60),
+  Number((6 + Math.sin(i * 1.7) * 2 + (i % 5) * 0.4).toFixed(2)),
+])
+
+const DEMO_RUN = {
+  result: {
+    model_type: "neural_network",
+    task: "regression" as const,
+    target: "final rating",
+    metrics: { r2: 0.872, rmse: 2.31, mae: 1.78 },
+    parameter_count: 451,
+    architecture: "12 → [64 relu] → [32 relu] → 1",
+    train_samples: 800,
+    test_samples: 200,
+    training_time_ms: 2140,
+    loss_history: Array.from({ length: 30 }, (_, e) => +(4 * Math.exp(-e / 6) + 0.35 + Math.random() * 0.05).toFixed(3)),
+    feature_importance: [
+      { feature: "prior_rating", importance: 0.42 },
+      { feature: "minutes", importance: 0.23 },
+      { feature: "age", importance: 0.14 },
+      { feature: "team_strength", importance: 0.11 },
+      { feature: "rest_days", importance: 0.06 },
+      { feature: "home_rate", importance: 0.04 },
+    ],
+    test_predictions: {
+      sampled: true,
+      y_true: Array.from({ length: 50 }, (_, i) => +(10 + Math.sin(i / 3) * 6 + (i % 7) * 0.8).toFixed(2)),
+      y_pred: Array.from({ length: 50 }, (_, i) => +(10 + Math.sin(i / 3) * 6 + (i % 7) * 0.8 + ((i % 11) - 5) * 0.55).toFixed(2)),
+    },
+  },
+}
+
+/* ---------- Page ---------- */
+
+export function UiDemo() {
+  const [dark, setDark] = useState(false)
+  const [tab, setTab] = useState("summary")
+  const [drawer, setDrawer] = useState(false)
+  const [picked, setPicked] = useState<{ name: string; pos: string } | null>(null)
+  const [messages, setMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
+    { role: "assistant", content: "Ask me about last night's games." },
+  ])
+  const [busy, setBusy] = useState(false)
+  const [liveScores, setLiveScores] = useState(true)
+  const [team, setTeam] = useState("north")
+  const [name, setName] = useState("")
+  const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
+  const [deployed, setDeployed] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = dark ? "dark" : ""
+    return () => {
+      delete document.documentElement.dataset.theme
+    }
+  }, [dark])
+
+  const log = gameLog()
+
+  return (
+    <div className="uidemo">
+      <NavBar
+        brand="⚾ Kit"
+        items={[
+          { label: "Today", href: "#", active: true },
+          {
+            label: "Research",
+            children: [
+              { label: "Leaderboards", href: "#" },
+              { label: "Projections", href: "#" },
+              { label: "Sandbox", onClick: () => setDrawer(true) },
+            ],
+          },
+          {
+            label: "News",
+            children: [
+              { label: "Top stories", href: "#" },
+              { label: "Transactions", href: "#" },
+            ],
+          },
+          { label: "Settings", onClick: () => {} },
+        ]}
+        right={<><NotificationBell items={DEMO_NOTIFS} onDismissAll={() => {}} /><Avatar name="Kit Viewer" src={demoPhoto("kv")} size={28} /></>}
+      />
+
+      <header className="uidemo-header">
+        <h1>UI kit playground</h1>
+        <button className="uidemo-toggle" onClick={() => setDark((d) => !d)}>
+          {dark ? "☀️ Light" : "🌙 Dark"}
+        </button>
+      </header>
+      <p className="uidemo-note">
+        Every component renders from tokens in <code>src/ui.css</code> — the toggle flips{" "}
+        <code>data-theme</code>, nothing else. Data fetching is never in the kit; everything here is
+        static test data.
+      </p>
+
+      <section className="uidemo-section">
+        <h2>PageHeader · Tabs · Drawer</h2>
+        <PageHeader
+          title="Season summary"
+          subtitle="Week 14 · through Tuesday"
+          onBack={() => history.back()}
+          actions={<button className="uidemo-toggle">Share</button>}
+        />
+        <Tabs
+          tabs={[
+            { id: "summary", label: "Summary" },
+            { id: "splits", label: "Splits" },
+            { id: "log", label: "Game log" },
+            { id: "vs", label: "vs opponents" },
+          ]}
+          active={tab}
+          onChange={setTab}
+        />
+        <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+          <button className="uidemo-toggle" onClick={() => setDrawer(true)}>
+            Open drawer
+          </button>
+          <span className="uidemo-note">active tab: {tab}</span>
+        </div>
+        <Drawer open={drawer} onClose={() => setDrawer(false)} side="right" label="Filters">
+          <PageHeader title="Filters" actions={<button className="uidemo-toggle" onClick={() => setDrawer(false)}>Done</button>} />
+          <p className="uidemo-note">Anything can live in a drawer: filters, settings, lineups.</p>
+        </Drawer>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Matchup cards (games, series, trivia weeks)</h2>
+        <div className="uidemo-grid">
+          <MatchupCard
+            away={{ name: "Riverton", logoUrl: demoLogo("RIV"), score: 4 }}
+            home={{ name: "Northside", logoUrl: demoLogo("NOR"), score: 6 }}
+            status="Final"
+            tone="final"
+            detail="WP: Ava Martinez · HR: Ben Okafor (12)"
+          />
+          <MatchupCard
+            away={{ name: "Eastgate", logoUrl: demoLogo("EAS") }}
+            home={{ name: "Westend", logoUrl: demoLogo("WES") }}
+            status="7:05 PM"
+            tone="upcoming"
+          />
+          <MatchupCard
+            away={{ name: "Riverton", logoUrl: demoLogo("RIV"), score: 3 }}
+            home={{ name: "Eastgate", logoUrl: demoLogo("EAS"), score: 3 }}
+            status="Live"
+            tone="live"
+            detail="Top 8th"
+          />
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Awards</h2>
+        <div className="uidemo-grid">
+          <AwardCard icon="🏆" label="Most valuable player" winner={<PlayerLink player={{ id: "p101", name: "Ava Martinez" }} avatarOnly />} detail=".312 / 23 HR / .894 OPS" />
+          <AwardCard icon="🥇" label="Trivia champion" winner="Cleo Nguyen" detail="9 of 10 correct" />
+          <AwardCard icon="🔥" label="Hottest streak" winner={<PlayerLink player={{ id: "p102", name: "Ben Okafor" }} avatarOnly />} detail="12 games with a hit" />
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>AI insights card</h2>
+        <InsightsCard
+          cached
+          onRegenerate={() => {}}
+          sections={[
+            {
+              heading: "What changed",
+              bullets: [
+                "Ava Martinez raised her rolling OPS from .781 to .894 over her last 10 games.",
+                "Riverton's bullpen has thrown the most innings in the league this month.",
+              ],
+            },
+            {
+              heading: "Worth watching",
+              bullets: ["Tonight's start vs Eastgate pits the top two run defenses against each other."],
+            },
+          ]}
+        />
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Search select</h2>
+        <Card>
+          <SearchSelect
+            value={picked}
+            onChange={setPicked}
+            fetcher={async (q) =>
+              DEMO_PLAYERS.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()))
+            }
+            getLabel={(p) => p.name}
+            getHint={(p) => p.pos}
+            placeholder="Search players…"
+          />
+          <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+            The fetcher prop is yours to point at any endpoint.
+          </p>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Assistant shell</h2>
+        <Card>
+          <p className="uidemo-note">
+            Fixed launcher bottom-right of this page →. The app supplies messages and an onSend;
+            the kit draws the conversation.
+          </p>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>StatCard variants</h2>
+        <div className="uidemo-grid">
+          <StatCard label="Batting avg" value=".312" percentile={78} />
+          <StatCard label="ERA" value="2.87" percentile={64} invert subtitle="lower is better" />
+          <StatCard label="Pull %" value="41.2" percentile={51} neutral />
+          <StatCard
+            label="Home runs"
+            value={23}
+            progress={{ current: 23, target: 34 }}
+            comparison={{ projectedLabel: "vs projection", status: "+3 ahead", color: "var(--ok)" }}
+          />
+          <StatCard label="Strikeouts" value={91} comparison={{ projectedLabel: "vs projection", status: "-8 behind", color: "var(--danger)" }} />
+          <StatCard label="No data" value={null} />
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Inline stats · Avatars · Help tip</h2>
+        <Card>
+          <InlineStatRow
+            stats={[
+              { label: "OPS", value: ".894" },
+              { label: "HR", value: 23 },
+              { label: "RBI", value: 77 },
+              { label: "SB", value: 12 },
+              { label: "BB%", value: "11.4%" },
+            ]}
+          />
+          <div className="uidemo-row" style={{ marginTop: "1rem" }}>
+            <Avatar name="Ada Lovelace" src={demoPhoto("ad")} size={40} />
+            <Avatar name="Grace Hopper" size={40} />
+            <Avatar name={null} src={null} size={40} />
+            <Avatar name="Tiny" size={20} />
+            <Avatar name="Huge" size={56} />
+            <span>
+              What is OPS? <HelpTip>On-base plus slugging. Sums reach-base rate and power into one hitting number.</HelpTip>
+            </span>
+          </div>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Loading & empty states</h2>
+        <div className="uidemo-grid">
+          <Card>
+            <Loading label="Fetching box score…" />
+          </Card>
+          <Card>
+            <EmptyState icon="⚾">No games today. Check back tomorrow.</EmptyState>
+          </Card>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Sports identity</h2>
+        <Card>
+          <div className="uidemo-row">
+            {PLAYERS.map((p) => (
+              <PlayerLink key={p.name} player={p} />
+            ))}
+          </div>
+          <div className="uidemo-row" style={{ marginTop: "0.75rem" }}>
+            {TEAMS.map(([id, name]) => (
+              <TeamLink key={id} teamId={id} name={name} />
+            ))}
+          </div>
+          <div className="uidemo-row" style={{ marginTop: "0.75rem" }}>
+            {TEAMS.map(([id]) => (
+              <TeamIcon key={id} teamId={id} size={32} />
+            ))}
+            <span className="uidemo-note">photos/logos come from configureSports(), not the kit</span>
+          </div>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>DynamicChart — every type</h2>
+        <div className="uidemo-charts">
+          <Card title="Bar">
+            <DynamicChart type="bar" title="Runs per day" data={barData} xKey="name" yKey="value" height={180} />
+          </Card>
+          <Card title="Horizontal bar">
+            <DynamicChart type="horizontal_bar" title="Counting stats" data={hbarData} xKey="name" yKey="value" height={180} />
+          </Card>
+          <Card title="Line">
+            <DynamicChart type="line" title="Team runs, rolling week" data={barData} xKey="name" yKey="value" height={180} />
+          </Card>
+          <Card title="Scatter">
+            <DynamicChart type="scatter" title="Speed vs break" data={scatterData} xKey="speed" yKey="break" height={180} />
+          </Card>
+          <Card title="Empty state">
+            <DynamicChart type="bar" title="Nothing yet" data={[]} xKey="name" yKey="value" />
+          </Card>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>RollingAverageChart</h2>
+        <div className="uidemo-charts">
+          <Card title="With inline header">
+            <RollingAverageChart data={log} valueKey="ops" valueLabel="OPS" title="OPS trend" windowSize={7} reference={0.75} height={200} />
+          </Card>
+          <Card title="Floating chip + custom format">
+            <RollingAverageChart
+              data={log}
+              valueKey="ops"
+              valueLabel="OPS"
+              windowSize={10}
+              formatValue={(v) => `${(v * 100).toFixed(0)}`}
+              height={200}
+            />
+          </Card>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>DataTable — sort, heat pills, expandable rows</h2>
+        <DataTable
+          data={TEAM_STATS}
+          rowKey={(r) => r.name}
+          columns={[
+            { key: "name", label: "Team", render: (r) => r.name },
+            { key: "ops", label: "OPS", lowIsBetter: false, fmt: (v) => Number(v).toFixed(3) },
+            { key: "era", label: "ERA", lowIsBetter: true, fmt: (v) => Number(v).toFixed(2) },
+            { key: "runs", label: "R", align: "right" },
+            { key: "errors", label: "E", lowIsBetter: true, align: "right" },
+          ]}
+          renderExpanded={(r) => (
+            <InlineStatRow
+              stats={[
+                { label: "Home", value: `${r.runs - 40}–${r.runs - 50}` },
+                { label: "Away", value: "12–9" },
+                { label: "Run diff", value: `+${r.runs - 52}` },
+                { label: "Last 10", value: "7–3" },
+              ]}
+            />
+          )}
+        />
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Expandable cards · Card strip</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <ExpandableCard title="Pitching staff" subtitle="5 starters · 9 relievers">
+            <InlineStatRow
+              stats={[
+                { label: "ERA", value: "3.42" },
+                { label: "WHIP", value: "1.18" },
+                { label: "K/9", value: "8.9" },
+              ]}
+            />
+          </ExpandableCard>
+          <ExpandableCard title="Injury report" subtitle="2 players" defaultOpen-hint="">
+            <p className="uidemo-note">Body content. Controlled via open/onToggle if the app wants ownership.</p>
+          </ExpandableCard>
+        </div>
+        <div style={{ marginTop: "0.75rem" }}>
+          <CardStrip>
+            {TEAMS.map(([id, name]) => (
+              <MatchupCard
+                key={id}
+                away={{ name, logoUrl: demoLogo(id), score: 3 }}
+                home={{ name: "Riverton", logoUrl: demoLogo("RIV"), score: 4 }}
+                status="Final"
+                tone="final"
+              />
+            ))}
+          </CardStrip>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Settings vocabulary</h2>
+        <Card>
+          <SettingRow label="Live scores" hint="Refresh automatically while games are on">
+            <Toggle checked={liveScores} onChange={setLiveScores} label="Live scores" />
+          </SettingRow>
+          <SettingRow label="Favorite team" hint="Drives the dashboard header">
+            <SelectField
+              value={team}
+              onChange={setTeam}
+              options={TEAMS.map(([id, name]) => ({ value: id, label: name }))}
+            />
+          </SettingRow>
+          <SettingRow label="Display name">
+            <TextField value={name} onChange={setName} placeholder="Your name" />
+          </SettingRow>
+          <SettingRow label="Data feeds" hint="Freshness of upstream imports">
+            <span style={{ display: "inline-flex", gap: "0.375rem" }}>
+              <Chip tone="ok">Live</Chip>
+              <Chip tone="stale">Stale</Chip>
+              <Chip tone="muted">Cached</Chip>
+            </span>
+          </SettingRow>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>BasicTable · DateNav · Sparklines</h2>
+        <BasicTable
+          showSummary
+          columns={["name", "team", "gp", "pts"]}
+          rows={[
+            ["Ava Martinez", "NOR", 22, 187],
+            ["Ben Okafor", "EAS", 24, 203],
+            ["Cleo Nguyen", "WEST", 19, null],
+            ["Dmitri Volkov", "NOR", 25, 164],
+            ["Esperanza Diaz", "RIV", 21, 158],
+          ]}
+        />
+        <div className="uidemo-row" style={{ marginTop: "0.75rem", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}>
+          <DateNav date={demoDate} onChange={setDemoDate} disableFuture />
+          <span className="uidemo-row">
+            <SparklineChart data={[{ v: 3 }, { v: 5 }, { v: 4 }, { v: 7 }, { v: 6 }, { v: 9 }]} valueKey="v" width={70} />
+            <SparklineChart data={[{ v: 9 }, { v: 7 }, { v: 8 }, { v: 4 }, { v: 5 }, { v: 2 }]} valueKey="v" color="var(--danger)" width={70} />
+            <SparklineChart data={[{ v: 1 }, { v: 2 }, { v: 3 }, { v: 3 }, { v: 4 }]} valueKey="v" color="var(--ok)" width={70} />
+          </span>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Percentile gauge · AutoLinkedText</h2>
+        <Card>
+          <PercentileGauge
+            stats={[
+              { label: "Scoring", value: "28.4", percentile: 92, category: "Offense" },
+              { label: "Assists", value: "6.1", percentile: 71, category: "Offense" },
+              { label: "Rebounds", value: "4.2", percentile: 33 },
+              { label: "Turnovers", value: "1.8", percentile: 78, neutral: true },
+            ]}
+          />
+        </Card>
+        <Card>
+          <p style={{ fontSize: "0.9rem", lineHeight: 1.6 }}>
+            <AutoLinkedText
+              text="Ava Martinez scored 31 points on 12/18 shooting while Ben Okafor added 24 in the Northside win over Eastgate."
+              players={[
+                { name: "Ava Martinez", id: "p101" },
+                { name: "Ben Okafor", id: "p102" },
+              ]}
+              renderPlayerLink={(name, id) => (
+                <a href={`#player-${id}`} style={{ color: "var(--brand-light)" }}>{name}</a>
+              )}
+              links={[{ name: "Northside", href: "#team-north" }, { name: "Eastgate", href: "#team-east" }]}
+            />
+          </p>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>SQL workbench — SandboxChart · SandboxCell (mock query)</h2>
+        <Card title="SandboxChart over test rows">
+          <SandboxChart columns={SB_COLUMNS} rows={SB_ROWS} />
+        </Card>
+        <div style={{ marginTop: "0.75rem" }}>
+          <SandboxCell
+            cell={{ id: "c1", type: "sql", sql: "SELECT name, season, war FROM batters LIMIT 200", title: "WAR by season" }}
+            index={0}
+            onRun={async () => ({ columns: SB_COLUMNS, rows: SB_ROWS, rowCount: SB_ROWS.length, runtimeMs: 42 })}
+            onUpdateSql={() => {}}
+          />
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>ML suite — ModelResults with a regression run</h2>
+        <ModelResults results={DEMO_RUN.result} />
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Settings page — composed</h2>
+        <PageHeader title="Settings" subtitle="Applies to this device only" />
+        <div className="uidemo-section" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <SettingsGroup title="Preferences" description="How the app looks and behaves for you">
+            <SettingRow label="Live scores" hint="Refresh automatically while games are on">
+              <Toggle checked={liveScores} onChange={setLiveScores} label="Live scores" />
+            </SettingRow>
+            <SettingRow label="Favorite team" hint="Drives the dashboard header">
+              <SelectField value={team} onChange={setTeam} options={TEAMS.map(([id, name]) => ({ value: id, label: name }))} />
+            </SettingRow>
+            <SettingRow label="Display name">
+              <TextField value={name} onChange={setName} placeholder="Your name" />
+            </SettingRow>
+          </SettingsGroup>
+          <SettingsGroup title="Data feeds" description="Freshness of upstream imports">
+            <SettingRow label="Feed status">
+              <span style={{ display: "inline-flex", gap: "0.375rem" }}>
+                <Chip tone="ok">Live</Chip>
+                <Chip tone="stale">Stale</Chip>
+                <Chip tone="muted">Cached</Chip>
+              </span>
+            </SettingRow>
+          </SettingsGroup>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Update toast</h2>
+        <Card>
+          <button className="uidemo-toggle" onClick={() => setDeployed(true)}>
+            Simulate a deploy
+          </button>
+          <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+            Polls getRemoteBuild() every 5 min + on tab focus; here it flips immediately.
+          </p>
+        </Card>
+      </section>
+
+      <UpdateToast
+        localBuild={deployed ? undefined : "demo-1"}
+        getRemoteBuild={async () => (deployed ? "demo-2" : "demo-1")}
+        appName="the kit"
+      />
+
+      <Assistant
+        title="Ask the kit"
+        launcher="✨"
+        messages={messages}
+        busy={busy}
+        onSend={(text) => {
+          setMessages((m) => [...m, { role: "user", content: text }])
+          setBusy(true)
+          setTimeout(() => {
+            setMessages((m) => [...m, { role: "assistant", content: `Echoing test data: “${text}”. A real app would call its API here.` }])
+            setBusy(false)
+          }, 700)
+        }}
+      />
+    </div>
+  )
+}

@@ -1,0 +1,217 @@
+import { useMemo, useState, type ReactNode } from "react"
+import { cn } from "../cn"
+import { EmptyState } from "./EmptyState"
+
+export interface TableColumn<T> {
+  key: string
+  label: string
+  /** Format the raw value for display. */
+  fmt?: (value: unknown) => ReactNode
+  align?: "left" | "right"
+  /** Column participates in the heat ramp; flip for lower-is-better stats. */
+  lowIsBetter?: boolean
+  /** Escape hatch: fully custom cell content (identity links, badges…). */
+  render?: (row: T) => ReactNode
+}
+
+interface Props<T extends Record<string, unknown>> {
+  data: T[] | null
+  columns: TableColumn<T>[]
+  /** Stable row identity; defaults to array index. */
+  rowKey?: (row: T, index: number) => string
+  /** When provided, rows become click-to-expand with this detail line. */
+  renderExpanded?: (row: T) => ReactNode
+  empty?: ReactNode
+  className?: string
+}
+
+function ramp(pct: number): string {
+  if (pct >= 0.85) return "var(--stat-elite)"
+  if (pct >= 0.65) return "var(--stat-great)"
+  if (pct >= 0.4) return "var(--stat-avg)"
+  if (pct >= 0.2) return "var(--stat-below)"
+  return "var(--stat-poor)"
+}
+
+/** Value pill colored against its column distribution. */
+export function HeatPill({ children, color }: { children: ReactNode; color?: string | null }) {
+  if (!color) return <span className="ui-mono ui-td">{children}</span>
+  return (
+    <span className="ui-heatpill" style={{ color, background: `color-mix(in oklch, ${color} 12%, transparent)` }}>
+      {children}
+    </span>
+  )
+}
+
+/**
+ * Column-driven sortable table with distribution heat pills and optional
+ * click-to-expand rows. Sorting lives inside the component. Wide tables
+ * scroll horizontally on phones.
+ */
+export function DataTable<T extends Record<string, unknown>>({
+  data,
+  columns,
+  rowKey,
+  renderExpanded,
+  empty = "No data available.",
+  className,
+}: Props<T>) {
+  const [sort, setSort] = useState<{ key: string; dir: "asc" | "desc" } | null>(null)
+  const [expandedKey, setExpandedKey] = useState<string | null>(null)
+
+  const rows = useMemo(() => {
+    if (!data?.length) return []
+    if (!sort) return data
+    const dir = sort.dir === "asc" ? 1 : -1
+    return [...data].sort((a, b) => {
+      const av = Number(a[sort.key])
+      const bv = Number(b[sort.key])
+      if (Number.isFinite(av) && Number.isFinite(bv)) return (av - bv) * dir
+      return String(a[sort.key] ?? "").localeCompare(String(b[sort.key] ?? "")) * dir
+    })
+  }, [data, sort])
+
+  // Per-column min/max for heat coloring.
+  const ranges = useMemo(() => {
+    const map: Record<string, { min: number; max: number }> = {}
+    if (!data?.length) return map
+    for (const col of columns) {
+      if (col.lowIsBetter === undefined) continue // no heat flag → plain column
+      const nums = data.map((r) => Number(r[col.key])).filter(Number.isFinite)
+      if (!nums.length) continue
+      map[col.key] = { min: Math.min(...nums), max: Math.max(...nums) }
+    }
+    return map
+  }, [data, columns])
+
+  function toggleSort(key: string) {
+    setSort((s) =>
+      s?.key === key ? (s.dir === "asc" ? { key, dir: "desc" } : null) : { key, dir: "asc" },
+    )
+  }
+
+  if (!data?.length) {
+    return (
+      <div className={cn("ui-card", className)}>
+        <EmptyState icon="📊">{empty}</EmptyState>
+      </div>
+    )
+  }
+
+  function heatColor(col: TableColumn<T>, raw: unknown): string | null {
+    const range = ranges[col.key]
+    const n = Number(raw)
+    if (!range || !Number.isFinite(n)) return null
+    let pct = range.max === range.min ? 1 : (n - range.min) / (range.max - range.min)
+    if (col.lowIsBetter) pct = 1 - pct
+    return ramp(pct)
+  }
+
+  return (
+    <div className={cn("ui-tablecard", className)}>
+      <div className="ui-tablescroll">
+        <table className="ui-table">
+          <thead>
+            <tr>
+              <th className="ui-th ui-th-num">#</th>
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  className={cn("ui-th", col.align === "right" && "ui-th--right")}
+                  onClick={() => toggleSort(col.key)}
+                >
+                  <span className="ui-th-inner">
+                    {col.label}
+                    {sort?.key === col.key && <span className="ui-sort-arrow">{sort.dir === "asc" ? "↑" : "↓"}</span>}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => {
+              const k = rowKey ? rowKey(row, i) : String(i)
+              const expandable = !!renderExpanded
+              const isOpen = expandable && expandedKey === k
+              return (
+                <ExpandableRowBody
+                  key={k}
+                  index={i}
+                  row={row}
+                  columns={columns}
+                  heatColor={heatColor}
+                  expandable={expandable}
+                  open={isOpen}
+                  onToggle={() => setExpandedKey((cur) => (cur === k ? null : k))}
+                  renderExpanded={renderExpanded!}
+                />
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function ExpandableRowBody<T extends Record<string, unknown>>({
+  index,
+  row,
+  columns,
+  heatColor,
+  expandable,
+  open,
+  onToggle,
+  renderExpanded,
+}: {
+  index: number
+  row: T
+  columns: TableColumn<T>[]
+  heatColor: (col: TableColumn<T>, raw: unknown) => string | null
+  expandable: boolean
+  open: boolean
+  onToggle: () => void
+  renderExpanded: (row: T) => ReactNode
+}) {
+  const cells = columns.map((col) => {
+    const raw = row[col.key]
+    if (col.render) {
+      return (
+        <td key={col.key} className={cn("ui-td", col.align === "right" && "ui-td--right")}>
+          {col.render(row)}
+        </td>
+      )
+    }
+    const shown = raw != null ? (col.fmt ? col.fmt(raw) : String(raw)) : "—"
+    const color = heatColor(col, raw)
+    if (color) {
+      return (
+        <td key={col.key} className={cn("ui-td", col.align === "right" && "ui-td--right")}>
+          <HeatPill color={color}>{shown}</HeatPill>
+        </td>
+      )
+    }
+    return (
+      <td key={col.key} className={cn("ui-td", col.align === "right" && "ui-td--right")}>
+        {shown}
+      </td>
+    )
+  })
+
+  return (
+    <>
+      <tr
+        className={cn("ui-tr", expandable && "ui-tr--clickable", open && "ui-tr--open")}
+        onClick={expandable ? onToggle : undefined}
+      >
+        <td className="ui-td ui-td-num">{index + 1}</td>
+        {cells}
+      </tr>
+      {open && (
+        <tr className="ui-tr-expanded">
+          <td colSpan={columns.length + 1}>{renderExpanded(row)}</td>
+        </tr>
+      )}
+    </>
+  )
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@mukco/ui-kit",
+  "version": "0.1.0",
+  "description": "Estate-wide UI kit: semantic tokens, primitives, charts, sports identity seam.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./ui.css": "./dist/ui.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && cp src/ui.css dist/ui.css",
+    "check": "tsc -p tsconfig.json",
+    "dev": "vite"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@codemirror/lang-sql": "^6.10.0",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@codemirror/view": "^6.43.9",
+    "@uiw/react-codemirror": "^4.25.11",
+    "echarts": "^6.1.0",
+    "echarts-for-react": "^3.0.6",
+    "react-markdown": "^10.1.0",
+    "react-pivottable": "^0.11.1",
+    "recharts": "^3.10.1",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-pivottable": "^0.11.6",
+    "@vitejs/plugin-react": "^6.0.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0"
+  }
+}
