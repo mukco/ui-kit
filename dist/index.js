@@ -24,6 +24,7 @@ export { NotificationBell } from "./notifications/NotificationBell";
 export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/Settings";
 export { SettingsGroup } from "./primitives/SettingsGroup";
 export { UpdateToast } from "./primitives/UpdateToast";
+export { SortedList } from "./primitives/SortedList";
 export { InlineStatRow, PercentileBar, StatCard } from "./primitives/StatCard";
 export { Tabs } from "./primitives/Tabs";
 // Charts

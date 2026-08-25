@@ -30,6 +30,7 @@ import {
   SandboxChart,
   SearchSelect,
   SelectField,
+  SortedList,
   SettingRow,
   SettingsGroup,
   SparklineChart,
@@ -196,6 +197,7 @@ export function UiDemo() {
   const [name, setName] = useState("")
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [deployed, setDeployed] = useState(false)
+  const [sections, setSections] = useState(["Recurring", "Queues", "Failures", "Notes"])
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? "dark" : ""
@@ -657,6 +659,26 @@ export function UiDemo() {
       </section>
 
       <section className="uidemo-section">
+        <h2>SortedList — drag the handles</h2>
+        <Card>
+          <SortedList
+            items={["Recurring", "Queues", "Failures", "Notes"]}
+            getKey={(x) => x}
+            onReorder={setSections}
+            renderItem={(label, handle) => (
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <button type="button" {...handle} className="ui-iconbtn" aria-label={`Reorder ${label}`}>⠿</button>
+                <span>{label}</span>
+              </div>
+            )}
+          />
+          <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+            Order: {sections.join(" → ")} · same handle contract SandboxCell accepts.
+          </p>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
         <h2>Update toast</h2>
         <Card>
           <button className="uidemo-toggle" onClick={() => setDeployed(true)}>
@@ -669,7 +691,7 @@ export function UiDemo() {
       </section>
 
       <UpdateToast
-        localBuild={deployed ? undefined : "demo-1"}
+        localBuild="demo-1"
         getRemoteBuild={async () => (deployed ? "demo-2" : "demo-1")}
         appName="the kit"
       />

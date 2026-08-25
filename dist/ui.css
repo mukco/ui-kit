@@ -2614,3 +2614,18 @@ button.ui-matchup--link {
   font-size: 0.78rem;
   color: var(--muted);
 }
+
+/* ---------- SortedList (drag-to-reorder) ---------- */
+
+.ui-sortlist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ui-sortlist-row--dragging {
+  z-index: 20;
+  opacity: 0.9;
+}
+
+/* ---------- Update toast demo hook is in primitives; nothing else here ---------- */
