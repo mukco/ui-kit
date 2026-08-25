@@ -31,6 +31,12 @@ export interface StatComparison {
 export interface StatProgress {
   current: number
   target: number
+  /** What the bar is pacing against. Omitted, only the fraction shows.
+      This used to be the hardcoded string "Season pace", which is a baseball
+      idea and was appearing in an infrastructure dashboard underneath
+      "3.3 GB free of 7.8 GB". The kit's own rule says no sport names outside
+      src/sports/, and this was the one that got through. */
+  label?: string
 }
 
 interface Props {
@@ -49,7 +55,7 @@ interface Props {
 }
 
 /**
- * A single stat value with optional percentile pill + bar, season-pace bar,
+ * A single stat value with optional percentile pill + bar, progress bar,
  * or projection comparison strip.
  */
 export function StatCard({ label, value, subtitle, percentile, progress, comparison, neutral = false, invert = false, className }: Props) {
@@ -87,7 +93,7 @@ export function StatCard({ label, value, subtitle, percentile, progress, compari
       {progressPct != null && progress && (
         <div className="ui-stat-foot">
           <div className="ui-stat-foot-row">
-            <span>Season pace</span>
+            {progress.label ? <span>{progress.label}</span> : <span />}
             <span className="ui-mono">
               {progress.current} / {progress.target}
             </span>

@@ -5,6 +5,7 @@ import {
   AutoLinkedText,
   Avatar,
   BasicTable,
+  Button,
   Card,
   CardStrip,
   Chip,
@@ -665,6 +666,26 @@ export function UiDemo() {
             onUpdateSql={() => {}}
           />
         </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Button — the one the kit never had</h2>
+        <Card>
+          <div className="uidemo-row">
+            <Button tone="primary">Refresh</Button>
+            <Button>Open</Button>
+            <Button tone="danger">Switch off</Button>
+            <Button disabled>Not yet</Button>
+            <Button size="sm">Small</Button>
+            <Button href="https://github.com" external size="sm">Run</Button>
+          </div>
+          <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+            Every app had invented its own — <code>.btn</code>, <code>.mac-btn</code>,
+            <code>.ui-triage-action</code> — which is why actions looked like they came from
+            different applications. An action with an href renders as a link, because one that
+            goes somewhere should be openable in a new tab.
+          </p>
+        </Card>
       </section>
 
       <section className="uidemo-section">
