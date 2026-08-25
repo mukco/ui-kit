@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   Assistant,
   AwardCard,
@@ -18,6 +18,8 @@ import {
   InlineStatRow,
   InsightsCard,
   Loading,
+  LogStream,
+  parseLogBody,
   MatchupCard,
   ModelResults,
   NavBar,
@@ -36,6 +38,7 @@ import {
   SparklineChart,
   StatCard,
   Tabs,
+  ThemeToggle,
   TeamIcon,
   TeamLink,
   TextField,
@@ -53,6 +56,18 @@ function hash(s: string): number {
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
   return h
 }
+
+/* A docker-shaped trail: RFC 3339 stamps, mixed formats, one very long line
+   so the fold has something to fold, and a warning and an error for the ramp. */
+const DEMO_LOG_BODY = [
+  "2026-08-25T02:10:58.114Z Started GET \"/api/metrics\" for 10.0.0.4 at 2026-08-25 02:10:58 +0000",
+  "2026-08-25T02:10:58.402Z Completed 200 OK in 288ms (Views: 1.1ms | ActiveRecord: 12.4ms)",
+  "2026-08-25T02:11:02.001Z [Feeds::Fetch] warning: espn.com refused a direct request, retrying through FEED_PROXY_URL",
+  "2026-08-25T02:11:44.771Z Error performing Feeds::FetchJob (Job ID: 4c1f-9a02) from SolidQueue(feeds) in 30021.4ms: Net::ReadTimeout with #<TCPSocket:(closed)> (Net::ReadTimeout) — /rails/app/services/feeds/fetch.rb:71:in `block in call` /rails/app/services/feeds/fetch.rb:68:in `each` /rails/app/jobs/feeds/fetch_job.rb:12:in `perform` /usr/local/bundle/gems/activejob-8.1.0/lib/active_job/execution.rb:69:in `block in perform_now`",
+  "2026-08-25T02:11:45.010Z SolidQueue-1.2.1 Claimed 3 jobs from queue default",
+  "no timestamp on this one — an app printing straight to stdout",
+  "2026-08-25T02:12:00.500Z Completed 200 OK in 43ms (Views: 0.4ms | ActiveRecord: 3.1ms)",
+].join("\n")
 
 const DEMO_COLORS = ["#1e66e4", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#14B8A6"]
 
@@ -184,7 +199,6 @@ const DEMO_RUN = {
 /* ---------- Page ---------- */
 
 export function UiDemo() {
-  const [dark, setDark] = useState(false)
   const [tab, setTab] = useState("summary")
   const [drawer, setDrawer] = useState(false)
   const [picked, setPicked] = useState<{ name: string; pos: string } | null>(null)
@@ -198,13 +212,6 @@ export function UiDemo() {
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [deployed, setDeployed] = useState(false)
   const [sections, setSections] = useState(["Recurring", "Queues", "Failures", "Notes"])
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = dark ? "dark" : ""
-    return () => {
-      delete document.documentElement.dataset.theme
-    }
-  }, [dark])
 
   const log = gameLog()
 
@@ -236,13 +243,12 @@ export function UiDemo() {
 
       <header className="uidemo-header">
         <h1>UI kit playground</h1>
-        <button className="uidemo-toggle" onClick={() => setDark((d) => !d)}>
-          {dark ? "☀️ Light" : "🌙 Dark"}
-        </button>
+        <ThemeToggle />
       </header>
       <p className="uidemo-note">
-        Every component renders from tokens in <code>src/ui.css</code> — the toggle flips{" "}
-        <code>data-theme</code>, nothing else. Data fetching is never in the kit; everything here is
+        Every component renders from tokens in <code>src/ui.css</code> — the toggle writes{" "}
+        <code>data-theme</code> onto &lt;html&gt; and remembers the choice, nothing else. “Auto”
+        follows the system. Data fetching is never in the kit; everything here is
         static test data.
       </p>
 
@@ -623,6 +629,28 @@ export function UiDemo() {
             onRun={async () => ({ columns: SB_COLUMNS, rows: SB_ROWS, rowCount: SB_ROWS.length, runtimeMs: 42 })}
             onUpdateSql={() => {}}
           />
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>LogStream — a container's trail</h2>
+        <Card>
+          <LogStream
+            entries={parseLogBody(DEMO_LOG_BODY, "baseball-web")}
+            footer="8 lines · written 2m ago · the host keeps a day"
+          />
+        </Card>
+        <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+          Narrow the window under 640px: the height cap comes off so the page is the only
+          scroll surface, the stamp moves above the message, and “No wrap” disappears.
+        </p>
+        <div className="uidemo-grid" style={{ marginTop: "0.75rem" }}>
+          <Card title="Loading">
+            <LogStream entries={null} />
+          </Card>
+          <Card title="Empty">
+            <LogStream entries={[]} />
+          </Card>
         </div>
       </section>
 

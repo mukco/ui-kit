@@ -32,6 +32,14 @@
   --warn: #d97706;
   --danger: #dc2626;
 
+  /* Severity — the ops ramp. Deliberately not --stat-*: that is a percentile
+     scale where elite is red, so reusing it for status would paint a healthy
+     service in the colour of a broken one. */
+  --sev-ok: var(--ok);
+  --sev-warn: var(--warn);
+  --sev-error: var(--danger);
+  --sev-unknown: var(--muted);
+
   /* Stat ramp — percentile coloring (elite → poor) */
   --stat-elite: oklch(58% 0.18 28);
   --stat-great: oklch(62% 0.16 60);
@@ -50,6 +58,7 @@
 }
 
 [data-theme='dark'] {
+  color-scheme: dark;
   --bg: #07090e;
   --surface: #0e1118;
   --surface-2: #161b24;
@@ -64,6 +73,12 @@
 
   --brand: #2563eb;
   --brand-light: #60a5fa;
+
+  /* Brightened for dark: the light-mode state colours read as mud on #0f1319. */
+  --sev-ok: #22c55e;
+  --sev-warn: #f59e0b;
+  --sev-error: #f87171;
+  --sev-unknown: var(--muted);
 
   --stat-elite: oklch(76% 0.18 28);
   --stat-great: oklch(78% 0.14 60);
@@ -2629,3 +2644,251 @@ button.ui-matchup--link {
 }
 
 /* ---------- Update toast demo hook is in primitives; nothing else here ---------- */
+
+/* ---------- LogStream ---------- */
+
+.ui-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Sticky so the filters stay reachable while the page scrolls past a long
+   stream — on phones this is the only way back to them without scrolling up. */
+.ui-log-tools {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  background: var(--surface);
+}
+
+.ui-log-find {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.ui-log-toggle {
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ui-log-toggle.is-on {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--surface);
+}
+
+.ui-log-body {
+  max-height: 60vh;
+  overflow: auto;
+  padding: 0.375rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* Two columns — meta, then message — so a wrapped line hangs under the text
+   rather than under the timestamp. One column on phones (below). */
+.ui-log-entry {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0 0.625rem;
+  padding: 0.1875rem 0.5rem;
+  border-left: 2px solid transparent;
+}
+
+.ui-log-entry--warn {
+  border-left-color: var(--sev-warn);
+  background: color-mix(in srgb, var(--sev-warn) 7%, transparent);
+}
+
+.ui-log-entry--error {
+  border-left-color: var(--sev-error);
+  background: color-mix(in srgb, var(--sev-error) 7%, transparent);
+}
+
+.ui-log-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+.ui-log-stamp {
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-log-source {
+  color: var(--text-2);
+}
+
+/* The level is a word as well as an edge colour — never colour alone. */
+.ui-log-level {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.ui-log-entry--warn .ui-log-level {
+  color: var(--sev-warn);
+}
+
+.ui-log-entry--error .ui-log-level {
+  color: var(--sev-error);
+}
+
+.ui-log-text {
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* A folded backtrace, so one long line cannot fill the viewport. */
+.ui-log-entry:not(.is-open) .ui-log-text {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--ui-log-clamp, 6);
+  line-clamp: var(--ui-log-clamp, 6);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ui-log-more {
+  grid-column: 2;
+  justify-self: start;
+  margin-top: 0.125rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand);
+  font: inherit;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.ui-log-body.is-nowrap .ui-log-text {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.ui-log-foot {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 639px) {
+  /* The page is the only scroll surface. A scrollable box inside a scrolling
+     page means every swipe is a guess about which one moves. */
+  .ui-log-body {
+    max-height: none;
+    overflow: visible;
+    font-size: 0.8125rem; /* 13px floor — this is the smallest text on the page */
+  }
+
+  /* Meta above the message, so the message gets the whole width. */
+  .ui-log-entry {
+    grid-template-columns: 1fr;
+    padding: 0.375rem 0.5rem;
+  }
+
+  .ui-log-entry + .ui-log-entry {
+    border-top: 1px solid var(--border);
+  }
+
+  .ui-log-more {
+    grid-column: 1;
+    min-height: 44px;
+  }
+
+  /* Sideways panning inside a nested scroller is not an escape hatch here. */
+  .ui-log-wrap-toggle {
+    display: none;
+  }
+
+  .ui-log-body.is-nowrap .ui-log-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ---------- ThemeToggle ---------- */
+
+.ui-theme {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.ui-theme-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 40px;
+  padding: 0 0.625rem;
+  border: 0;
+  border-radius: calc(var(--radius-md) - 3px);
+  background: none;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 0.8125rem;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ui-theme-opt:hover {
+  color: var(--text);
+}
+
+.ui-theme-opt.is-on {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  color: var(--text);
+}
+
+/* Icons only: keep the target square and still 44px-tall on touch. */
+.ui-theme--compact .ui-theme-opt {
+  min-width: 40px;
+  padding: 0;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 639px) {
+  .ui-theme-opt {
+    min-height: 44px;
+  }
+
+  .ui-theme--compact .ui-theme-opt {
+    min-width: 44px;
+  }
+}
