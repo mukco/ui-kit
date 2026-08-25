@@ -45,10 +45,12 @@ interface Props {
  * Four things a log view has to get right on a small screen, all of them
  * CSS-driven so this is one component and not two:
  *
- * - **No box inside the page.** Above 640px the stream scrolls in its own
- *   pane; below it the height cap comes off and the page is the only scroll
- *   surface. A scrollable box inside a scrolling page is the single worst
- *   thing a log view does to a thumb.
+ * - **Its own pane, and the scroll stops there.** The stream scrolls inside a
+ *   bounded box at every width — 60vh on a phone. Letting three hundred lines
+ *   flow into the page made the page enormous and buried everything below it.
+ *   What makes a nested scroller feel broken is chaining: a flick that reaches
+ *   the end carries on scrolling the page behind. `overscroll-behavior:
+ *   contain` is the fix, and it is why the box is safe to keep.
  * - **The message gets the full width.** The entry is a two-column grid — meta,
  *   then text — which collapses to one column on phones, so the stamp sits
  *   above the message instead of eating a quarter of the line. The grid also

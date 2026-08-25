@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { cn } from "../cn";
 import { SparklineChart } from "../charts/SparklineChart";
 /** Rank for sorting: the worst thing first, because that is what a list of
@@ -20,7 +20,7 @@ const WORDS = {
  * is visually hidden rather than absent — colour alone is never the carrier.
  */
 export function StatusDot({ tone = "unknown", pulse, label, className, }) {
-    return (_jsx("span", { className: cn("ui-dot", `ui-dot--${tone}`, pulse && "ui-dot--pulse", className), children: _jsx("span", { className: "ui-sr", children: label ?? WORDS[tone] }) }));
+    return (_jsx("span", { className: cn("ui-dot", `ui-dot--${tone}`, pulse && "ui-dot--pulse", className), children: _jsxs("span", { className: "ui-sr", children: [label ?? WORDS[tone], " "] }) }));
 }
 /**
  * The estate at a glance: one tile per thing, colour for state, one figure,

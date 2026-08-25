@@ -14,6 +14,8 @@ export { DateNav } from "./primitives/DateNav";
 export { Drawer } from "./primitives/Drawer";
 export { EmptyState } from "./primitives/EmptyState";
 export { ExpandableCard } from "./primitives/ExpandableCard";
+export { FactGrid } from "./primitives/FactGrid";
+export type { Fact } from "./primitives/FactGrid";
 export { HelpTip } from "./primitives/HelpTip";
 export { InsightsCard } from "./primitives/InsightsCard";
 export type { InsightSection } from "./primitives/InsightsCard";
