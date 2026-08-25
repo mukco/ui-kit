@@ -18,6 +18,9 @@ npm run build    # dist/ — CI commits this to main; never commit dist by hand
 
 ## Non-negotiables
 
+- **Space comes from the scale.** `--space-1` … `--space-6`, four-pixel base.
+  Never pick a padding by eye: that is how a status tile ended up at 10px
+  beside a Card at 16 and the whole app read as cramped.
 - **Tokens only.** Components reference CSS custom properties from
   `src/ui.css` (`--surface`, `--brand`, `--stat-great`, …). Never write a hex,
   rgb(), or oklch() literal in a component. New visual concept → add a token,
