@@ -3001,7 +3001,11 @@ button.ui-matchup--link {
 
 .ui-statusgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  /* 11rem, not 9.5: the tile carries a service name and a monospace latency,
+     and a name like "Workshop agent" wants ~7rem of that before padding. The
+     old floor produced 143px columns, which truncated the very label the tile
+     exists to show. */
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
   gap: var(--space-3);
 }
 
@@ -3042,9 +3046,11 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-statustile-name {
   font-weight: 600;
   font-size: 0.85rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Wraps rather than ellipsising. A truncated service name is worse than a
+     two-line one: "Workshop a…" and "Workshop agent" are the same width on a
+     phone, and only one of them can be read. min-width:0 on the flex parent
+     keeps the wrap honest. */
+  overflow-wrap: break-word;
 }
 
 .ui-statustile-metric {
@@ -3055,8 +3061,21 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-statustile-detail {
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
+  /* Held to two lines so one long error cannot make its tile twice the height
+     of its neighbours — a grid of tiles that disagree about how tall a tile is
+     reads as broken before it reads as informative. The full string stays in
+     the title attribute.
+
+     `anywhere` rather than `break-word` because these are single unbreakable
+     tokens (Socket::ResolutionError) with no space to break at; the trade is
+     an ugly split over an overflowing one, and the clamp hides most of it. */
   overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 /* ---------- TriageList ---------- */
@@ -3151,7 +3170,10 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 @media (max-width: 639px) {
-  .ui-statusgrid { grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); }
+  /* Two columns, fixed. auto-fill with a *smaller* floor was backwards: it
+     gave a 500px phone three 143px columns when the honest answer is two of
+     228px. Narrower screens want fewer, wider tiles, not more, thinner ones. */
+  .ui-statusgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   /* Age and action drop under the text rather than squeezing it to nothing. */
   .ui-triage-row {

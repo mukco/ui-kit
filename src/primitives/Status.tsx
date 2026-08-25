@@ -105,7 +105,13 @@ export function StatusGrid({
               <span className="ui-statustile-name">{item.name}</span>
             </span>
             {item.metric != null && <span className="ui-statustile-metric">{item.metric}</span>}
-            {item.detail != null && <span className="ui-statustile-detail">{item.detail}</span>}
+            {item.detail != null && (
+              // Clamped to two lines in CSS, so the full string has to survive
+              // somewhere: an error truncated to "Socket::Resol…" names nothing.
+              <span className="ui-statustile-detail" title={String(item.detail)}>
+                {item.detail}
+              </span>
+            )}
             {item.series && item.series.length > 1 && (
               <SparklineChart
                 data={item.series}
