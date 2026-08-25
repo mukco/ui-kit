@@ -26,8 +26,13 @@ export declare function TextField({ value, onChange, placeholder, type }: FieldP
 export declare function SelectField({ value, onChange, options }: FieldProps): import("react").JSX.Element;
 export type ChipTone = "ok" | "stale" | "muted" | "danger";
 /** Small status badge: Live, Stale, Cached… */
-export declare function Chip({ tone, children }: {
+export declare function Chip({ tone, children, onClick, title, }: {
     tone?: ChipTone;
     children: ReactNode;
+    /** Makes the chip a door. A named thing that can be opened should be
+        openable — the alternative keeps coming out as a comma-separated list of
+        places to go with no way to reach any of them. */
+    onClick?: () => void;
+    title?: string;
 }): import("react").JSX.Element;
 export {};

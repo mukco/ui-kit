@@ -17,6 +17,7 @@ export { FactGrid } from "./primitives/FactGrid";
 export { HelpTip } from "./primitives/HelpTip";
 export { InsightsCard } from "./primitives/InsightsCard";
 export { Loading } from "./primitives/Loading";
+export { ListRow, ListRows } from "./primitives/ListRow";
 export { LogStream, logLevelOf, parseLogBody } from "./primitives/LogStream";
 export { MatchupCard } from "./primitives/MatchupCard";
 export { NavBar } from "./primitives/NavBar";

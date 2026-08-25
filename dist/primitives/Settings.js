@@ -21,7 +21,11 @@ const CHIP_TONES = {
     danger: "var(--danger)",
 };
 /** Small status badge: Live, Stale, Cached… */
-export function Chip({ tone = "muted", children }) {
+export function Chip({ tone = "muted", children, onClick, title, }) {
     const color = CHIP_TONES[tone];
-    return (_jsx("span", { className: "ui-chipbadge", style: { color, background: `color-mix(in srgb, ${color} 12%, transparent)` }, children: children }));
+    const style = { color, background: `color-mix(in srgb, ${color} 12%, transparent)` };
+    if (onClick) {
+        return (_jsx("button", { type: "button", className: "ui-chipbadge ui-chipbadge--button", style: style, onClick: onClick, title: title, children: children }));
+    }
+    return (_jsx("span", { className: "ui-chipbadge", style: style, title: title, children: children }));
 }

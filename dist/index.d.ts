@@ -20,6 +20,8 @@ export { HelpTip } from "./primitives/HelpTip";
 export { InsightsCard } from "./primitives/InsightsCard";
 export type { InsightSection } from "./primitives/InsightsCard";
 export { Loading } from "./primitives/Loading";
+export { ListRow, ListRows } from "./primitives/ListRow";
+export type { ListRowProps } from "./primitives/ListRow";
 export { LogStream, logLevelOf, parseLogBody } from "./primitives/LogStream";
 export type { LogEntry, LogLevel } from "./primitives/LogStream";
 export { MatchupCard } from "./primitives/MatchupCard";
