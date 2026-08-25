@@ -3124,3 +3124,40 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
   .ui-range-opt { min-height: 44px; }
 }
+
+/* ---------- FactGrid ---------- */
+
+.ui-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+}
+
+.ui-facts-row {
+  display: contents;
+}
+
+.ui-facts dt {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ui-facts dd {
+  margin: 0;
+  color: var(--text);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ui-facts-mono {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+@media (max-width: 639px) {
+  /* The label column is a third of a phone. The label goes above its value. */
+  .ui-facts { grid-template-columns: 1fr; gap: 0; }
+  .ui-facts dt { margin-top: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
+}

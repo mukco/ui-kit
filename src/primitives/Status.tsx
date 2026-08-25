@@ -48,7 +48,7 @@ export function StatusDot({
 }) {
   return (
     <span className={cn("ui-dot", `ui-dot--${tone}`, pulse && "ui-dot--pulse", className)}>
-      <span className="ui-sr">{label ?? WORDS[tone]}</span>
+      <span className="ui-sr">{label ?? WORDS[tone]}{" "}</span>
     </span>
   )
 }
