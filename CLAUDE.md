@@ -58,7 +58,15 @@ Memorize these before writing consumer code — they are not guesses:
 <UpdateToast localBuild={id} getRemoteBuild={async () => idOrNull} appName="Estate" />
 <SortedList items={xs} getKey={(x) => x.id} onReorder={(next) => setXs(next)}
             renderItem={(x, handle) => <Row handleProps={handle} />} />
+<LogStream entries={parseLogBody(body, "baseball-web") /* LogEntry[] | null */}
+           footer="300 lines · written 2m ago" clampLines={6} />
+<ThemeToggle />                                              // self-contained; no value/onChange pair
+const { theme, resolved, setTheme } = useTheme()              // same state, for your own UI
 ```
+
+Status colour is `--sev-ok/-warn/-error/-unknown`, never `--stat-*` — that ramp
+is a percentile scale where elite is red, so it paints a healthy service in the
+colour of a broken one.
 
 Styling rule reminder: apps use their own layout classes (e.g. `.muted`,
 `.panel`) plus kit classes (`ui-*`). The kit ships no bare-text utility classes.
