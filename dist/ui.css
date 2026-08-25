@@ -3409,3 +3409,32 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 .ui-triage-row--opens:hover .ui-triage-chevron { color: var(--text); }
+
+/* ---------- Line length ----------
+   Measured on a 1280px screen: a triage row's explanation was running 822px,
+   about 114 characters. Typography has agreed for a century that past roughly
+   90 the eye loses its place returning to the next line, and this is prose
+   somebody reads while something is broken — the worst moment to make them
+   work at it.
+   
+   A cap in ch rather than px so it follows the font: the limit is characters,
+   which is what the eye is counting. Untouched on a phone, where the column is
+   already narrower than the cap. */
+.ui-triage-detail,
+.ui-row-detail,
+.ui-facts dd,
+.ui-stat-sub {
+  max-width: 68ch;
+}
+
+/* The value column was taking every pixel the label did not: a 70px label
+   beside an 846px column holding "postgres:17". Bounded, so a short value sits
+   next to its label instead of at the end of a corridor. */
+.ui-facts {
+  grid-template-columns: max-content minmax(0, 68ch);
+}
+
+@media (max-width: 639px) {
+  /* One column on a phone, so the cap would only fight the width. */
+  .ui-facts { grid-template-columns: 1fr; }
+}
