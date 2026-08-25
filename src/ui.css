@@ -1219,8 +1219,19 @@ button.ui-matchup--link {
      ends up behind the clock. Browsers report 0 here, so this costs nothing
      in a tab. */
   padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-left)) 0.5rem;
-  background: color-mix(in srgb, var(--surface) 85%, transparent);
-  backdrop-filter: blur(10px);
+  /* Opaque, not translucent-and-blurred.
+     
+     A sticky element combining a semi-transparent background with
+     backdrop-filter is a well-known source of compositing artefacts in iOS
+     Safari: the blurred backdrop gets promoted to its own layer and is painted
+     at bounds that need not match the element's, which shows up as a solid
+     rectangle of the wrong size sitting over the bar. It renders correctly in
+     every desktop browser, which is exactly why it survives review.
+     
+     The effect was worth very little — a bar over a near-solid page — and a
+     bar that is reliably there is worth a great deal more than one that
+     shimmers. */
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
 
