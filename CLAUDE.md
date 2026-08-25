@@ -44,6 +44,25 @@ npm run build    # dist/ — CI commits this to main; never commit dist by hand
 4. Demo section in `demo/UiDemo.tsx`.
 5. `npm run check && npm run build` green.
 
+## API signatures agents get wrong
+
+Memorize these before writing consumer code — they are not guesses:
+
+```tsx
+<EmptyState icon="⚠">message text as children</EmptyState>   // no title prop
+<Loading label="Checking…" />                                // label prop, not children
+<StatCard label="OPS" value={".894"} percentile={78} />      // label+value props, never children
+<Toggle checked={v} onChange={setV} label="Live scores" />
+<DataTable data={rows /* T[] | null */} columns={[...]} rowKey={(r) => r.id}
+           renderExpanded={(r) => …} />                      // sorting is internal
+<UpdateToast localBuild={id} getRemoteBuild={async () => idOrNull} appName="Estate" />
+<SortedList items={xs} getKey={(x) => x.id} onReorder={(next) => setXs(next)}
+            renderItem={(x, handle) => <Row handleProps={handle} />} />
+```
+
+Styling rule reminder: apps use their own layout classes (e.g. `.muted`,
+`.panel`) plus kit classes (`ui-*`). The kit ships no bare-text utility classes.
+
 ## Versioning
 
 Consumers pin `github:mukco/ui-kit#main` while the kit is young; tags exist
