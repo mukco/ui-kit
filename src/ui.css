@@ -1218,7 +1218,14 @@ button.ui-matchup--link {
      without it renders underneath the status bar and the notch — the burger
      ends up behind the clock. Browsers report 0 here, so this costs nothing
      in a tab. */
-  padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-left)) 0.5rem;
+  /* Longhand, not a three-value shorthand full of max() and env(). A shorthand
+     is all-or-nothing: one value a browser cannot parse drops the whole
+     declaration, and the bar loses every side's padding at once rather than
+     the one it could not work out. Written out, a failure costs one edge. */
+  padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+  padding-bottom: 0.5rem;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
   /* Opaque, not translucent-and-blurred.
      
      A sticky element combining a semi-transparent background with
