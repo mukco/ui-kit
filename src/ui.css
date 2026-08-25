@@ -1275,7 +1275,22 @@ button.ui-matchup--link {
   display: flex;
   align-items: center;
   gap: 0.125rem;
+  /* Without min-width:0 this row refuses to shrink below its content, so the
+     left side stays wider than the space it has and the right-hand cluster is
+     laid over the top of it. That is the whole bug: between about 640px and
+     1000px — where the burger has gone but seven items do not yet fit — the
+     search field renders on top of the tabs. Neither 390px nor 1280px shows
+     it, which is exactly the pair of widths anybody tests. */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+
+.ui-nav-items::-webkit-scrollbar { display: none; }
+
+/* A label that compresses is a label you cannot read; the strip scrolls
+   instead. */
+.ui-nav-item { flex-shrink: 0; }
 
 .ui-nav-item-wrap {
   position: relative;
@@ -1341,6 +1356,9 @@ button.ui-matchup--link {
   display: flex;
   align-items: center;
   gap: 0.375rem;
+  /* The controls are the fixed cost of the bar: they never give way to the
+     tabs, and the tabs scroll past them rather than under them. */
+  flex-shrink: 0;
 }
 
 .ui-nav-burger {
