@@ -16,6 +16,7 @@ export { ExpandableCard } from "./primitives/ExpandableCard";
 export { HelpTip } from "./primitives/HelpTip";
 export { InsightsCard } from "./primitives/InsightsCard";
 export { Loading } from "./primitives/Loading";
+export { LogStream, logLevelOf, parseLogBody } from "./primitives/LogStream";
 export { MatchupCard } from "./primitives/MatchupCard";
 export { NavBar } from "./primitives/NavBar";
 export { PageHeader } from "./primitives/PageHeader";
@@ -26,6 +27,7 @@ export { SettingsGroup } from "./primitives/SettingsGroup";
 export { UpdateToast } from "./primitives/UpdateToast";
 export { SortedList } from "./primitives/SortedList";
 export { InlineStatRow, PercentileBar, StatCard } from "./primitives/StatCard";
+export { ThemeToggle, useTheme } from "./primitives/ThemeToggle";
 export { Tabs } from "./primitives/Tabs";
 // Charts
 export { DynamicChart, chartPalette } from "./charts/DynamicChart";
