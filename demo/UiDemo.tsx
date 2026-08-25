@@ -39,6 +39,10 @@ import {
   StatCard,
   Tabs,
   ThemeToggle,
+  TimeRangePicker,
+  TriageList,
+  StatusDot,
+  StatusGrid,
   TeamIcon,
   TeamLink,
   TextField,
@@ -59,6 +63,32 @@ function hash(s: string): number {
 
 /* A docker-shaped trail: RFC 3339 stamps, mixed formats, one very long line
    so the fold has something to fold, and a warning and an error for the ramp. */
+/* An estate mid-wobble: two things fine, one slow, one refusing, one silent. */
+const DEMO_TILES = [
+  { id: "hub", name: "Family Hub", tone: "ok" as const, metric: "12ms",
+    series: [{ v: 11 }, { v: 13 }, { v: 12 }, { v: 14 }, { v: 12 }], seriesKey: "v" },
+  { id: "baseball", name: "Baseball", tone: "ok" as const, metric: "18ms",
+    series: [{ v: 19 }, { v: 17 }, { v: 18 }, { v: 18 }, { v: 17 }], seriesKey: "v" },
+  { id: "push", name: "Push", tone: "warn" as const, metric: "410ms", detail: "workers stale 14m",
+    series: [{ v: 40 }, { v: 90 }, { v: 210 }, { v: 380 }, { v: 410 }], seriesKey: "v" },
+  { id: "nofuss", name: "NoFuss", tone: "critical" as const, metric: "—", detail: "no answer" },
+  { id: "gateway", name: "gateway", tone: "unknown" as const, detail: "not reporting" },
+]
+
+const DEMO_TRIAGE = [
+  { id: "t1", severity: "warn" as const, title: "Push · workers stale",
+    detail: "Last heartbeat 14 minutes ago; the queue is still accepting.",
+    at: new Date(Date.now() - 14 * 60_000).toISOString(),
+    action: { label: "Open", onClick: () => {} } },
+  { id: "t2", severity: "critical" as const, title: "NoFuss stopped answering",
+    detail: "nofuss.edwardsfamily.app refused three checks in a row.",
+    at: new Date(Date.now() - 3 * 3600_000).toISOString(),
+    action: { label: "Open", onClick: () => {} } },
+  { id: "t3", severity: "ok" as const, title: "Certificate renewed",
+    detail: "hub.edwardsfamily.app now expires in 89 days.",
+    at: new Date(Date.now() - 26 * 3600_000).toISOString() },
+]
+
 const DEMO_LOG_BODY = [
   "2026-08-25T02:10:58.114Z Started GET \"/api/metrics\" for 10.0.0.4 at 2026-08-25 02:10:58 +0000",
   "2026-08-25T02:10:58.402Z Completed 200 OK in 288ms (Views: 1.1ms | ActiveRecord: 12.4ms)",
@@ -211,6 +241,8 @@ export function UiDemo() {
   const [name, setName] = useState("")
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [deployed, setDeployed] = useState(false)
+  const [range, setRange] = useState("6h")
+  const [tile] = useState<string | null>("push")
   const [sections, setSections] = useState(["Recurring", "Queues", "Failures", "Notes"])
 
   const log = gameLog()
@@ -629,6 +661,37 @@ export function UiDemo() {
             onRun={async () => ({ columns: SB_COLUMNS, rows: SB_ROWS, rowCount: SB_ROWS.length, runtimeMs: 42 })}
             onUpdateSql={() => {}}
           />
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>StatusGrid · TriageList · TimeRangePicker — a monitoring screen</h2>
+        <Card>
+          <div className="uidemo-row" style={{ justifyContent: "space-between", marginBottom: "0.75rem" }}>
+            <strong style={{ fontSize: "0.9rem" }}>The estate</strong>
+            <TimeRangePicker value={range} onChange={(r) => setRange(r.id)} />
+          </div>
+          <StatusGrid items={DEMO_TILES} selected={tile} />
+          <p className="uidemo-note" style={{ margin: "0.75rem 0 0.4rem" }}>
+            Worst first, and sorted by the component — a triage list ordered any other way
+            is not a triage list.
+          </p>
+          <TriageList items={DEMO_TRIAGE} />
+          <p className="uidemo-note" style={{ marginTop: "0.75rem" }}>
+            Nothing wrong looks like this:
+          </p>
+          <TriageList items={[]} />
+        </Card>
+        <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+          Severity is painted from <code>--sev-*</code>, never <code>--stat-*</code> — that ramp is a
+          percentile scale where elite is red. Every dot carries a hidden word, so colour is
+          never the only carrier. Range: {range}.
+        </p>
+        <div className="uidemo-row" style={{ marginTop: "0.75rem", alignItems: "center" }}>
+          <StatusDot tone="ok" pulse /> healthy
+          <StatusDot tone="warn" /> needs a look
+          <StatusDot tone="critical" /> broken
+          <StatusDot tone="unknown" /> not reporting
         </div>
       </section>
 
