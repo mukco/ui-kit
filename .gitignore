@@ -1,2 +1,7 @@
 node_modules/
-dist/
+
+# dist/ is NOT ignored, deliberately. estate installs this package straight from
+# git — `"@mukco/ui-kit": "github:mukco/ui-kit#main"` — and npm runs no build step
+# for a git dependency, so package.json's `main`/`types`/`exports` targets have to
+# be committed or the install resolves to nothing. Run `npm run build` and commit
+# dist/ alongside the src change.
