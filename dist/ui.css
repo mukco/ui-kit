@@ -1213,7 +1213,12 @@ button.ui-matchup--link {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.5rem max(1rem, env(safe-area-inset-left));
+  /* The top inset matters as much as the side one, and only shows up when a
+     PWA is installed: in standalone mode there is no browser chrome, so a bar
+     without it renders underneath the status bar and the notch — the burger
+     ends up behind the clock. Browsers report 0 here, so this costs nothing
+     in a tab. */
+  padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-left)) 0.5rem;
   background: color-mix(in srgb, var(--surface) 85%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
