@@ -3161,3 +3161,79 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   .ui-facts { grid-template-columns: 1fr; gap: 0; }
   .ui-facts dt { margin-top: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
 }
+
+/* ---------- ListRow ---------- */
+
+.ui-rows { display: grid; gap: 0.35rem; }
+
+.ui-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 0.5rem;
+  align-items: baseline;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  min-width: 0;
+}
+
+.ui-row--button { cursor: pointer; }
+.ui-row--button:hover { border-color: var(--brand); }
+
+/* A row that carries its own severity wears it on the edge, not as a wash the
+   text has to be read through. */
+.ui-row--warn { border-left: 2px solid var(--sev-warn); }
+.ui-row--critical { border-left: 2px solid var(--sev-error); }
+.ui-row--ok { border-left: 2px solid var(--sev-ok); }
+.ui-row--unknown { border-left: 2px solid var(--sev-unknown); }
+
+.ui-row-dot { transform: translateY(-0.1rem); }
+
+.ui-row-body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+
+.ui-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.ui-row-title { font-size: 0.86rem; font-weight: 600; overflow-wrap: anywhere; }
+.ui-row-meta { color: var(--muted); font-size: 0.76rem; }
+
+.ui-row-detail {
+  color: var(--text-2);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.ui-row-detail--mono { font-family: var(--font-mono); font-size: 0.76rem; }
+
+/* Clamped rather than scrolled sideways: a row that runs off the screen takes
+   the page with it, and a backtrace is not a paragraph. */
+.ui-row-detail.is-clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--ui-row-clamp, 3);
+  line-clamp: var(--ui-row-clamp, 3);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ui-chipbadge--button {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ui-chipbadge--button:hover { filter: brightness(1.25); }
+
+@media (max-width: 639px) {
+  .ui-row { padding: 0.55rem 0.6rem; }
+  .ui-chipbadge--button { min-height: 32px; }
+}

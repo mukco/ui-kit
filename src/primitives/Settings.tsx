@@ -73,10 +73,33 @@ const CHIP_TONES: Record<ChipTone, string> = {
 }
 
 /** Small status badge: Live, Stale, Cached… */
-export function Chip({ tone = "muted", children }: { tone?: ChipTone; children: ReactNode }) {
+export function Chip({
+  tone = "muted",
+  children,
+  onClick,
+  title,
+}: {
+  tone?: ChipTone
+  children: ReactNode
+  /** Makes the chip a door. A named thing that can be opened should be
+      openable — the alternative keeps coming out as a comma-separated list of
+      places to go with no way to reach any of them. */
+  onClick?: () => void
+  title?: string
+}) {
   const color = CHIP_TONES[tone]
+  const style = { color, background: `color-mix(in srgb, ${color} 12%, transparent)` }
+
+  if (onClick) {
+    return (
+      <button type="button" className="ui-chipbadge ui-chipbadge--button" style={style} onClick={onClick} title={title}>
+        {children}
+      </button>
+    )
+  }
+
   return (
-    <span className="ui-chipbadge" style={{ color, background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
+    <span className="ui-chipbadge" style={style} title={title}>
       {children}
     </span>
   )
