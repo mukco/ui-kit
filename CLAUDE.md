@@ -65,7 +65,14 @@ const { theme, resolved, setTheme } = useTheme()              // same state, for
 <StatusGrid items={tiles} selected={id} />                   // tone: ok|warn|critical|unknown
 <TriageList items={rows} />                                  // sorts itself, worst first
 <TimeRangePicker value={id} onChange={(r) => setHours(r.hours)} />
+<ListRows><ListRow tone="critical" edge title="Job" meta="queue · 3h ago"
+                   mono clamp={3} detail="…" onClick={fn} /></ListRows>
+<Chip onClick={fn}>a chip that opens something</Chip>
 ```
+
+A list of things — failures, running jobs, processes, search hits — is
+`ListRow`, not a fresh set of class names each time. That is the difference
+between a panel and pages that happen to share a stylesheet.
 
 Status colour is `--sev-ok/-warn/-error/-unknown`, never `--stat-*` — that ramp
 is a percentile scale where elite is red, so it paints a healthy service in the

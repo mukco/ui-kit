@@ -19,6 +19,8 @@ import {
   InlineStatRow,
   InsightsCard,
   Loading,
+  ListRow,
+  ListRows,
   LogStream,
   parseLogBody,
   MatchupCard,
@@ -663,6 +665,43 @@ export function UiDemo() {
             onUpdateSql={() => {}}
           />
         </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>ListRow — one thing in a list of things</h2>
+        <Card>
+          <ListRows>
+            <ListRow
+              tone="critical"
+              edge
+              title="Feeds::FetchJob"
+              meta="feeds · 14h ago"
+              mono
+              clamp={3}
+              detail="Net::ReadTimeout: execution expired reading espn.com after 30s — /rails/app/services/feeds/fetch.rb:71:in `block in call` /rails/app/jobs/feeds/fetch_job.rb:12:in `perform` /usr/local/bundle/gems/activejob-8.1.0/lib/active_job/execution.rb:69"
+            />
+            <ListRow tone="ok" pulse title="Dinner::SweepJob" meta="default · for 41m" />
+            <ListRow
+              tone="warn"
+              edge
+              title="baseball-web"
+              meta="4 restarts"
+              detail="Up 3 hours"
+            />
+            <ListRow
+              title="family-hub-web"
+              meta="02:11:44"
+              mono
+              clamp={2}
+              detail="Completed 500 Internal Server Error in 288ms (Views: 1.1ms | ActiveRecord: 12.4ms)"
+              onClick={() => {}}
+            />
+          </ListRows>
+          <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+            Estate had hand-rolled this four times — failed jobs, running jobs, worker processes
+            and log hits — each with its own truncation rule. The last row is a door.
+          </p>
+        </Card>
       </section>
 
       <section className="uidemo-section">
