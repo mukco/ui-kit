@@ -68,6 +68,7 @@ const { theme, resolved, setTheme } = useTheme()              // same state, for
 <ListRows><ListRow tone="critical" edge title="Job" meta="queue · 3h ago"
                    mono clamp={3} detail="…" onClick={fn} /></ListRows>
 <Chip onClick={fn}>a chip that opens something</Chip>
+<Button tone="primary|quiet|danger" size="sm" href={url} external onClick={fn} />
 ```
 
 A list of things — failures, running jobs, processes, search hits — is

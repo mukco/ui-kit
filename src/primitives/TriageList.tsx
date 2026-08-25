@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { cn } from "../cn"
+import { Button } from "./Button"
 import { SEVERITY_ORDER, StatusDot, type Severity } from "./Status"
 
 export interface TriageItem {
@@ -68,16 +69,17 @@ export function TriageList({
               {item.detail != null && <span className="ui-triage-detail">{item.detail}</span>}
             </span>
             {when && <time className="ui-triage-age" dateTime={item.at ?? undefined}>{when}</time>}
-            {item.action &&
-              (item.action.href ? (
-                <a className="ui-triage-action" href={item.action.href}>
-                  {item.action.label}
-                </a>
-              ) : (
-                <button type="button" className="ui-triage-action" onClick={item.action.onClick}>
-                  {item.action.label}
-                </button>
-              ))}
+            {item.action && (
+              <Button
+                size="sm"
+                href={item.action.href}
+                external={Boolean(item.action.href)}
+                onClick={item.action.onClick}
+                className="ui-triage-action"
+              >
+                {item.action.label}
+              </Button>
+            )}
           </li>
         )
       })}
