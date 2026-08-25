@@ -1,8 +1,13 @@
 # @mukco/ui-kit
 
-The estate's shared UI kit. One set of components and design tokens so every
-app — family hub, baseball, football, futbol, whatever comes next — looks and
-behaves like the same product. The default palette is baseball's.
+The shared UI kit for the estate's **template-derived apps**: estate,
+baseball, football, futbol, and anything else scaffolded from
+rails-vite-template. One set of components and design tokens so those apps
+look and behave like one product. The default palette is baseball's.
+
+**Family Hub is deliberately not a consumer.** It is its own thing with its
+own System-7 design language and its own conventions; do not add it to this
+list or assume kit components belong there.
 
 Apps install it as a git dependency:
 

@@ -1,7 +1,11 @@
 # CLAUDE.md — @mukco/ui-kit
 
-The estate-wide UI kit. Consumed as `@mukco/ui-kit` (git dep) by every app on
-the estate. Default palette = baseball's. See README.md for the component
+The UI kit for template-derived estate apps (estate, baseball, football,
+futbol…) — consumed as `@mukco/ui-kit` (git dep).
+
+**family-hub is its own thing.** Its System-7 design system is intentional;
+it does not consume this kit, and kit changes should never be justified by
+"family-hub could use this". Scope here = rails-vite-template descendants. Default palette = baseball's. See README.md for the component
 inventory.
 
 ## Commands
