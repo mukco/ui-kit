@@ -3435,7 +3435,11 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
      already 44 — so a button beside a tab or a field sat 4px shorter than it
      for no reason a reader could see. */
   min-height: 44px;
-  padding: 0 0.85rem;
+  /* 0.85rem computed to 13.6px — not a rung, and not a value anybody chose;
+     it is what you get from eyeballing "a bit more than twelve". 1rem against
+     a 44px height gives the label room without making a button look like a
+     banner. */
+  padding: 0 var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface-2);
