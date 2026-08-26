@@ -2487,18 +2487,30 @@ button.ui-matchup--link {
   position: absolute;
   top: 2px;
   right: 0;
-  min-width: 16px;
-  height: 16px;
+  min-width: 17px;
+  height: 17px;
   padding: 0 4px;
   border-radius: 999px;
   background: var(--danger);
   color: #fff;
-  font-size: 9px;
+  /* 9px was below the point where a digit is reliably a digit — at that size
+     "3" and "8" are the same smudge on a phone. The badge grows with it. */
+  font-size: 10.5px;
   font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1.5px solid var(--surface);
+}
+
+/* Sized here rather than on the element so a caller cannot end up with a bell
+   that disagrees with the other icons in the same bar. */
+.ui-bell-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .ui-bell-panel {
