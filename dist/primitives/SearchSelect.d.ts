@@ -22,6 +22,20 @@ interface Props<T> {
      * chosen, so a custom row cannot leave the selected state unnamed.
      */
     renderOption?: (item: T) => ReactNode;
+    /**
+     * Opens the list as a dialog instead of a dropdown.
+     *
+     * A dropdown is absolutely positioned inside whatever contains it, so inside
+     * a bordered card on a 390px screen it clips at the card's edge and at the
+     * bottom of the viewport — which is exactly what happened here. A dialog has
+     * no container to be trapped by: full-bleed sheet on a phone, centred panel
+     * on a desktop.
+     *
+     * Use it wherever the picker sits inside a card, a table row or anything
+     * else with an edge. Inline in a toolbar, the dropdown is still better —
+     * it does not take the screen to choose one value.
+     */
+    sheet?: boolean;
     placeholder?: string;
     /**
      * How much has to be typed before the list appears. 2 by default, which is
@@ -50,5 +64,5 @@ interface Props<T> {
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export declare function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, placeholder, minChars, className }: Props<T>): import("react").JSX.Element;
+export declare function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, sheet, placeholder, minChars, className }: Props<T>): import("react").JSX.Element;
 export {};

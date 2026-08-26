@@ -1,4 +1,6 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { useFocusTrap } from "./useFocusTrap"
+import { IconSearch } from "./Icon"
 import { cn } from "../cn"
 
 interface Props<T> {
@@ -24,6 +26,20 @@ interface Props<T> {
    * chosen, so a custom row cannot leave the selected state unnamed.
    */
   renderOption?: (item: T) => ReactNode
+  /**
+   * Opens the list as a dialog instead of a dropdown.
+   *
+   * A dropdown is absolutely positioned inside whatever contains it, so inside
+   * a bordered card on a 390px screen it clips at the card's edge and at the
+   * bottom of the viewport — which is exactly what happened here. A dialog has
+   * no container to be trapped by: full-bleed sheet on a phone, centred panel
+   * on a desktop.
+   *
+   * Use it wherever the picker sits inside a card, a table row or anything
+   * else with an edge. Inline in a toolbar, the dropdown is still better —
+   * it does not take the screen to choose one value.
+   */
+  sheet?: boolean
   placeholder?: string
   /**
    * How much has to be typed before the list appears. 2 by default, which is
@@ -53,7 +69,7 @@ interface Props<T> {
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, placeholder = "Search…", minChars = 2, className }: Props<T>) {
+export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, sheet, placeholder = "Search…", minChars = 2, className }: Props<T>) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<T[]>([])
   const [open, setOpen] = useState(false)
@@ -63,6 +79,7 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
   // nobody chose.
   const [active, setActive] = useState(-1)
   const rootRef = useRef<HTMLDivElement>(null)
+  const sheetRef = useRef<HTMLDivElement>(null)
   const listId = useId()
 
   useEffect(() => {
@@ -111,6 +128,8 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
   }
 
   const listOpen = open && query.trim().length >= minChars
+  // Only when it is actually a dialog — a dropdown must not lock the page.
+  useFocusTrap(Boolean(sheet && open), sheetRef, () => setOpen(false))
 
   function choose(item: T) {
     onChange(item)
@@ -170,7 +189,85 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
       />
-      {listOpen && (
+      {listOpen &&
+        (sheet ? (
+          /* A dialog, not a dropdown. A dropdown is positioned inside whatever
+             contains it, so in a bordered card on a phone it clips at the
+             card's edge and again at the bottom of the viewport. */
+          <div className="ui-picker-overlay" onClick={() => setOpen(false)}>
+            <div
+              ref={sheetRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={placeholder}
+              tabIndex={-1}
+              className="ui-picker-sheet"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="ui-picker-sheet-head">
+                <IconSearch className="ui-picker-sheet-icon" />
+                <input
+                  className="ui-picker-sheet-input"
+                  value={query}
+                  placeholder={placeholder}
+                  aria-label={placeholder}
+                  autoFocus
+                  onChange={(e) => {
+                    setQuery(e.target.value)
+                    setActive(-1)
+                  }}
+                  onKeyDown={onKeyDown}
+                />
+                <button
+                  type="button"
+                  className="ui-picker-sheet-close"
+                  aria-label="Close"
+                  onClick={() => setOpen(false)}
+                >
+                  ✕
+                </button>
+              </div>
+              <ul className="ui-picker-sheet-list" id={listId} role="listbox">
+          {busy && (
+            <li className="ui-search-note" role="status">
+              Searching…
+            </li>
+          )}
+          {!busy && results.length === 0 && (
+            <li className="ui-search-note" role="status">
+              No matches.
+            </li>
+          )}
+          {!busy &&
+            results.map((r, i) => (
+              <li
+                key={i}
+                id={`${listId}-${i}`}
+                role="option"
+                aria-selected={i === active}
+                className={cn("ui-search-option", i === active && "is-active")}
+                // Mouse and keyboard end up in the same place; the pointer
+                // moves the highlight so the two never disagree about which
+                // row Enter would take.
+                onMouseEnter={() => setActive(i)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => choose(r)}
+              >
+                {renderOption ? (
+                  renderOption(r)
+                ) : (
+                  <>
+                    {renderLeading?.(r)}
+                    <span className="ui-search-option-label">{getLabel(r)}</span>
+                    {getHint && <span className="ui-search-hint">{getHint(r)}</span>}
+                  </>
+                )}
+              </li>
+            ))}
+        </ul>
+            </div>
+          </div>
+        ) : (
         <ul className="ui-search-results" id={listId} role="listbox">
           {busy && (
             <li className="ui-search-note" role="status">
@@ -209,7 +306,7 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
               </li>
             ))}
         </ul>
-      )}
+        ))}
     </div>
   )
 }
