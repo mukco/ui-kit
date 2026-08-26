@@ -19,9 +19,28 @@ export interface NavItem {
 
 interface Props {
   brand?: ReactNode
+  /**
+   * Where the brand goes when pressed. Supply one — a logo that does nothing
+   * is a broken affordance: it looks like the way home, every other site has
+   * trained people that it is, and pressing it doing nothing reads as the app
+   * being stuck rather than as the logo being decorative.
+   */
+  onBrandClick?: () => void
+  brandHref?: string
   items: NavItem[]
   /** Right-aligned cluster: search, icons, avatar. */
   right?: ReactNode
+  /**
+   * The bottom of the mobile drawer, below a divider: sign-out, a theme
+   * control, a link to settings — the things that are about the session
+   * rather than about where you are in the app.
+   *
+   * They belong here rather than in the top bar. A phone's bar has room for a
+   * hamburger, a brand and two icons, and every session control added to it
+   * takes width from the app's own name. The drawer is already open when
+   * somebody is looking for "sign out", and it has room to group them.
+   */
+  drawerFooter?: ReactNode
   className?: string
 }
 
@@ -30,7 +49,7 @@ interface Props {
  * hamburger that slides a drawer in from the left on phones (under 640px,
  * CSS-driven). The app supplies hrefs/onClicks — routing stays app-side.
  */
-export function NavBar({ brand, items, right, className }: Props) {
+export function NavBar({ brand, onBrandClick, brandHref, items, right, drawerFooter, className }: Props) {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const rootRef = useRef<HTMLElement>(null)
@@ -64,7 +83,18 @@ export function NavBar({ brand, items, right, className }: Props) {
         <button type="button" className="ui-nav-burger" aria-label="Open navigation menu" onClick={() => setMobileOpen(true)}>
           ☰
         </button>
-        {brand && <span className="ui-nav-brand">{brand}</span>}
+        {brand &&
+          (brandHref ? (
+            <a className="ui-nav-brand ui-nav-brand--link" href={brandHref}>
+              {brand}
+            </a>
+          ) : onBrandClick ? (
+            <button type="button" className="ui-nav-brand ui-nav-brand--link" onClick={onBrandClick}>
+              {brand}
+            </button>
+          ) : (
+            <span className="ui-nav-brand">{brand}</span>
+          ))}
         <div className="ui-nav-items">
           {items.map((item) =>
             item.children ? (
@@ -106,15 +136,41 @@ export function NavBar({ brand, items, right, className }: Props) {
 
       <Drawer open={mobileOpen} onClose={() => setMobileOpen(false)} side="left" label="Navigation">
         <div className="ui-nav-mobile">
-          {brand && <span className="ui-nav-brand ui-nav-brand--mobile">{brand}</span>}
+          {/* A header, not a floating brand. The drawer covers the page, so it
+              needs to say what it is and offer a way out that is not "guess
+              that tapping the dimmed area closes it". */}
+          <div className="ui-nav-mobile-head">
+            {brand && <span className="ui-nav-brand ui-nav-brand--mobile">{brand}</span>}
+            <button
+              type="button"
+              className="ui-nav-mobile-close"
+              aria-label="Close navigation"
+              onClick={() => setMobileOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
           {items.map((item) => (
             <div key={item.label}>
               {item.href ? (
-                <a className="ui-nav-mobile-link" href={item.href} onClick={() => setMobileOpen(false)}>
+                <a
+                  className={cn("ui-nav-mobile-link", item.active && "ui-nav-mobile-link--active")}
+                  href={item.href}
+                  aria-current={item.active ? "page" : undefined}
+                  onClick={() => setMobileOpen(false)}
+                >
                   {item.label}
                 </a>
               ) : item.onClick ? (
-                <button type="button" className="ui-nav-mobile-link" onClick={() => { setMobileOpen(false); item.onClick?.() }}>
+                /* The drawer ignored item.active entirely, so the one screen
+                   you were actually on looked exactly like the six you were
+                   not — a menu that will not say where you are. */
+                <button
+                  type="button"
+                  className={cn("ui-nav-mobile-link", item.active && "ui-nav-mobile-link--active")}
+                  aria-current={item.active ? "page" : undefined}
+                  onClick={() => { setMobileOpen(false); item.onClick?.() }}
+                >
                   {item.label}
                 </button>
               ) : null}
@@ -131,6 +187,7 @@ export function NavBar({ brand, items, right, className }: Props) {
               )}
             </div>
           ))}
+          {drawerFooter && <div className="ui-nav-mobile-foot">{drawerFooter}</div>}
         </div>
       </Drawer>
     </nav>
