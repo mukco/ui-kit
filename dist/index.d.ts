@@ -42,6 +42,7 @@ export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/S
 export type { ChipTone } from "./primitives/Settings";
 export { SettingsGroup } from "./primitives/SettingsGroup";
 export { UpdateToast } from "./primitives/UpdateToast";
+export { readyForNewBuild } from "./primitives/updateReady";
 export { SortedList } from "./primitives/SortedList";
 export { StatusDot, StatusGrid, SEVERITY_ORDER } from "./primitives/Status";
 export type { Severity, StatusTileItem } from "./primitives/Status";

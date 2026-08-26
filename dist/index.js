@@ -32,6 +32,11 @@ export { NotificationBell } from "./notifications/NotificationBell";
 export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/Settings";
 export { SettingsGroup } from "./primitives/SettingsGroup";
 export { UpdateToast } from "./primitives/UpdateToast";
+// Exported on its own for apps that cannot take ui.css yet. That file is not
+// scoped — it sets :root, html, body and focus styles — so an app with its own
+// design system cannot import it just to get one toast. Those apps keep their
+// own markup and call this before reloading, which is where the bug was.
+export { readyForNewBuild } from "./primitives/updateReady";
 export { SortedList } from "./primitives/SortedList";
 export { StatusDot, StatusGrid, SEVERITY_ORDER } from "./primitives/Status";
 export { TriageList } from "./primitives/TriageList";
