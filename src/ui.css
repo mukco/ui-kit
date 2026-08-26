@@ -246,7 +246,7 @@ body {
   font-size: 10px;
   font-weight: 600;
   border-radius: 999px;
-  padding: 2px 6px;
+  padding: 0.125rem 0.375rem;
   line-height: 1;
 }
 
@@ -518,7 +518,7 @@ body {
   border: 0;
   background: transparent;
   border-radius: var(--radius-sm);
-  padding: 2px 6px;
+  padding: 0.125rem 0.375rem;
   font-size: 10px;
   color: var(--muted);
   cursor: pointer;
@@ -1224,7 +1224,7 @@ button.ui-matchup--link {
 .ui-heatpill {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
+  padding: 0.125rem 0.5rem;
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 13px;
@@ -1599,7 +1599,7 @@ button.ui-matchup--link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 2px 8px;
+  padding: 0.125rem 0.5rem;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 500;
@@ -1673,7 +1673,7 @@ button.ui-matchup--link {
 .ui-sb-celltype {
   font-size: 9px;
   font-weight: 600;
-  padding: 2px 6px;
+  padding: 0.125rem 0.375rem;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
@@ -1718,7 +1718,7 @@ button.ui-matchup--link {
 .ui-sb-cellactions {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0.125rem;
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -1811,18 +1811,18 @@ button.ui-matchup--link {
 
 .ui-sb-viewtabs {
   display: flex;
-  gap: 2px;
+  gap: 0.125rem;
   margin-left: auto;
   background: var(--surface-2);
   border-radius: var(--radius-md);
-  padding: 2px;
+  padding: 0.125rem;
 }
 
 .ui-sb-viewtab {
   border: 0;
   background: transparent;
   border-radius: calc(var(--radius-md) - 3px);
-  padding: 4px 12px;
+  padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--muted);
@@ -1842,7 +1842,7 @@ button.ui-matchup--link {
   background: transparent;
   color: var(--muted);
   font-size: 0.75rem;
-  padding: 4px 10px;
+  padding: 0.25rem 0.625rem;
   cursor: pointer;
 }
 
@@ -1972,7 +1972,7 @@ button.ui-matchup--link {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
   min-height: 30px;
 }
 
@@ -1982,7 +1982,7 @@ button.ui-matchup--link {
   background: transparent;
   color: var(--muted);
   font-size: 11px;
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   cursor: pointer;
 }
 
@@ -1999,7 +1999,7 @@ button.ui-matchup--link {
 }
 
 .ui-sb-warn {
-  margin: 4px 0 0;
+  margin: 0.25rem 0 0;
   font-size: 10px;
   color: var(--warn);
 }
@@ -2031,7 +2031,7 @@ button.ui-matchup--link {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 2px 8px;
+  padding: 0.125rem 0.5rem;
   color: var(--text-2);
   font-family: var(--font-mono);
 }
@@ -2081,7 +2081,7 @@ button.ui-matchup--link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 2px 8px;
+  padding: 0.125rem 0.5rem;
   background: var(--surface-2);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
@@ -2107,7 +2107,7 @@ button.ui-matchup--link {
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  margin-bottom: 2px;
+  margin-bottom: 0.125rem;
 }
 
 .ui-metriccard-label p { margin: 0; font-size: 0.75rem; color: var(--muted); }
@@ -2128,12 +2128,12 @@ button.ui-matchup--link {
 
 .ui-confmatrix th {
   color: var(--text-2);
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   text-align: center;
 }
 
 .ui-confmatrix td {
-  padding: 6px 8px;
+  padding: 0.375rem 0.5rem;
   text-align: center;
   border-radius: var(--radius-sm);
 }
@@ -2150,7 +2150,7 @@ button.ui-matchup--link {
 }
 
 .ui-comparetable th {
-  padding: 4px 8px 8px;
+  padding: 0.25rem 0.5rem 0.5rem;
   text-align: center;
   font-size: 0.75rem;
   font-weight: 600;
@@ -2160,7 +2160,7 @@ button.ui-matchup--link {
 .ui-comparetable th:nth-child(3) { color: #c084fc; }
 
 .ui-comparetable td {
-  padding: 6px 8px;
+  padding: 0.375rem 0.5rem;
   text-align: center;
   font-size: 0.75rem;
   font-family: var(--font-mono);
@@ -2207,7 +2207,7 @@ button.ui-matchup--link {
 
 .ui-runcard-actions {
   display: flex;
-  gap: 2px;
+  gap: 0.125rem;
   flex-shrink: 0;
 }
 
@@ -2241,7 +2241,7 @@ button.ui-matchup--link {
 .ui-layer-input {
   width: 5rem;
   min-height: 32px !important;
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   font-family: var(--font-mono);
 }
 
@@ -2265,7 +2265,7 @@ button.ui-matchup--link {
   gap: 0.25rem;
   flex-wrap: wrap;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding-bottom: 0.25rem;
   margin-top: 0.75rem;
 }
 
@@ -2276,7 +2276,7 @@ button.ui-matchup--link {
   flex-direction: column;
   align-items: center;
   border-radius: var(--radius-sm);
-  padding: 6px 8px;
+  padding: 0.375rem 0.5rem;
   min-width: 48px;
   font-size: 0.75rem;
   line-height: 1.2;
@@ -2330,10 +2330,10 @@ button.ui-matchup--link {
 
 .ui-tip-formula {
   display: block;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   background: var(--surface-2);
   border-radius: var(--radius-sm);
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   font-size: 11px;
   color: var(--text-2);
 }
@@ -2352,7 +2352,7 @@ button.ui-matchup--link {
 }
 
 .ui-nntitle {
-  margin: 0 0 6px;
+  margin: 0 0 0.375rem;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--brand);
@@ -2381,7 +2381,7 @@ button.ui-matchup--link {
   align-items: center;
   gap: 0.5rem;
   width: 100%;
-  padding: 3px 0;
+  padding: 0.1875rem 0;
 }
 
 .ui-gauge-headrow { align-items: end; }
@@ -2438,7 +2438,7 @@ button.ui-matchup--link {
   transform: translate(-50%, -50%);
   min-width: 17px;
   height: 15px;
-  padding: 0 3px;
+  padding: 0 0.1875rem;
   border-radius: 999px;
   border: 1.5px solid var(--surface);
   display: flex;
@@ -2468,7 +2468,7 @@ button.ui-matchup--link {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--muted);
-  margin-bottom: 2px;
+  margin-bottom: 0.125rem;
 }
 
 .ui-autolink {
@@ -2523,13 +2523,13 @@ button.ui-matchup--link {
 }
 
 .ui-datenav-picker {
-  margin-top: 4px;
+  margin-top: 0.25rem;
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-2);
   font-size: 0.7rem;
-  padding: 2px 6px;
+  padding: 0.125rem 0.375rem;
 }
 
 .ui-datenav-picker:focus { border-color: var(--brand); }
@@ -2537,9 +2537,9 @@ button.ui-matchup--link {
 .ui-datenav-today {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-  padding: 2px 8px;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding: 0.125rem 0.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: transparent;
@@ -2584,7 +2584,7 @@ button.ui-matchup--link {
   right: 0;
   min-width: 17px;
   height: 17px;
-  padding: 0 4px;
+  padding: 0 0.25rem;
   border-radius: 999px;
   background: var(--danger);
   color: #fff;
@@ -2689,14 +2689,14 @@ button.ui-matchup--link {
   display: block;
   font-size: 0.78rem;
   color: var(--text-2);
-  margin-top: 2px;
+  margin-top: 0.125rem;
 }
 
 .ui-bell-item-time {
   display: block;
   font-size: 10px;
   color: var(--muted);
-  margin-top: 4px;
+  margin-top: 0.25rem;
 }
 
 .ui-bell-empty {
@@ -2712,7 +2712,7 @@ button.ui-matchup--link {
   border-radius: 50%;
   background: var(--brand);
   flex-shrink: 0;
-  margin-top: 6px;
+  margin-top: 0.375rem;
 }
 
 /* Update toast */
@@ -3011,8 +3011,8 @@ button.ui-matchup--link {
 
 .ui-theme {
   display: inline-flex;
-  gap: 2px;
-  padding: 2px;
+  gap: 0.125rem;
+  padding: 0.125rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface-2);
@@ -3247,8 +3247,8 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-range {
   display: inline-flex;
-  gap: 2px;
-  padding: 2px;
+  gap: 0.125rem;
+  padding: 0.125rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface-2);
@@ -3836,4 +3836,31 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
     animation-duration: 3s !important;
     animation-iteration-count: infinite !important;
   }
+}
+
+/* ---------- Field validation ----------
+   The kit had no way for a field to say what was wrong with it, so apps either
+   invented their own or showed nothing and let the submit fail.
+
+   The border is not the message. It carries the same information twice on
+   purpose — a red edge for the person scanning, and a sentence for the person
+   who needs to know what to type instead — because colour alone excludes
+   exactly the readers most likely to have tripped the validation. */
+.ui-field--invalid {
+  border-color: var(--sev-error);
+}
+
+.ui-field--invalid:focus-visible {
+  outline-color: var(--sev-error);
+}
+
+.ui-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  margin: var(--space-1) 0 0;
+  color: var(--sev-error);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  max-width: 60ch;
 }

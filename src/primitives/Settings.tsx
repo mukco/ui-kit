@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { useId, type ReactNode } from "react"
 import { cn } from "../cn"
 
 /** Accessible on/off switch. */
@@ -37,29 +37,85 @@ interface FieldProps {
   options?: Array<{ value: string; label: string }>
   placeholder?: string
   type?: string
+  /**
+   * What is wrong with the current value, in words the person can act on.
+   *
+   * The kit had no way to say this at all, so every app either invented its
+   * own or — far more often — showed nothing and let the submit fail. When set,
+   * the field is marked invalid, described by the message, and the message is
+   * announced: colour alone would leave the whole thing invisible to anybody
+   * not looking straight at it.
+   *
+   * Say what to do, not that something is wrong. "Use a number of minutes"
+   * beats "Invalid input".
+   */
+  error?: string
+  /** Ties the field to its own error text. Supply one when two fields with the
+      same label can appear on a page. */
+  id?: string
 }
 
-export function TextField({ value, onChange, placeholder, type = "text" }: FieldProps) {
+export function TextField({ value, onChange, placeholder, type = "text", error, id }: FieldProps) {
+  const auto = useId()
+  const fieldId = id ?? auto
+  const errorId = `${fieldId}-error`
+
   return (
-    <input
-      className="ui-field"
-      type={type}
-      value={value}
-      placeholder={placeholder}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <>
+      <input
+        id={fieldId}
+        className={cn("ui-field", error && "ui-field--invalid")}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      {error && <FieldError id={errorId}>{error}</FieldError>}
+    </>
   )
 }
 
-export function SelectField({ value, onChange, options }: FieldProps) {
+export function SelectField({ value, onChange, options, error, id }: FieldProps) {
+  const auto = useId()
+  const fieldId = id ?? auto
+  const errorId = `${fieldId}-error`
+
   return (
-    <select className="ui-field ui-field--select" value={value} onChange={(e) => onChange(e.target.value)}>
-      {options?.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
-    </select>
+    <>
+      <select
+        id={fieldId}
+        className={cn("ui-field ui-field--select", error && "ui-field--invalid")}
+        value={value}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {options?.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+      {error && <FieldError id={errorId}>{error}</FieldError>}
+    </>
+  )
+}
+
+/**
+ * The message under an invalid field.
+ *
+ * role="alert" because validation usually appears after the reader has moved
+ * on — they submitted, or left the field — and a message that only exists
+ * visually is one they will never learn about. The ⚠ is decorative; the text
+ * carries it, and aria-describedby ties it to the field it is about.
+ */
+function FieldError({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <p className="ui-field-error" id={id} role="alert">
+      <span aria-hidden="true">⚠</span> {children}
+    </p>
   )
 }
 

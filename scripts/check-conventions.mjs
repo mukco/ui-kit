@@ -58,6 +58,13 @@ css.split("\n").forEach((line, i) => {
   // The visually-hidden idiom, which is -1px by convention everywhere.
   if (value === "-1px") return
   for (const part of value.split(/\s+/)) {
+    // `auto` is not a magnitude — it is "let the layout decide", and there is
+    // no rung of a spacing scale that expresses it.
+    if (part === "auto" || part === "inherit") continue
+    // A negative margin is a deliberate pull-back, usually to cancel a
+    // parent's padding. It is measured against that padding, not against the
+    // scale, so snapping it would break the thing it exists to line up with.
+    if (part.startsWith("-")) continue
     if (!SCALE.has(part)) {
       findings.offScaleSpacing.push(`ui.css:${i + 1}  ${prop}: ${value}`)
       break
