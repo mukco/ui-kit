@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { cn } from "../cn"
 import { Drawer } from "./Drawer"
+import { IconButton } from "./IconButton"
+import { IconClose } from "./Icon"
 
 export interface NavChild {
   label: string
@@ -157,14 +159,9 @@ export function NavBar({ brand, onBrandClick, brandHref, items, right, drawerFoo
               that tapping the dimmed area closes it". */}
           <div className="ui-nav-mobile-head">
             {brand && <span className="ui-nav-brand ui-nav-brand--mobile">{brand}</span>}
-            <button
-              type="button"
-              className="ui-nav-mobile-close"
-              aria-label="Close navigation"
-              onClick={() => setMobileOpen(false)}
-            >
-              ✕
-            </button>
+            <IconButton label="Close navigation" onClick={() => setMobileOpen(false)}>
+              <IconClose />
+            </IconButton>
           </div>
           {items.map((item, i) => (
             <div key={item.label}>

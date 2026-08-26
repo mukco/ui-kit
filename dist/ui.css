@@ -1439,9 +1439,19 @@ button.ui-matchup--link {
   background: var(--surface-2);
 }
 
+/* The current tab as a filled pill, not a colour change.
+   Colour alone put the whole burden on hue: at 14px, weight 500, against six
+   neighbours in the same size, "which one is blue" is a question the eye has
+   to ask. A shape answers it before the reading starts — and it is what the
+   drawer already does, so the two now agree about what "you are here" looks
+   like. */
 .ui-nav-item--active {
-  color: var(--brand-text);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 600;
 }
+
+.ui-nav-item--active:hover { background: var(--surface-2); }
 
 .ui-nav-menu {
   position: absolute;
@@ -4034,3 +4044,58 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   align-items: center;
   gap: var(--space-2);
 }
+
+/* ---------- Nav right-hand controls ----------
+   The cluster held a bare glyph, a bell and a bordered button — three
+   treatments for three controls doing the same kind of job. One shape, so the
+   group reads as a group. Matches the drawer's icon buttons and the toggle's
+   44px target. */
+.ui-nav-right > button,
+.ui-nav-right > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- IconButton ----------
+   Baseball's nav control, extracted: a 36px square with a hairline border, the
+   icon on currentColor so it follows the theme. One shape for every icon-only
+   control, because the alternative — which is what the estate panel had — is a
+   bare glyph, a borderless bell and a bordered text button in the same row.
+
+   The visible square is 36px and the target is 44px, grown with a transparent
+   ::after rather than by inflating the button: a row of 44px squares reads as
+   a toolbar of tiles, and 36px is the size these have always looked right at. */
+.ui-iconbtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+}
+
+.ui-iconbtn::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
+.ui-iconbtn:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong, var(--border));
+  color: var(--text);
+}
+
+.ui-iconbtn:disabled { opacity: 0.5; cursor: default; }

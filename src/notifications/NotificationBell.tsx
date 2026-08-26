@@ -1,3 +1,4 @@
+import { IconBell } from "../primitives/Icon"
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { cn } from "../cn"
 
@@ -35,26 +36,9 @@ export function NotificationBell({ items, onItemClick, onDismissAll, empty = "Yo
   return (
     <div ref={rootRef} className={cn("ui-bell", className)}>
       <button type="button" className="ui-bell-btn" aria-label="Notifications" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-        {/* An SVG, not 🔔. The emoji renders in full colour on every platform
-            that has it, so a nav bar of monochrome controls got one yellow
-            cartoon in the middle of it — and the one control that is coloured
-            reads as the important one, which a bell with nothing in it is not.
-            currentColor makes it agree with its neighbours and with the theme. */}
-        <svg
-          className="ui-bell-icon"
-          viewBox="0 0 24 24"
-          width="18"
-          height="18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7" />
-          <path d="M13.7 20a1.9 1.9 0 0 1-3.4 0" />
-        </svg>
+        {/* The kit's shared bell — this used to be a private copy of the
+            same paths, which is one more place for the icon set to drift. */}
+        <IconBell className="ui-bell-icon" size={18} />
         {items.length > 0 && <span className="ui-bell-badge">{items.length > 9 ? "9+" : items.length}</span>}
       </button>
 
