@@ -11,6 +11,19 @@ interface Props<T> {
   getHint?: (item: T) => ReactNode
   /** Optional avatar/leading element per result. */
   renderLeading?: (item: T) => ReactNode
+  /**
+   * Renders the whole option row, replacing label + hint.
+   *
+   * A label and one line of hint is right for picking a person and wrong for
+   * picking a model, where the choice is made on several facts at once — what
+   * it is, who makes it, what it costs in and what it costs out. Squeezing
+   * that into one hint line produces the thing it replaced: a sentence you
+   * have to read instead of a row you can scan.
+   *
+   * getLabel is still required and still used for the chip once something is
+   * chosen, so a custom row cannot leave the selected state unnamed.
+   */
+  renderOption?: (item: T) => ReactNode
   placeholder?: string
   /**
    * How much has to be typed before the list appears. 2 by default, which is
@@ -40,7 +53,7 @@ interface Props<T> {
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder = "Search…", minChars = 2, className }: Props<T>) {
+export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, placeholder = "Search…", minChars = 2, className }: Props<T>) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<T[]>([])
   const [open, setOpen] = useState(false)
@@ -184,9 +197,15 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => choose(r)}
               >
-                {renderLeading?.(r)}
-                <span className="ui-search-option-label">{getLabel(r)}</span>
-                {getHint && <span className="ui-search-hint">{getHint(r)}</span>}
+                {renderOption ? (
+                  renderOption(r)
+                ) : (
+                  <>
+                    {renderLeading?.(r)}
+                    <span className="ui-search-option-label">{getLabel(r)}</span>
+                    {getHint && <span className="ui-search-hint">{getHint(r)}</span>}
+                  </>
+                )}
               </li>
             ))}
         </ul>

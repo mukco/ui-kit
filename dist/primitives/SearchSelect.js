@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "../cn";
 /**
@@ -17,7 +17,7 @@ import { cn } from "../cn";
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder = "Search…", minChars = 2, className }) {
+export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, placeholder = "Search…", minChars = 2, className }) {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const [open, setOpen] = useState(false);
@@ -104,9 +104,9 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
                     setOpen(true);
                     setActive(-1);
                 }, onFocus: () => setOpen(true), onKeyDown: onKeyDown }), listOpen && (_jsxs("ul", { className: "ui-search-results", id: listId, role: "listbox", children: [busy && (_jsx("li", { className: "ui-search-note", role: "status", children: "Searching\u2026" })), !busy && results.length === 0 && (_jsx("li", { className: "ui-search-note", role: "status", children: "No matches." })), !busy &&
-                        results.map((r, i) => (_jsxs("li", { id: `${listId}-${i}`, role: "option", "aria-selected": i === active, className: cn("ui-search-option", i === active && "is-active"), 
+                        results.map((r, i) => (_jsx("li", { id: `${listId}-${i}`, role: "option", "aria-selected": i === active, className: cn("ui-search-option", i === active && "is-active"), 
                             // Mouse and keyboard end up in the same place; the pointer
                             // moves the highlight so the two never disagree about which
                             // row Enter would take.
-                            onMouseEnter: () => setActive(i), onMouseDown: (e) => e.preventDefault(), onClick: () => choose(r), children: [renderLeading?.(r), _jsx("span", { className: "ui-search-option-label", children: getLabel(r) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(r) })] }, i)))] }))] }));
+                            onMouseEnter: () => setActive(i), onMouseDown: (e) => e.preventDefault(), onClick: () => choose(r), children: renderOption ? (renderOption(r)) : (_jsxs(_Fragment, { children: [renderLeading?.(r), _jsx("span", { className: "ui-search-option-label", children: getLabel(r) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(r) })] })) }, i)))] }))] }));
 }

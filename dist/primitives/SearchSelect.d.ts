@@ -9,6 +9,19 @@ interface Props<T> {
     getHint?: (item: T) => ReactNode;
     /** Optional avatar/leading element per result. */
     renderLeading?: (item: T) => ReactNode;
+    /**
+     * Renders the whole option row, replacing label + hint.
+     *
+     * A label and one line of hint is right for picking a person and wrong for
+     * picking a model, where the choice is made on several facts at once — what
+     * it is, who makes it, what it costs in and what it costs out. Squeezing
+     * that into one hint line produces the thing it replaced: a sentence you
+     * have to read instead of a row you can scan.
+     *
+     * getLabel is still required and still used for the chip once something is
+     * chosen, so a custom row cannot leave the selected state unnamed.
+     */
+    renderOption?: (item: T) => ReactNode;
     placeholder?: string;
     /**
      * How much has to be typed before the list appears. 2 by default, which is
@@ -37,5 +50,5 @@ interface Props<T> {
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export declare function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder, minChars, className }: Props<T>): import("react").JSX.Element;
+export declare function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, placeholder, minChars, className }: Props<T>): import("react").JSX.Element;
 export {};
