@@ -33,6 +33,7 @@ pin).
 
 | Area | Exports |
 |---|---|
+| Layout | Stack, Cluster, Page (gap is a rung of the scale — `Space` = 1…6, nothing else compiles) |
 | Primitives | Button, Card, StatCard, PercentileBar, InlineStatRow, BasicTable, DataTable + HeatPill, Tabs, NavBar, PageHeader, Drawer, ExpandableCard, CardStrip, MatchupCard, AwardCard, Avatar, SearchSelect, AutoLinkedText, DateNav, HelpTip, GlossaryTip, Loading, EmptyState, InsightsCard, Assistant, NotificationBell, UpdateToast, LogStream, ThemeToggle, StatusDot, StatusGrid, TriageList, TimeRangePicker, FactGrid, ListRow |
 | Settings | Toggle, SettingRow, TextField, SelectField, Chip, SettingsGroup (compose under PageHeader = whole page) |
 | Charts | DynamicChart, RollingAverageChart, SparklineChart, PercentileGauge |

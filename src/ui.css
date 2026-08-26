@@ -201,6 +201,83 @@ body {
   outline-offset: 0;
 }
 
+/* ---------- Layout: Stack · Cluster · Page ----------
+
+   Three shapes that were being rewritten in every app, and rewritten slightly
+   differently each time. The gap arrives as --ui-gap, set by the component
+   from a rung of the scale — there is deliberately no .ui-gap-3 utility to
+   write by hand, because that would be a way around the type that makes the
+   rung the only option. */
+
+.ui-stack {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap, var(--space-4));
+  min-width: 0;
+}
+
+.ui-stack--start { align-items: flex-start; }
+.ui-stack--center { align-items: center; }
+.ui-stack--end { align-items: flex-end; }
+
+/* A stack is the shape a list of things already is, so `as="ul"` should not
+   also cost the app a rule to undo the browser's bullets and indent. */
+.ui-stack:where(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-cluster {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-gap, var(--space-2));
+  min-width: 0;
+}
+
+.ui-cluster--nowrap { flex-wrap: nowrap; }
+
+/* Namespaced, because align and justify share a vocabulary: "end" means two
+   different things depending on which axis is being asked, and a single
+   .ui-cluster--end would have silently applied both. */
+.ui-cluster--align-start { align-items: flex-start; }
+.ui-cluster--align-end { align-items: flex-end; }
+.ui-cluster--align-baseline { align-items: baseline; }
+.ui-cluster--justify-center { justify-content: center; }
+.ui-cluster--justify-end { justify-content: flex-end; }
+.ui-cluster--justify-between { justify-content: space-between; }
+
+.ui-cluster:where(ul, ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-page {
+  /* The kit ships no global reset, so a consumer that has not written one of
+     its own would get a column 100% wide PLUS its padding -- which is 32px of
+     overflow on every screen. The playground caught it doing exactly that. */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap, var(--space-4));
+  margin-inline: auto;
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-4);
+  /* The gesture bar. Without this the last card on a screen sits under the
+     home indicator on any recent phone, which is where it was on the screens
+     that had forgotten it. */
+  padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+}
+
+.ui-page--narrow { max-width: 48rem; }
+.ui-page--wide { max-width: 60rem; }
+.ui-page--full { max-width: none; }
+
 /* ---------- Card ---------- */
 
 .ui-card {

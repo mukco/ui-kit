@@ -1,5 +1,8 @@
 import { useState } from "react"
 import {
+  Cluster,
+  Page,
+  Stack,
   Assistant,
   AwardCard,
   AutoLinkedText,
@@ -287,6 +290,102 @@ export function UiDemo() {
         follows the system. Data fetching is never in the kit; everything here is
         static test data.
       </p>
+
+      <section className="uidemo-section">
+        <h2>Layout — Stack · Cluster · Page</h2>
+        <Card>
+          <p className="uidemo-note" style={{ margin: "0 0 0.75rem" }}>
+            Every rung of the scale, so the steps are visible next to each other.
+            A gap that is not one of these six does not compile.
+          </p>
+          <Stack gap={3}>
+            {([1, 2, 3, 4, 5, 6] as const).map((g) => (
+              <Cluster key={g} gap={2} align="baseline">
+                <span style={{ width: "5.5rem", color: "var(--muted)", fontSize: "0.78rem" }}>
+                  gap={g}
+                </span>
+                <Cluster gap={g}>
+                  <Chip>one</Chip>
+                  <Chip>two</Chip>
+                  <Chip>three</Chip>
+                </Cluster>
+              </Cluster>
+            ))}
+          </Stack>
+        </Card>
+
+        <Card>
+          <Stack gap={4}>
+            <Cluster justify="between">
+              <strong>justify=&quot;between&quot;</strong>
+              <Chip tone="ok">healthy</Chip>
+            </Cluster>
+            <Cluster justify="end" gap={2}>
+              <Button tone="quiet" size="sm">Cancel</Button>
+              <Button tone="primary" size="sm">Save</Button>
+            </Cluster>
+            <Cluster align="baseline" gap={3}>
+              <span style={{ fontSize: "1.6rem", fontWeight: 700 }}>412</span>
+              <span className="uidemo-note">requests · baseline-aligned beside the figure</span>
+            </Cluster>
+            <div>
+              <p className="uidemo-note" style={{ margin: "0 0 0.5rem" }}>
+                Wrapping is the default — narrow the window and this row folds
+                rather than pushing its last chips off the screen.
+              </p>
+              <Cluster gap={2}>
+                {["gateway", "postgres", "redis", "flaresolverr", "baseball-web", "football-web", "estate-web"].map((c) => (
+                  <Chip key={c}>{c}</Chip>
+                ))}
+              </Cluster>
+            </div>
+            <div>
+              <p className="uidemo-note" style={{ margin: "0 0 0.5rem" }}>
+                <code>as=&quot;ul&quot;</code> — a list of things is a list, and the
+                bullets and indent are already gone.
+              </p>
+              <Stack as="ul" gap={1}>
+                <li>Deploy finished 4m ago</li>
+                <li>Queue drained</li>
+                <li>No failures in 24h</li>
+              </Stack>
+            </div>
+          </Stack>
+        </Card>
+
+        <Card>
+          <p className="uidemo-note" style={{ margin: "0 0 0.75rem" }}>
+            <code>Page</code> is the column a screen lives in: centred, capped,
+            padded, and clear of the phone&rsquo;s home indicator. It fills the
+            space it is given until it reaches its cap, so on a phone all three
+            widths look the same &mdash; the difference only appears on a wide
+            window, which is the point of them.
+          </p>
+          <Stack gap={2}>
+            {(
+              [
+                ["narrow", "48rem", "reading width — one column of prose or settings"],
+                ["wide", "60rem", "the dashboard default"],
+                ["full", "no cap", "a screen that owns its own measure"],
+              ] as const
+            ).map(([w, cap, why]) => (
+              <Cluster key={w} gap={3} align="baseline">
+                <code style={{ minWidth: "8.5rem" }}>width=&quot;{w}&quot;</code>
+                <strong style={{ minWidth: "4rem" }}>{cap}</strong>
+                <span className="uidemo-note">{why}</span>
+              </Cluster>
+            ))}
+          </Stack>
+          <Page as="div" width="narrow" gap={2} className="uidemo-pagebox" style={{ marginTop: "0.75rem" }}>
+            <strong>A Page, drawn</strong>
+            <span className="uidemo-note">
+              The dashed edge is the column; the space inside it is
+              <code> --space-4</code>, and the bottom edge grows to clear the
+              home indicator on a phone.
+            </span>
+          </Page>
+        </Card>
+      </section>
 
       <section className="uidemo-section">
         <h2>PageHeader · Tabs · Drawer</h2>

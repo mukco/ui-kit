@@ -64,3 +64,15 @@
   color: var(--muted);
   font-size: 0.8rem;
 }
+
+/* Layout section only: the Page boxes need a visible edge, or a demo of
+   padding and measure shows nothing at all. */
+.uidemo-pagebox {
+  background: var(--surface-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+}
+
+.uidemo-section > .ui-card + .ui-card {
+  margin-top: 0.75rem;
+}
