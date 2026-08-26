@@ -1,3 +1,4 @@
+import type { Severity } from "./Status"
 import type { ReactNode } from "react"
 import { cn } from "../cn"
 
@@ -114,12 +115,24 @@ export function StatCard({ label, value, subtitle, percentile, progress, compari
   )
 }
 
-/** Compact horizontal stat display for tables/lists. */
-export function InlineStatRow({ stats }: { stats: Array<{ label: string; value: ReactNode }> }) {
+/**
+ * Compact horizontal stat display for tables and lists.
+ *
+ * `tone` exists because a row of counts is usually one interesting number and
+ * several zeroes — "Workers 8 · Ready 0 · Running 0 · Failed 3" — and rendering
+ * all four identically means the panel reporting three dead jobs looks like the
+ * panel reporting none. The caller decides which number is news; nothing here
+ * guesses, because "high is bad" is true of failures and false of workers.
+ */
+export function InlineStatRow({
+  stats,
+}: {
+  stats: Array<{ label: string; value: ReactNode; tone?: Severity }>
+}) {
   return (
     <div className="ui-inline-stats">
-      {stats.map(({ label, value }) => (
-        <div key={label} className="ui-inline-stat">
+      {stats.map(({ label, value, tone }) => (
+        <div key={label} className={cn("ui-inline-stat", tone && `ui-inline-stat--${tone}`)}>
           <span className="ui-inline-stat-label">{label}</span>
           <span className="ui-inline-stat-value">{value ?? "—"}</span>
         </div>

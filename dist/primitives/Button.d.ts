@@ -1,5 +1,13 @@
 import type { ReactNode } from "react";
-export type ButtonTone = "primary" | "quiet" | "danger";
+/**
+ * How much weight the button carries, which should follow how much the press
+ * costs. "danger" is filled — a destructive action must never be quieter than
+ * the safe one beside it. "danger-quiet" is the washed version, for a
+ * destructive action that is genuinely secondary: a remove beside every row of
+ * a list, where twenty filled red buttons are a wall of alarm and none of them
+ * reads as urgent.
+ */
+export type ButtonTone = "primary" | "quiet" | "danger" | "danger-quiet";
 interface Props {
     children: ReactNode;
     onClick?: () => void;

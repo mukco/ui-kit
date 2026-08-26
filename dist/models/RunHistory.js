@@ -11,8 +11,8 @@ function metricColor(val) {
     if (val >= 0.7)
         return "var(--brand)";
     if (val >= 0.4)
-        return "#f59e0b";
-    return "#ef4444";
+        return "var(--sev-warn)";
+    return "var(--sev-error)";
 }
 function shortLabel(run) {
     return `${(run.config.model_type ?? "").replace(/_/g, " ")} · ${run.config.target ?? "?"}`.slice(0, 24);
@@ -57,5 +57,5 @@ export function RunHistory({ runs, loading, selectedRunId, compareRunId, onLoad,
         .map((r) => ({ id: r.id, label: shortLabel(r), value: primaryMetric(r), metricLabel, run: r }))
         .filter((d) => d.value != null)
         .reverse();
-    return (_jsxs("div", { className: "ui-runhistory", children: [_jsxs("div", { className: "ui-chart-head", children: [_jsxs("p", { className: "ui-chart-title", children: ["Run history (", runs.length, ")"] }), onCompare && runs.length >= 2 && (_jsx("button", { type: "button", onClick: onCompare, className: "ui-insights-regen", children: "Compare \u2192" }))] }), chartData.length >= 2 && (_jsxs("div", { style: { padding: "0 4px 4px" }, children: [_jsxs("p", { className: "ui-sb-note", style: { marginBottom: 4 }, children: [metricLabel, " across runs \u2014 click a bar to load"] }), _jsx(ResponsiveContainer, { width: "100%", height: 96, children: _jsxs(BarChart, { data: chartData, margin: { top: 4, right: 4, bottom: 4, left: -20 }, children: [_jsx(YAxis, { domain: [0, 1], tick: { fontSize: 9, fill: "var(--muted)" }, tickCount: 3 }), _jsx(Tooltip, { content: _jsx(CustomTooltip, {}), cursor: { fill: "rgba(128,128,128,0.08)" } }), _jsx(Bar, { dataKey: "value", radius: [3, 3, 0, 0], onClick: (d) => d?.run && onLoad(d.run), style: { cursor: "pointer" }, children: chartData.map((d) => (_jsx(Cell, { fill: metricColor(d.value) }, d.id))) })] }) })] })), runs.map((run) => (_jsx(RunCard, { run: run, onLoad: () => onLoad(run), onDelete: onDelete, onAsk: onAsk, isSelected: run.id === selectedRunId || run.id === compareRunId }, run.id)))] }));
+    return (_jsxs("div", { className: "ui-runhistory", children: [_jsxs("div", { className: "ui-chart-head", children: [_jsxs("p", { className: "ui-chart-title", children: ["Run history (", runs.length, ")"] }), onCompare && runs.length >= 2 && (_jsx("button", { type: "button", onClick: onCompare, className: "ui-insights-regen", children: "Compare \u2192" }))] }), chartData.length >= 2 && (_jsxs("div", { style: { padding: "0 4px 4px" }, children: [_jsxs("p", { className: "ui-sb-note", style: { marginBottom: 4 }, children: [metricLabel, " across runs \u2014 click a bar to load"] }), _jsx(ResponsiveContainer, { width: "100%", height: 96, children: _jsxs(BarChart, { data: chartData, margin: { top: 4, right: 4, bottom: 4, left: -20 }, children: [_jsx(YAxis, { domain: [0, 1], tick: { fontSize: 9, fill: "var(--muted)" }, tickCount: 3 }), _jsx(Tooltip, { content: _jsx(CustomTooltip, {}), cursor: { fill: "color-mix(in srgb, var(--text) 8%, transparent)" } }), _jsx(Bar, { dataKey: "value", radius: [3, 3, 0, 0], onClick: (d) => d?.run && onLoad(d.run), style: { cursor: "pointer" }, children: chartData.map((d) => (_jsx(Cell, { fill: metricColor(d.value) }, d.id))) })] }) })] })), runs.map((run) => (_jsx(RunCard, { run: run, onLoad: () => onLoad(run), onDelete: onDelete, onAsk: onAsk, isSelected: run.id === selectedRunId || run.id === compareRunId }, run.id)))] }));
 }

@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { cn } from "../cn"
 import { EmptyState } from "./EmptyState"
+import { ErrorState } from "./ErrorState"
 
 export interface TableColumn<T> {
   key: string
@@ -22,6 +23,12 @@ interface Props<T extends Record<string, unknown>> {
   /** When provided, rows become click-to-expand with this detail line. */
   renderExpanded?: (row: T) => ReactNode
   empty?: ReactNode
+  /** When set, the table renders a failure instead of an empty state. `data`
+      being null means "nothing yet"; this means "the attempt failed", and the
+      two were previously indistinguishable to the reader. */
+  error?: ReactNode
+  /** Offered alongside `error`. */
+  onRetry?: () => void
   className?: string
 }
 
@@ -54,6 +61,8 @@ export function DataTable<T extends Record<string, unknown>>({
   rowKey,
   renderExpanded,
   empty = "No data available.",
+  error,
+  onRetry,
   className,
 }: Props<T>) {
   const [sort, setSort] = useState<{ key: string; dir: "asc" | "desc" } | null>(null)
@@ -90,6 +99,17 @@ export function DataTable<T extends Record<string, unknown>>({
     )
   }
 
+  // Checked before the empty case: a failed fetch also leaves `data` empty, and
+  // rendering "no rows" over a request that never succeeded tells the reader
+  // the opposite of what happened.
+  if (error != null) {
+    return (
+      <div className={cn("ui-card", className)}>
+        <ErrorState onRetry={onRetry}>{error}</ErrorState>
+      </div>
+    )
+  }
+
   if (!data?.length) {
     return (
       <div className={cn("ui-card", className)}>
@@ -114,18 +134,39 @@ export function DataTable<T extends Record<string, unknown>>({
           <thead>
             <tr>
               <th className="ui-th ui-th-num">#</th>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className={cn("ui-th", col.align === "right" && "ui-th--right")}
-                  onClick={() => toggleSort(col.key)}
-                >
-                  <span className="ui-th-inner">
-                    {col.label}
-                    {sort?.key === col.key && <span className="ui-sort-arrow">{sort.dir === "asc" ? "↑" : "↓"}</span>}
-                  </span>
-                </th>
-              ))}
+              {columns.map((col) => {
+                const sorted = sort?.key === col.key
+                return (
+                  <th
+                    key={col.key}
+                    className={cn("ui-th", col.align === "right" && "ui-th--right")}
+                    // Announced, so a screen reader says "sorted ascending"
+                    // rather than leaving the order a mystery. "none" on the
+                    // rest is what tells it the column *can* be sorted.
+                    aria-sort={sorted ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
+                  >
+                    {/* A real button, not onClick on the <th>. The cell version
+                        was reachable by mouse only — no tabIndex, no key
+                        handler — so sorting a table was impossible from a
+                        keyboard and silent to assistive tech, while looking
+                        interactive to everyone else. */}
+                    <button
+                      type="button"
+                      className="ui-th-sort"
+                      onClick={() => toggleSort(col.key)}
+                    >
+                      <span className="ui-th-inner">
+                        {col.label}
+                        {sorted && (
+                          <span className="ui-sort-arrow" aria-hidden="true">
+                            {sort.dir === "asc" ? "↑" : "↓"}
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           <tbody>

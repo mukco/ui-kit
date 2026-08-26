@@ -33,7 +33,7 @@ function ResidualsHistogram({ yTrue, yPred }) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomDot(props) {
     const { cx, cy } = props;
-    return _jsx("circle", { cx: cx, cy: cy, r: 3, fill: "#2563EB", fillOpacity: 0.55, stroke: "none" });
+    return _jsx("circle", { cx: cx, cy: cy, r: 3, fill: "var(--brand)", fillOpacity: 0.55, stroke: "none" });
 }
 /** Predicted-vs-actual scatter against the diagonal, plus the residual
     histogram — the two plots that grade a regression honestly. */

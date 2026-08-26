@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "../cn";
+import { useRovingSelect } from "./useRovingSelect";
 const DEFAULT_KEY = "ui-theme";
 const DARK_QUERY = "(prefers-color-scheme: dark)";
 function readStored(key) {
@@ -74,7 +75,14 @@ const OPTIONS = [
  */
 export function ThemeToggle({ storageKey, compact, onChange, className }) {
     const { theme, setTheme } = useTheme(storageKey);
-    return (_jsx("div", { className: cn("ui-theme", compact && "ui-theme--compact", className), role: "radiogroup", "aria-label": "Colour theme", children: OPTIONS.map((option) => (_jsxs("button", { type: "button", role: "radio", "aria-checked": theme === option.id, "aria-label": option.label, title: option.label, className: cn("ui-theme-opt", theme === option.id && "is-on"), onClick: () => {
+    const onKeyDown = useRovingSelect(OPTIONS.map((o) => o.id), theme, (id) => {
+        setTheme(id);
+        onChange?.(id);
+    });
+    return (_jsx("div", { className: cn("ui-theme", compact && "ui-theme--compact", className), role: "radiogroup", "aria-label": "Colour theme", 
+        // Same contract as the other two radiogroups in the kit: one tab stop,
+        // arrows move and select.
+        onKeyDown: onKeyDown, children: OPTIONS.map((option) => (_jsxs("button", { type: "button", role: "radio", "aria-checked": theme === option.id, tabIndex: theme === option.id ? 0 : -1, "aria-label": option.label, title: option.label, className: cn("ui-theme-opt", theme === option.id && "is-on"), onClick: () => {
                 setTheme(option.id);
                 onChange?.(option.id);
             }, children: [_jsx("span", { "aria-hidden": "true", children: option.icon }), !compact && _jsx("span", { className: "ui-theme-label", children: option.label })] }, option.id))) }));

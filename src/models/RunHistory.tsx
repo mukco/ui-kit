@@ -34,8 +34,8 @@ function primaryMetric(run: MlRun): number | null {
 function metricColor(val: number | null): string {
   if (val == null) return "var(--muted)"
   if (val >= 0.7) return "var(--brand)"
-  if (val >= 0.4) return "#f59e0b"
-  return "#ef4444"
+  if (val >= 0.4) return "var(--sev-warn)"
+  return "var(--sev-error)"
 }
 
 function shortLabel(run: MlRun): string {
@@ -172,7 +172,7 @@ export function RunHistory({ runs, loading, selectedRunId, compareRunId, onLoad,
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             <BarChart data={chartData as any[]} margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
               <YAxis domain={[0, 1]} tick={{ fontSize: 9, fill: "var(--muted)" }} tickCount={3} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(128,128,128,0.08)" }} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "color-mix(in srgb, var(--text) 8%, transparent)" }} />
               <Bar dataKey="value" radius={[3, 3, 0, 0]} onClick={(d: any) => d?.run && onLoad(d.run)} style={{ cursor: "pointer" }}>
                 {(chartData as Array<{ id: string; value: number | null }>).map((d) => (
                   <Cell key={d.id} fill={metricColor(d.value)} />

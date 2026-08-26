@@ -62,7 +62,7 @@ function ResidualsHistogram({ yTrue, yPred }: { yTrue: number[]; yPred: number[]
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CustomDot(props: any) {
   const { cx, cy } = props
-  return <circle cx={cx} cy={cy} r={3} fill="#2563EB" fillOpacity={0.55} stroke="none" />
+  return <circle cx={cx} cy={cy} r={3} fill="var(--brand)" fillOpacity={0.55} stroke="none" />
 }
 
 interface Props {

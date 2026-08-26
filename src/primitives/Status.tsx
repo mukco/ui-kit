@@ -30,6 +30,22 @@ const WORDS: Record<Severity, string> = {
 }
 
 /**
+ * The paint for a severity, for the places that need the value rather than a
+ * class — a chart's `color` prop, mainly.
+ *
+ * Lives beside WORDS on purpose: a tile that says "Needs a look" in amber and
+ * draws its trend line in green is not a styling slip, it is the panel
+ * contradicting itself at the moment somebody is deciding whether to act. The
+ * two maps are read together, so they are written together.
+ */
+const PAINT: Record<Severity, string> = {
+  ok: "var(--sev-ok)",
+  warn: "var(--sev-warn)",
+  critical: "var(--sev-error)",
+  unknown: "var(--sev-unknown)",
+}
+
+/**
  * A coloured dot, and a word for anybody who cannot see the colour. The word
  * is visually hidden rather than absent — colour alone is never the carrier.
  */
@@ -105,14 +121,20 @@ export function StatusGrid({
               <span className="ui-statustile-name">{item.name}</span>
             </span>
             {item.metric != null && <span className="ui-statustile-metric">{item.metric}</span>}
-            {item.detail != null && <span className="ui-statustile-detail">{item.detail}</span>}
+            {item.detail != null && (
+              // Clamped to two lines in CSS, so the full string has to survive
+              // somewhere: an error truncated to "Socket::Resol…" names nothing.
+              <span className="ui-statustile-detail" title={String(item.detail)}>
+                {item.detail}
+              </span>
+            )}
             {item.series && item.series.length > 1 && (
               <SparklineChart
                 data={item.series}
                 valueKey={item.seriesKey ?? "value"}
                 width={96}
                 height={22}
-                color="var(--sev-ok)"
+                color={PAINT[item.tone]}
               />
             )}
           </Cell>

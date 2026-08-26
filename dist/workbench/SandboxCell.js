@@ -10,17 +10,40 @@ import remarkGfm from "remark-gfm";
 import { cn } from "../cn";
 import { SandboxChart } from "./SandboxChart";
 import { SandboxPivot } from "./SandboxPivot";
-// Brand-color overrides on top of one-dark base theme
+/**
+ * The editor, wearing the app's own colours.
+ *
+ * This hard-coded #0F1117 — a near-black — so in light mode the editor was a
+ * black slab inside a white card, and no consuming app could do anything
+ * about it, because the values were literals rather than tokens. The one-dark
+ * base still supplies the syntax highlighting, which is a code-reading
+ * convention and reasonably stays as it is; what changes is the chrome around
+ * it, which belongs to the page.
+ *
+ * `dark: false` because the theme now follows whatever --surface-2 resolves
+ * to; asserting darkness here would have CodeMirror pick dark defaults for
+ * everything this block does not set.
+ */
 const BRAND_OVERRIDE = EditorView.theme({
-    "&": { backgroundColor: "#0F1117" },
-    ".cm-content": { caretColor: "#6366F1" },
-    ".cm-cursor": { borderLeftColor: "#6366F1" },
-    ".cm-selectionBackground": { background: "#6366F128 !important" },
-    "&.cm-focused .cm-selectionBackground": { background: "#6366F135 !important" },
-    ".cm-activeLine": { backgroundColor: "#1F253238" },
-    ".cm-gutters": { backgroundColor: "#0F1117", borderRight: "1px solid #1F2532" },
-    ".cm-activeLineGutter": { backgroundColor: "#1F253238" },
-}, { dark: true });
+    "&": { backgroundColor: "var(--surface-2)", color: "var(--text)" },
+    ".cm-content": { caretColor: "var(--brand)" },
+    ".cm-cursor": { borderLeftColor: "var(--brand)" },
+    ".cm-selectionBackground": {
+        background: "color-mix(in srgb, var(--brand) 16%, transparent) !important",
+    },
+    "&.cm-focused .cm-selectionBackground": {
+        background: "color-mix(in srgb, var(--brand) 22%, transparent) !important",
+    },
+    ".cm-activeLine": { backgroundColor: "color-mix(in srgb, var(--text) 6%, transparent)" },
+    ".cm-gutters": {
+        backgroundColor: "var(--surface-2)",
+        color: "var(--muted)",
+        borderRight: "1px solid var(--border)",
+    },
+    ".cm-activeLineGutter": {
+        backgroundColor: "color-mix(in srgb, var(--text) 6%, transparent)",
+    },
+}, { dark: false });
 const BASE_EXTENSIONS = [oneDark, BRAND_OVERRIDE];
 const ID_COLS = new Set(["player_id", "fg_id", "mlbam_id", "game_pk", "game_id", "team_id", "batter_id", "pitcher_id"]);
 function fmtCell(v, col) {

@@ -51,9 +51,9 @@ export function ClassBreakdownChart({ classBreakdown }: Props) {
             }}
           />
           <Legend wrapperStyle={{ fontSize: 11, color: "var(--muted)" }} />
-          <Bar dataKey="Precision" fill="#2563EB" radius={[0, 3, 3, 0]} barSize={8} />
-          <Bar dataKey="Recall" fill="#16A34A" radius={[0, 3, 3, 0]} barSize={8} />
-          <Bar dataKey="F1" fill="#9333EA" radius={[0, 3, 3, 0]} barSize={8} />
+          <Bar dataKey="Precision" fill="var(--brand)" radius={[0, 3, 3, 0]} barSize={8} />
+          <Bar dataKey="Recall" fill="var(--series-3)" radius={[0, 3, 3, 0]} barSize={8} />
+          <Bar dataKey="F1" fill="var(--series-2)" radius={[0, 3, 3, 0]} barSize={8} />
         </BarChart>
       </ResponsiveContainer>
     </div>
