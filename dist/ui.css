@@ -827,7 +827,21 @@ a.ui-team-link:hover {
   cursor: pointer;
 }
 
-.ui-search-option:hover { background: var(--surface-2); }
+/* Hover and keyboard highlight are the same state deliberately: the pointer
+   moves `active` too, so there is never a moment where one row looks chosen
+   and Enter takes a different one. */
+.ui-search-option:hover,
+.ui-search-option.is-active {
+  background: var(--surface-2);
+}
+
+/* The option is an <li> now rather than a <button>, because focus has to stay
+   in the input for aria-activedescendant to mean anything. It keeps a 44px
+   target: a list you navigate with a thumb needs one as much as a toolbar. */
+.ui-search-option {
+  min-height: 44px;
+  list-style: none;
+}
 
 .ui-search-note {
   padding: 0.45rem 0.5rem;
