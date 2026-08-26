@@ -13,6 +13,7 @@ export { DataTable, HeatPill } from "./primitives/DataTable";
 export { DateNav } from "./primitives/DateNav";
 export { Drawer } from "./primitives/Drawer";
 export { EmptyState } from "./primitives/EmptyState";
+export { ErrorState } from "./primitives/ErrorState";
 export { ExpandableCard } from "./primitives/ExpandableCard";
 export { FactGrid } from "./primitives/FactGrid";
 export { HelpTip } from "./primitives/HelpTip";

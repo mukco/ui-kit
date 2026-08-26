@@ -51,9 +51,11 @@ function CustomTooltip({ active, payload, valueKey, valueLabel, formatValue }: T
 
 interface Props {
   data?: ChartRow[] | null
-  /** Row field to plot. */
-  valueKey?: string
-  valueLabel?: string
+  /** Row field to plot. Required: this chart has no business guessing which
+      number a caller means, and the guess it used to make was a baseball one. */
+  valueKey: string
+  /** What to call that number in the tooltip and axis. */
+  valueLabel: string
   /** When set, the current value renders inline next to this title in a header
       row instead of floating over the plot; the caller then skips its own title. */
   title?: string | null
@@ -70,8 +72,13 @@ interface Props {
  */
 export function RollingAverageChart({
   data = [],
-  valueKey = "ops",
-  valueLabel = "OPS",
+  // No default. "ops"/"OPS" is a baseball statistic, and CLAUDE.md's rule is
+  // that a sport name does not appear outside src/sports/ — a chart in
+  // src/charts/ that silently plots OPS unless told otherwise is the whole
+  // reason for that rule. A caller that forgets now gets a type error rather
+  // than a chart quietly labelled for a different sport.
+  valueKey,
+  valueLabel,
   title = null,
   color = "var(--brand)",
   windowSize = 10,

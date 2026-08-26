@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useMemo, useState } from "react";
 import { cn } from "../cn";
 import { EmptyState } from "./EmptyState";
+import { ErrorState } from "./ErrorState";
 function ramp(pct) {
     if (pct >= 0.85)
         return "var(--stat-elite)";
@@ -24,7 +25,7 @@ export function HeatPill({ children, color }) {
  * click-to-expand rows. Sorting lives inside the component. Wide tables
  * scroll horizontally on phones.
  */
-export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No data available.", className, }) {
+export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No data available.", error, onRetry, className, }) {
     const [sort, setSort] = useState(null);
     const [expandedKey, setExpandedKey] = useState(null);
     const rows = useMemo(() => {
@@ -59,6 +60,12 @@ export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No d
     function toggleSort(key) {
         setSort((s) => s?.key === key ? (s.dir === "asc" ? { key, dir: "desc" } : null) : { key, dir: "asc" });
     }
+    // Checked before the empty case: a failed fetch also leaves `data` empty, and
+    // rendering "no rows" over a request that never succeeded tells the reader
+    // the opposite of what happened.
+    if (error != null) {
+        return (_jsx("div", { className: cn("ui-card", className), children: _jsx(ErrorState, { onRetry: onRetry, children: error }) }));
+    }
     if (!data?.length) {
         return (_jsx("div", { className: cn("ui-card", className), children: _jsx(EmptyState, { icon: "\uD83D\uDCCA", children: empty }) }));
     }
@@ -72,7 +79,10 @@ export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No d
             pct = 1 - pct;
         return ramp(pct);
     }
-    return (_jsx("div", { className: cn("ui-tablecard", className), children: _jsx("div", { className: "ui-tablescroll", children: _jsxs("table", { className: "ui-table", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { className: "ui-th ui-th-num", children: "#" }), columns.map((col) => (_jsx("th", { className: cn("ui-th", col.align === "right" && "ui-th--right"), onClick: () => toggleSort(col.key), children: _jsxs("span", { className: "ui-th-inner", children: [col.label, sort?.key === col.key && _jsx("span", { className: "ui-sort-arrow", children: sort.dir === "asc" ? "↑" : "↓" })] }) }, col.key)))] }) }), _jsx("tbody", { children: rows.map((row, i) => {
+    return (_jsx("div", { className: cn("ui-tablecard", className), children: _jsx("div", { className: "ui-tablescroll", children: _jsxs("table", { className: "ui-table", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { className: "ui-th ui-th-num", children: "#" }), columns.map((col) => {
+                                    const sorted = sort?.key === col.key;
+                                    return (_jsx("th", { className: cn("ui-th", col.align === "right" && "ui-th--right"), "aria-sort": sorted ? (sort.dir === "asc" ? "ascending" : "descending") : "none", children: _jsx("button", { type: "button", className: "ui-th-sort", onClick: () => toggleSort(col.key), children: _jsxs("span", { className: "ui-th-inner", children: [col.label, sorted && (_jsx("span", { className: "ui-sort-arrow", "aria-hidden": "true", children: sort.dir === "asc" ? "↑" : "↓" }))] }) }) }, col.key));
+                                })] }) }), _jsx("tbody", { children: rows.map((row, i) => {
                             const k = rowKey ? rowKey(row, i) : String(i);
                             const expandable = !!renderExpanded;
                             const isOpen = expandable && expandedKey === k;

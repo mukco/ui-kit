@@ -1,9 +1,11 @@
 import type { ChartRow } from "./DynamicChart";
 interface Props {
     data?: ChartRow[] | null;
-    /** Row field to plot. */
-    valueKey?: string;
-    valueLabel?: string;
+    /** Row field to plot. Required: this chart has no business guessing which
+        number a caller means, and the guess it used to make was a baseball one. */
+    valueKey: string;
+    /** What to call that number in the tooltip and axis. */
+    valueLabel: string;
     /** When set, the current value renders inline next to this title in a header
         row instead of floating over the plot; the caller then skips its own title. */
     title?: string | null;

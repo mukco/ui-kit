@@ -23,7 +23,13 @@ function CustomTooltip({ active, payload, valueKey, valueLabel, formatValue }) {
  * Per-game dots with a rolling-average area line over them — the shape for
  * "how has this been trending lately?"
  */
-export function RollingAverageChart({ data = [], valueKey = "ops", valueLabel = "OPS", title = null, color = "var(--brand)", windowSize = 10, reference = null, height = 200, formatValue = (v) => Number(v).toFixed(3), }) {
+export function RollingAverageChart({ data = [], 
+// No default. "ops"/"OPS" is a baseball statistic, and CLAUDE.md's rule is
+// that a sport name does not appear outside src/sports/ — a chart in
+// src/charts/ that silently plots OPS unless told otherwise is the whole
+// reason for that rule. A caller that forgets now gets a type error rather
+// than a chart quietly labelled for a different sport.
+valueKey, valueLabel, title = null, color = "var(--brand)", windowSize = 10, reference = null, height = 200, formatValue = (v) => Number(v).toFixed(3), }) {
     const processed = useMemo(() => rollingAvg(data ?? [], valueKey, windowSize), [data, valueKey, windowSize]);
     const vals = processed.map((d) => Number(d[valueKey])).filter(Number.isFinite);
     if (!vals.length)

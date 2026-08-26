@@ -21,15 +21,32 @@
   /* Content */
   --text: #0a0e15;
   --text-2: #475262;
-  --muted: #808a99;
+  /* 4.79:1 on --surface, 4.60:1 on --bg. Was #808a99 at 3.49:1, which is
+     under AA for body text — and this token paints every stat label, every
+     table header and every inactive tab, so almost nothing secondary in the
+     kit was readable to AA.
+
+     Chosen against the *tinted* backgrounds, not against white: triage rows
+     are --surface mixed with 6% severity, and a value that clears 4.5:1 on
+     white can sit at 4.37:1 there. 5.22:1 on white buys the margin. */
+  --muted: #656d7a;
 
   /* Brand */
   --brand: #1e66e4;
+  /* The brand at a lightness that survives being *text*. --brand is tuned to
+     be a fill with white on it, which is a different job: in dark it is
+     #2563eb, and #2563eb as text on the panel measures 3.37:1 — under AA, and
+     it paints the active nav item, which is the one item in the bar a reader
+     needs to find. Light already passes at 5.15:1, so this is --brand there
+     and a lighter blue in dark. */
+  --brand-text: #1e66e4;
   --brand-light: #4c91f8;
 
   /* States */
-  --ok: #16a34a;
-  --warn: #d97706;
+  /* 5.02:1 on white, up from 3.30:1. These carry meaning as text as well as
+     as dots, and the text reading is the one that has to clear 4.5:1. */
+  --ok: #15803d;
+  --warn: #b45309; /* 5.02:1 on white, up from 3.19:1 */
   --danger: #dc2626;
 
   /* Severity — the ops ramp. Deliberately not --stat-*: that is a percentile
@@ -85,9 +102,12 @@
 
   --text: #e8ecf3;
   --text-2: #8b95a3;
-  --muted: #5b6573;
+  /* 5.11:1 on --surface, 5.39:1 on --bg. Was #5b6573 at 3.20:1 — a single
+     token accounting for almost every contrast failure in dark mode. */
+  --muted: #7b8695;
 
   --brand: #2563eb;
+  --brand-text: #5b9cf8; /* 6.79:1 on --surface, up from 3.37:1 */
   --brand-light: #60a5fa;
 
   /* Brightened for dark: the light-mode state colours read as mud on #0f1319. */
@@ -118,6 +138,30 @@ body {
   font-size: 16px;
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Focus ----------
+   One ring, for everything that can hold focus.
+
+   There were five `outline: none` declarations against two :focus-visible
+   rules, so on three of those controls the browser's ring was removed and
+   nothing was put back: a keyboard user tabbed into .ui-search-input,
+   .ui-assistant-input or .ui-sb-titleinput and had no way to know where they
+   were. That is not a styling preference, it is the control disappearing.
+
+   :focus-visible rather than :focus so a mouse click does not draw it. Wrapped
+   in :where() so it carries zero specificity — any component that genuinely
+   needs a different ring overrides it with a plain selector, and does so
+   on purpose rather than by accident of source order. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring, var(--brand));
+  outline-offset: 2px;
+}
+
+/* Inputs sit flush inside their containers; an outset ring on those clips
+   against the neighbour instead of surrounding the field. */
+:where(input, select, textarea):focus-visible {
+  outline-offset: 0;
 }
 
 /* ---------- Card ---------- */
@@ -322,7 +366,12 @@ body {
   display: inline-flex;
 }
 
+/* The dot stays 14px — it sits inline beside a label and a bigger one would
+   shove the text around. The *target* is grown instead, with a transparent
+   ::after, so a finger gets 44px and the layout gets 14px. Growing the visible
+   circle was the obvious fix and the wrong one. */
 .ui-helptip-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -706,7 +755,6 @@ a.ui-team-link:hover {
   font: inherit;
   font-size: 0.8125rem;
   width: 11rem;
-  outline: none;
 }
 
 .ui-search-results {
@@ -1027,7 +1075,6 @@ button.ui-matchup--link {
   font: inherit;
   font-size: 0.85rem;
   padding: 0.5rem 0.625rem;
-  outline: none;
 }
 
 .ui-assistant-send {
@@ -1318,7 +1365,7 @@ button.ui-matchup--link {
 }
 
 .ui-nav-item--active {
-  color: var(--brand);
+  color: var(--brand-text);
 }
 
 .ui-nav-menu {
@@ -1491,7 +1538,6 @@ button.ui-matchup--link {
   font-size: 0.875rem;
   padding: 0.5rem 0.625rem;
   min-height: 44px;
-  outline: none;
 }
 
 .ui-field:focus {
@@ -1616,7 +1662,6 @@ button.ui-matchup--link {
   color: var(--text);
   font-size: 0.875rem;
   font-weight: 500;
-  outline: none;
 }
 
 .ui-sb-cellactions {
@@ -2434,7 +2479,6 @@ button.ui-matchup--link {
   color: var(--text-2);
   font-size: 0.7rem;
   padding: 2px 6px;
-  outline: none;
 }
 
 .ui-datenav-picker:focus { border-color: var(--brand); }
@@ -2468,8 +2512,8 @@ button.ui-matchup--link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -3203,6 +3247,18 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
     align-items: center;
   }
 
+  /* The chevron was the one child of this grid never given a placement, so
+     when the row collapsed from four columns to two it auto-flowed onto a row
+     of its own — measured 282px from the title it belongs to. It is the only
+     thing on the row that says "this opens", so it has to sit with the text
+     it is promising about. */
+  .ui-triage-chevron {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+    align-self: start;
+  }
+
   .ui-range-opt { min-height: 44px; }
 }
 
@@ -3326,7 +3382,11 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  min-height: 40px;
+  /* 44, not 40. Two reasons and they point the same way: 44px is the touch
+     target this kit calls non-negotiable, and .ui-tab and .ui-field were
+     already 44 — so a button beside a tab or a field sat 4px shorter than it
+     for no reason a reader could see. */
+  min-height: 44px;
   padding: 0 0.85rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -3505,4 +3565,82 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 @media (max-width: 639px) {
   /* One column on a phone, so the cap would only fight the width. */
   .ui-facts { grid-template-columns: 1fr; }
+}
+
+/* The sort control fills its cell so the whole header remains the target it
+   always looked like — the change is that it is now reachable by keyboard and
+   announced, not that it got smaller. Inherits every type property from the
+   th, because a button element otherwise brings its own. */
+.ui-th-sort {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.ui-th--right .ui-th-sort { text-align: right; }
+
+/* ---------- ErrorState ----------
+   Deliberately the same silhouette as .ui-empty — same centred stack, same
+   icon size — so the two read as the same slot in the layout. The difference
+   is carried by the severity colour and by the fact that this one can have a
+   button in it. An empty state has nothing to offer; a failed one does. */
+.ui-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 0.875rem;
+}
+
+.ui-error-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--sev-error);
+}
+
+.ui-error-msg { max-width: 52ch; }
+
+.ui-error-detail {
+  max-width: 52ch;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.ui-error-retry {
+  min-height: 44px;
+  padding: 0 var(--space-4, 1rem);
+  border: 1px solid var(--border-strong, var(--border));
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.ui-error-retry:hover { background: var(--surface-2); }
+
+/* 14px of dot, 44px of target. The pseudo-element carries no paint, so nothing
+   moves; it only makes the button hittable at the size a finger actually is. */
+.ui-helptip-btn::after {
+  content: "";
+  position: absolute;
+  inset: -15px;
 }
