@@ -4248,3 +4248,140 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 .ui-optionrow-cost span { display: block; }
+
+/* ---------- Scrollbars ----------
+   Baseball themes these and the kit did not, which is most of why a dark panel
+   still felt unfinished: the page goes to #07090e and the browser draws a
+   bright grey bar down the side of it, plus another under every table and log.
+   At six pixels with a border-coloured thumb the scrollbar stops being a piece
+   of the operating system sitting on top of the app.
+
+   Firefox gets the two-property version; WebKit and Blink the pseudo-elements.
+   Both are given, because a scrollbar that is themed in one engine and not the
+   other is worse than one that is themed in neither. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* The corner where two scrollbars meet, which otherwise stays the browser's
+   default grey square in the bottom-right of every scrollable table. */
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* ---------- Figures ----------
+   Every monospace context gets tabular numerals, because the reason to set a
+   number in mono is to line it up with the number above it. The kit had been
+   applying this in eight separate places and missing everywhere else — a log
+   timestamp, a code block, a kbd hint. */
+code,
+kbd,
+pre,
+samp,
+.ui-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Picker sheet ----------
+   The list as a dialog, for pickers that sit inside a card, a table row or
+   anything else with an edge. A dropdown is positioned inside its container,
+   so on a phone it clips at the card's border and again at the bottom of the
+   viewport — half the options unreachable and the scroll going to the page
+   behind.
+
+   Full-bleed from the bottom on a phone, which is where a thumb is; a centred
+   panel above it, where a pointer is. */
+.ui-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgb(0 0 0 / 0.45);
+}
+
+.ui-picker-sheet {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 85dvh;
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.ui-picker-sheet-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.ui-picker-sheet-icon { flex-shrink: 0; color: var(--muted); }
+
+.ui-picker-sheet-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem; /* 16px: anything smaller and iOS zooms the page on focus. */
+}
+
+.ui-picker-sheet-input::placeholder { color: var(--muted); }
+.ui-picker-sheet-input:focus-visible { outline: none; }
+
+.ui-picker-sheet-close {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.ui-picker-sheet-close:hover { background: var(--surface-2); color: var(--text); }
+
+/* The list is the scrolling part, not the sheet, so the search field stays put
+   while the options move under it. */
+.ui-picker-sheet-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+}
+
+@media (min-width: 40rem) {
+  .ui-picker-overlay { align-items: center; padding: var(--space-4); }
+
+  .ui-picker-sheet {
+    width: min(32rem, 100%);
+    max-height: min(32rem, 80dvh);
+    border-bottom: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+}

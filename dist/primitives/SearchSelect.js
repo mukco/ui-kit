@@ -1,5 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
+import { useFocusTrap } from "./useFocusTrap";
+import { IconSearch } from "./Icon";
 import { cn } from "../cn";
 /**
  * Generic search-and-pick combobox: debounced async results in a dropdown,
@@ -17,7 +19,7 @@ import { cn } from "../cn";
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, placeholder = "Search…", minChars = 2, className }) {
+export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, renderLeading, renderOption, sheet, placeholder = "Search…", minChars = 2, className }) {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const [open, setOpen] = useState(false);
@@ -27,6 +29,7 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
     // nobody chose.
     const [active, setActive] = useState(-1);
     const rootRef = useRef(null);
+    const sheetRef = useRef(null);
     const listId = useId();
     useEffect(() => {
         if (query.trim().length < minChars) {
@@ -63,6 +66,8 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
         return (_jsxs("div", { className: cn("ui-search-chip", className), children: [renderLeading?.(value), _jsx("span", { className: "ui-search-chip-label", children: getLabel(value) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(value) }), _jsx("button", { type: "button", className: "ui-search-clear", "aria-label": "Clear selection", onClick: () => onChange(null), children: "\u00D7" })] }));
     }
     const listOpen = open && query.trim().length >= minChars;
+    // Only when it is actually a dialog — a dropdown must not lock the page.
+    useFocusTrap(Boolean(sheet && open), sheetRef, () => setOpen(false));
     function choose(item) {
         onChange(item);
         setQuery("");
@@ -103,10 +108,19 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
                     setQuery(e.target.value);
                     setOpen(true);
                     setActive(-1);
-                }, onFocus: () => setOpen(true), onKeyDown: onKeyDown }), listOpen && (_jsxs("ul", { className: "ui-search-results", id: listId, role: "listbox", children: [busy && (_jsx("li", { className: "ui-search-note", role: "status", children: "Searching\u2026" })), !busy && results.length === 0 && (_jsx("li", { className: "ui-search-note", role: "status", children: "No matches." })), !busy &&
-                        results.map((r, i) => (_jsx("li", { id: `${listId}-${i}`, role: "option", "aria-selected": i === active, className: cn("ui-search-option", i === active && "is-active"), 
-                            // Mouse and keyboard end up in the same place; the pointer
-                            // moves the highlight so the two never disagree about which
-                            // row Enter would take.
-                            onMouseEnter: () => setActive(i), onMouseDown: (e) => e.preventDefault(), onClick: () => choose(r), children: renderOption ? (renderOption(r)) : (_jsxs(_Fragment, { children: [renderLeading?.(r), _jsx("span", { className: "ui-search-option-label", children: getLabel(r) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(r) })] })) }, i)))] }))] }));
+                }, onFocus: () => setOpen(true), onKeyDown: onKeyDown }), listOpen &&
+                (sheet ? (_jsx("div", { className: "ui-picker-overlay", onClick: () => setOpen(false), children: _jsxs("div", { ref: sheetRef, role: "dialog", "aria-modal": "true", "aria-label": placeholder, tabIndex: -1, className: "ui-picker-sheet", onClick: (e) => e.stopPropagation(), children: [_jsxs("div", { className: "ui-picker-sheet-head", children: [_jsx(IconSearch, { className: "ui-picker-sheet-icon" }), _jsx("input", { className: "ui-picker-sheet-input", value: query, placeholder: placeholder, "aria-label": placeholder, autoFocus: true, onChange: (e) => {
+                                            setQuery(e.target.value);
+                                            setActive(-1);
+                                        }, onKeyDown: onKeyDown }), _jsx("button", { type: "button", className: "ui-picker-sheet-close", "aria-label": "Close", onClick: () => setOpen(false), children: "\u2715" })] }), _jsxs("ul", { className: "ui-picker-sheet-list", id: listId, role: "listbox", children: [busy && (_jsx("li", { className: "ui-search-note", role: "status", children: "Searching\u2026" })), !busy && results.length === 0 && (_jsx("li", { className: "ui-search-note", role: "status", children: "No matches." })), !busy &&
+                                        results.map((r, i) => (_jsx("li", { id: `${listId}-${i}`, role: "option", "aria-selected": i === active, className: cn("ui-search-option", i === active && "is-active"), 
+                                            // Mouse and keyboard end up in the same place; the pointer
+                                            // moves the highlight so the two never disagree about which
+                                            // row Enter would take.
+                                            onMouseEnter: () => setActive(i), onMouseDown: (e) => e.preventDefault(), onClick: () => choose(r), children: renderOption ? (renderOption(r)) : (_jsxs(_Fragment, { children: [renderLeading?.(r), _jsx("span", { className: "ui-search-option-label", children: getLabel(r) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(r) })] })) }, i)))] })] }) })) : (_jsxs("ul", { className: "ui-search-results", id: listId, role: "listbox", children: [busy && (_jsx("li", { className: "ui-search-note", role: "status", children: "Searching\u2026" })), !busy && results.length === 0 && (_jsx("li", { className: "ui-search-note", role: "status", children: "No matches." })), !busy &&
+                            results.map((r, i) => (_jsx("li", { id: `${listId}-${i}`, role: "option", "aria-selected": i === active, className: cn("ui-search-option", i === active && "is-active"), 
+                                // Mouse and keyboard end up in the same place; the pointer
+                                // moves the highlight so the two never disagree about which
+                                // row Enter would take.
+                                onMouseEnter: () => setActive(i), onMouseDown: (e) => e.preventDefault(), onClick: () => choose(r), children: renderOption ? (renderOption(r)) : (_jsxs(_Fragment, { children: [renderLeading?.(r), _jsx("span", { className: "ui-search-option-label", children: getLabel(r) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(r) })] })) }, i)))] })))] }));
 }
