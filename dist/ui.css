@@ -1632,11 +1632,28 @@ button.ui-matchup--link {
 .ui-chipbadge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
+  gap: var(--space-1);
+  padding: 0.125rem var(--space-2);
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 500;
+  /* 11px was under this kit's own legibility floor, on text that is often a
+     count or a status word — the two things worth reading at a glance. */
+  font-size: 12px;
+  font-weight: 600;
+  /* Text darkened away from the tint it sits on. The two used to be the same
+     value, which is how a chip ended up at 3.6:1. */
+  background: color-mix(in srgb, var(--chip-hue, var(--muted)) 12%, transparent);
+  color: color-mix(in srgb, var(--chip-hue, var(--muted)) 76%, black);
+}
+
+/* On a dark ground the correction goes the other way. */
+:root[data-theme="dark"] .ui-chipbadge {
+  color: color-mix(in srgb, var(--chip-hue, var(--muted)) 82%, white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ui-chipbadge {
+    color: color-mix(in srgb, var(--chip-hue, var(--muted)) 82%, white);
+  }
 }
 
 /* ---------- Mobile behavior (copied from baseball/football) ----------
@@ -3515,10 +3532,22 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 /* The old wash kept, for a destructive action that is genuinely secondary —
    a "remove" beside each row of a list, where twenty filled red buttons would
    be a wall of alarm and none of them would read as urgent. */
+/* Same correction as the chip: --danger text on a 12% --danger wash measured
+   3.35:1. The tint stays; the text moves away from it. */
 .ui-btn--danger-quiet {
   background: color-mix(in srgb, var(--sev-error) 12%, transparent);
   border-color: color-mix(in srgb, var(--sev-error) 40%, transparent);
-  color: var(--danger);
+  color: color-mix(in srgb, var(--danger) 76%, black);
+}
+
+:root[data-theme="dark"] .ui-btn--danger-quiet {
+  color: color-mix(in srgb, var(--danger) 82%, white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ui-btn--danger-quiet {
+    color: color-mix(in srgb, var(--danger) 82%, white);
+  }
 }
 
 .ui-btn--sm {
@@ -4168,4 +4197,12 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 @media (min-width: 64rem) {
   .ui-navsearch-kbd { display: inline-flex; align-items: center; }
+}
+
+/* Stacked expandable cards were flush against each other — measured 0px, so
+   two of them read as one box with a rule through it, exactly as the settings
+   groups did. Adjacent-sibling so the last one does not push a gap onto
+   whatever follows. */
+.ui-expandable + .ui-expandable {
+  margin-top: var(--space-3);
 }
