@@ -14,6 +14,8 @@ export { DateNav } from "./primitives/DateNav";
 export { Drawer } from "./primitives/Drawer";
 export { EmptyState } from "./primitives/EmptyState";
 export { ErrorState } from "./primitives/ErrorState";
+export { ConfirmDialog } from "./primitives/ConfirmDialog";
+export { useFocusTrap } from "./primitives/useFocusTrap";
 export { ExpandableCard } from "./primitives/ExpandableCard";
 export { FactGrid } from "./primitives/FactGrid";
 export { HelpTip } from "./primitives/HelpTip";
