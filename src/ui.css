@@ -4099,3 +4099,73 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 .ui-iconbtn:disabled { opacity: 0.5; cursor: default; }
+
+/* ---------- NavSearch ----------
+   Baseball's search box, extracted. The icon sits inside the field, which is
+   the whole difference between "a text input, and separately a magnifier" and
+   "a search box" — the affordance is the box, and a glyph parked beside it
+   just reads as another button in a row of buttons.
+
+   The border lights up on focus-within rather than the input growing a ring of
+   its own, so the box behaves as one control. */
+.ui-navsearch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 26rem;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  transition: border-color 0.15s;
+}
+
+.ui-navsearch:focus-within { border-color: var(--brand); }
+
+.ui-navsearch-icon { flex-shrink: 0; color: var(--muted); }
+
+.ui-navsearch-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.ui-navsearch-input::placeholder { color: var(--muted); }
+
+/* The field owns the focus treatment, so the input inside it does not draw a
+   second one. This is the deliberate exception to the kit's focus ring. */
+.ui-navsearch-input:focus-visible { outline: none; }
+
+.ui-navsearch-input::-webkit-search-cancel-button { cursor: pointer; }
+
+.ui-navsearch-busy {
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-width: 2px;
+}
+
+/* No keyboard on a phone, and no room to advertise a shortcut for one. */
+.ui-navsearch-kbd {
+  display: none;
+  flex-shrink: 0;
+  padding: 0.125rem 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+
+@media (min-width: 64rem) {
+  .ui-navsearch-kbd { display: inline-flex; align-items: center; }
+}

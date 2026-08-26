@@ -20,6 +20,7 @@ export { ConfirmDialog } from "./primitives/ConfirmDialog";
 export { useFocusTrap } from "./primitives/useFocusTrap";
 export { useRovingSelect } from "./primitives/useRovingSelect";
 export { IconButton } from "./primitives/IconButton";
+export { NavSearch } from "./primitives/NavSearch";
 export { ThemeSwitch } from "./primitives/ThemeSwitch";
 export { IconSun, IconMoon, IconSignOut, IconSettings, IconSearch, IconRefresh, IconClose, IconBell, } from "./primitives/Icon";
 export { ExpandableCard } from "./primitives/ExpandableCard";
