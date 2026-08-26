@@ -381,7 +381,9 @@ export function UiDemo() {
             <span className="uidemo-note">
               The dashed edge is the column; the space inside it is
               <code> --space-4</code>, and the bottom edge grows to clear the
-              home indicator on a phone.
+              home indicator on a phone. Rhythm is opt-in: this one passes
+              <code> gap={2}</code>, and a page that omits it stays an ordinary
+              block so children keep whatever margins they already set.
             </span>
           </Page>
         </Card>

@@ -18,7 +18,22 @@ function gapStyle(gap: Space, style?: CSSProperties): CSSProperties {
   return { ...style, ["--ui-gap" as string]: `var(--space-${gap})` }
 }
 
-type Tag = "div" | "section" | "ul" | "ol" | "li" | "nav" | "header" | "footer" | "form" | "fieldset"
+type Tag =
+  | "div"
+  | "span"
+  | "section"
+  | "ul"
+  | "ol"
+  | "li"
+  | "nav"
+  | "header"
+  | "footer"
+  | "form"
+  | "fieldset"
+  // A labelled form field is a two-item stack, and the thing that has to wrap
+  // both is the label itself — otherwise clicking the caption stops focusing
+  // the control.
+  | "label"
 
 interface StackProps {
   children: ReactNode
@@ -122,7 +137,13 @@ interface PageProps {
    * default; `full` is for a screen that owns its own measure.
    */
   width?: "narrow" | "wide" | "full"
-  /** Rung of the spacing scale between the sections inside. Default 4. */
+  /**
+   * Rung of the spacing scale between the sections inside. Omit it and the
+   * page is an ordinary block, which is what a screen whose children carry
+   * their own margins wants — estate's section headings set their own rhythm
+   * deliberately, and a gap on top of those margins would add to them rather
+   * than replace them.
+   */
   gap?: Space
   as?: Tag
   className?: string
@@ -139,10 +160,13 @@ interface PageProps {
  * was in some of them and not others — so the same layout lost its final row
  * on a phone depending on which screen you were on.
  */
-export function Page({ children, width = "wide", gap = 4, as, className, style }: PageProps) {
+export function Page({ children, width = "wide", gap, as, className, style }: PageProps) {
   const Tag = (as ?? "main") as ElementType
   return (
-    <Tag className={cn("ui-page", `ui-page--${width}`, className)} style={gapStyle(gap, style)}>
+    <Tag
+      className={cn("ui-page", `ui-page--${width}`, gap !== undefined && "ui-page--flow", className)}
+      style={gap === undefined ? style : gapStyle(gap, style)}
+    >
       {children}
     </Tag>
   )

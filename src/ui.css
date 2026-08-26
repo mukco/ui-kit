@@ -261,9 +261,6 @@ body {
      its own would get a column 100% wide PLUS its padding -- which is 32px of
      overflow on every screen. The playground caught it doing exactly that. */
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: var(--ui-gap, var(--space-4));
   margin-inline: auto;
   width: 100%;
   min-width: 0;
@@ -276,6 +273,15 @@ body {
 
 .ui-page--narrow { max-width: 48rem; }
 .ui-page--wide { max-width: 60rem; }
+/* Rhythm is opt-in: pass a gap and the page becomes a column with that gap
+   between its sections. Without one it is an ordinary block, so a screen whose
+   children already carry their own margins keeps them. */
+.ui-page--flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-gap, var(--space-4));
+}
+
 .ui-page--full { max-width: none; }
 
 /* ---------- Card ---------- */
