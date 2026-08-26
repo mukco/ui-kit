@@ -9,6 +9,22 @@ export interface NavItem {
     href?: string;
     onClick?: () => void;
     active?: boolean;
+    /**
+     * Shown before the label in the drawer, and only there. A phone's drawer is
+     * a column of same-length words with nothing to aim at; an icon gives the
+     * eye a target and makes the list scannable rather than readable. The
+     * desktop strip stays text-only — it is already short and horizontal.
+     */
+    icon?: ReactNode;
+    /**
+     * A heading rendered above this item in the drawer, starting a group. Repeat
+     * the same string on consecutive items to keep them together; omit it to
+     * continue the current group.
+     *
+     * Seven undifferentiated links is a list you read top to bottom every time.
+     * Three groups of two or three is a list you learn.
+     */
+    section?: string;
     /** When present the item renders as a dropdown of these entries. */
     children?: NavChild[];
 }

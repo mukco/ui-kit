@@ -10,6 +10,15 @@ interface Props<T> {
     /** Optional avatar/leading element per result. */
     renderLeading?: (item: T) => ReactNode;
     placeholder?: string;
+    /**
+     * How much has to be typed before the list appears. 2 by default, which is
+     * right when the fetcher is a network search and wrong when it is a filter
+     * over a list already in memory: there, requiring two characters means you
+     * cannot see what the options *are* without guessing at one.
+     *
+     * Pass 0 for a browsable list — focusing the field then shows everything.
+     */
+    minChars?: number;
     className?: string;
 }
 /**
@@ -28,5 +37,5 @@ interface Props<T> {
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export declare function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder, className }: Props<T>): import("react").JSX.Element;
+export declare function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder, minChars, className }: Props<T>): import("react").JSX.Element;
 export {};
