@@ -3521,10 +3521,22 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
     font-size: max(0.75rem, 12px);
   }
 
-  /* A switch is a thing you hit with a thumb. 26px is a thing you hit twice. */
-  .ui-toggle {
-    min-height: 44px;
-    min-width: 44px;
+  /* A switch is a thing you hit with a thumb, and 26px is a thing you hit
+     twice — but min-height:44px on a 44px-wide pill makes it a 44px circle,
+     and a circle does not read as a switch. It looked like a large blue dot
+     with a knob lost inside it.
+
+     Grow the target, not the control: a transparent ::after gives the thumb
+     its 44px while the switch keeps the shape that says what it is. Same
+     approach as the help tip, and for the same reason. */
+  .ui-toggle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
   }
 
   /* A chip that is only a label may stay small; one that opens something is a
