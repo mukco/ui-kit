@@ -121,7 +121,23 @@ export function DynamicChart({ type, title, data, xKey = "name", yKey = "value",
     chart = (
       <BarChart data={data} margin={CHART_MARGIN}>
         <CartesianGrid vertical={false} stroke={BORDER} strokeDasharray="3 3" strokeOpacity={0.6} />
-        <XAxis dataKey={xKey} {...AXIS_PROPS} interval={0} tick={{ ...AXIS_PROPS.tick, fontSize: 10 }} />
+        {/* interval={0} means "draw every label". That is right for six bars
+            and unreadable at a hundred: a 24h window at five-minute grain is
+            288 points, and forcing a tick per point produced a solid band of
+            overlapping digits where the axis should be. The line chart below
+            it was legible the whole time precisely because it passed no
+            interval and let recharts thin.
+
+            So: every label while they fit, and thinned past that. The first
+            and last are always kept, because the ends of the window are the
+            two labels a reader actually needs. */}
+        <XAxis
+          dataKey={xKey}
+          {...AXIS_PROPS}
+          interval={data.length > 12 ? "preserveStartEnd" : 0}
+          minTickGap={24}
+          tick={{ ...AXIS_PROPS.tick, fontSize: 10 }}
+        />
         <YAxis {...AXIS_PROPS} width={40} />
         <Tooltip content={<CustomTooltip xKey={xKey} yKey={yKey} />} cursor={{ fill: SURFACE }} />
         <Bar dataKey={yKey} fill={color || BRAND} fillOpacity={0.85} radius={[3, 3, 0, 0]} maxBarSize={40} />
@@ -145,7 +161,7 @@ export function DynamicChart({ type, title, data, xKey = "name", yKey = "value",
     chart = (
       <LineChart data={data} margin={CHART_MARGIN}>
         <CartesianGrid stroke={BORDER} strokeDasharray="3 3" strokeOpacity={0.6} />
-        <XAxis dataKey={xKey} {...AXIS_PROPS} />
+        <XAxis dataKey={xKey} {...AXIS_PROPS} interval="preserveStartEnd" minTickGap={24} />
         <YAxis {...AXIS_PROPS} width={40} />
         <Tooltip content={<CustomTooltip xKey={xKey} yKey={yKey} />} />
         <Line
