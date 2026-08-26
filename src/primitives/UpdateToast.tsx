@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { readyForNewBuild } from "./updateReady"
 
 interface Props {
   /** Return the remote build id; polled periodically and on tab focus. */
@@ -6,16 +7,40 @@ interface Props {
   localBuild: string | undefined
   appName?: string
   intervalMs?: number
+  /** How long to wait for a new service worker before reloading anyway. */
+  readyTimeoutMs?: number
 }
 
 const DEFAULT_INTERVAL = 5 * 60 * 1000
+const DEFAULT_READY_TIMEOUT = 5_000
 
-/** "A new version has been deployed — Refresh?" toast. Compares a polled
-    remote build id against the one this page loaded with; the button reloads.
-    Pass localBuild from your build pipeline (e.g. __BUILD_ID__ define) and
-    point getRemoteBuild at version.json or /api/build. */
-export function UpdateToast({ getRemoteBuild, localBuild, appName = "the app", intervalMs = DEFAULT_INTERVAL }: Props) {
+/** "A new version has been deployed — Refresh?" toast.
+ *
+ *  The poll answers "is there a new build on the server". That is the right
+ *  question for *showing* the toast and the wrong one for acting on it: a new
+ *  build existing remotely says nothing about whether this device can serve it
+ *  yet. Where a service worker is installed, the page keeps being served by the
+ *  worker that is currently in control, and a plain reload re-renders the build
+ *  it already had. The toast reappears, the second press works, and it looks
+ *  like the app needs refreshing twice.
+ *
+ *  It did — this component asked for it. So Refresh now prepares the device
+ *  before reloading: nudge the registration, let a waiting worker take over,
+ *  and wait for control to actually change hands. Only then reload.
+ *
+ *  Family Hub never had this bug because it never asked the server. It watches
+ *  the registration and only offers the button once a new worker has reached
+ *  `activated`, at which point a plain reload is genuinely enough.
+ */
+export function UpdateToast({
+  getRemoteBuild,
+  localBuild,
+  appName = "the app",
+  intervalMs = DEFAULT_INTERVAL,
+  readyTimeoutMs = DEFAULT_READY_TIMEOUT,
+}: Props) {
   const [available, setAvailable] = useState(false)
+  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     if (!localBuild) return undefined
@@ -41,6 +66,16 @@ export function UpdateToast({ getRemoteBuild, localBuild, appName = "the app", i
     }
   }, [getRemoteBuild, localBuild, intervalMs])
 
+  const refresh = useCallback(async () => {
+    setBusy(true)
+    try {
+      await readyForNewBuild(readyTimeoutMs)
+    } catch {
+      // Whatever went wrong, reloading is still the best thing left to do.
+    }
+    window.location.reload()
+  }, [readyTimeoutMs])
+
   if (!available) return null
 
   return (
@@ -51,10 +86,17 @@ export function UpdateToast({ getRemoteBuild, localBuild, appName = "the app", i
           <div className="ui-updatetoast-title">Update available</div>
           <div className="ui-updatetoast-sub">A new version of {appName} has been deployed.</div>
         </div>
-        <button type="button" className="ui-updatetoast-refresh" onClick={() => window.location.reload()}>
-          Refresh
+        <button
+          type="button"
+          className="ui-updatetoast-refresh"
+          onClick={refresh}
+          disabled={busy}
+          aria-busy={busy}
+        >
+          {busy ? "Updating…" : "Refresh"}
         </button>
       </div>
     </div>
   )
 }
+
