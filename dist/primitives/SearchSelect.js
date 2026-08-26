@@ -17,7 +17,7 @@ import { cn } from "../cn";
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder = "Search…", className }) {
+export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder = "Search…", minChars = 2, className }) {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const [open, setOpen] = useState(false);
@@ -29,9 +29,13 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
     const rootRef = useRef(null);
     const listId = useId();
     useEffect(() => {
-        if (query.trim().length < 2) {
-            setResults([]);
-            return;
+        if (query.trim().length < minChars) {
+            // With minChars 0 an empty query is a real query — "show me everything" —
+            // so it goes to the fetcher rather than being short-circuited to nothing.
+            if (minChars > 0) {
+                setResults([]);
+                return;
+            }
         }
         setBusy(true);
         const t = setTimeout(() => {
@@ -46,7 +50,7 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
                 .finally(() => setBusy(false));
         }, 250);
         return () => clearTimeout(t);
-    }, [query, fetcher]);
+    }, [query, fetcher, minChars]);
     useEffect(() => {
         const onDown = (e) => {
             if (rootRef.current && !rootRef.current.contains(e.target))
@@ -58,7 +62,7 @@ export function SearchSelect({ value, onChange, fetcher, getLabel, getHint, rend
     if (value != null) {
         return (_jsxs("div", { className: cn("ui-search-chip", className), children: [renderLeading?.(value), _jsx("span", { className: "ui-search-chip-label", children: getLabel(value) }), getHint && _jsx("span", { className: "ui-search-hint", children: getHint(value) }), _jsx("button", { type: "button", className: "ui-search-clear", "aria-label": "Clear selection", onClick: () => onChange(null), children: "\u00D7" })] }));
     }
-    const listOpen = open && query.trim().length >= 2;
+    const listOpen = open && query.trim().length >= minChars;
     function choose(item) {
         onChange(item);
         setQuery("");

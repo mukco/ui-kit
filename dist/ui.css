@@ -824,6 +824,15 @@ a.ui-team-link:hover {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  /* A list of every model the gateway knows is longer than a phone, and this
+     had no height and no scroll — so it grew past the bottom of the screen and
+     a swipe scrolled the page behind it instead. Bounded and scrollable, with
+     the chain contained so flicking to the end of the list does not then start
+     moving the page. */
+  max-height: min(50vh, 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ui-search-option {
@@ -3994,3 +4003,34 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 .ui-nav-brand--link:hover { color: var(--brand-text); }
+
+/* A group heading in the drawer. Small, muted and lettered wide — it is a
+   divider that happens to have a word in it, not a thing you click. */
+.ui-nav-mobile-section {
+  margin: var(--space-3) 0 var(--space-1);
+  padding: 0 var(--space-2);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ui-nav-mobile-section:first-child { margin-top: 0; }
+
+/* The icon column. Fixed width so every label starts at the same x — a ragged
+   left edge is the fastest way to make a short list feel disorderly. */
+.ui-nav-mobile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.ui-nav-mobile-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}

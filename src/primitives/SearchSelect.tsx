@@ -12,6 +12,15 @@ interface Props<T> {
   /** Optional avatar/leading element per result. */
   renderLeading?: (item: T) => ReactNode
   placeholder?: string
+  /**
+   * How much has to be typed before the list appears. 2 by default, which is
+   * right when the fetcher is a network search and wrong when it is a filter
+   * over a list already in memory: there, requiring two characters means you
+   * cannot see what the options *are* without guessing at one.
+   *
+   * Pass 0 for a browsable list — focusing the field then shows everything.
+   */
+  minChars?: number
   className?: string
 }
 
@@ -31,7 +40,7 @@ interface Props<T> {
  * than buttons — focus must never leave the input, or typing stops working
  * half way through choosing.
  */
-export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder = "Search…", className }: Props<T>) {
+export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, renderLeading, placeholder = "Search…", minChars = 2, className }: Props<T>) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<T[]>([])
   const [open, setOpen] = useState(false)
@@ -44,9 +53,13 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
   const listId = useId()
 
   useEffect(() => {
-    if (query.trim().length < 2) {
-      setResults([])
-      return
+    if (query.trim().length < minChars) {
+      // With minChars 0 an empty query is a real query — "show me everything" —
+      // so it goes to the fetcher rather than being short-circuited to nothing.
+      if (minChars > 0) {
+        setResults([])
+        return
+      }
     }
     setBusy(true)
     const t = setTimeout(() => {
@@ -61,7 +74,7 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
         .finally(() => setBusy(false))
     }, 250)
     return () => clearTimeout(t)
-  }, [query, fetcher])
+  }, [query, fetcher, minChars])
 
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
@@ -84,7 +97,7 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
     )
   }
 
-  const listOpen = open && query.trim().length >= 2
+  const listOpen = open && query.trim().length >= minChars
 
   function choose(item: T) {
     onChange(item)

@@ -13,6 +13,22 @@ export interface NavItem {
   href?: string
   onClick?: () => void
   active?: boolean
+  /**
+   * Shown before the label in the drawer, and only there. A phone's drawer is
+   * a column of same-length words with nothing to aim at; an icon gives the
+   * eye a target and makes the list scannable rather than readable. The
+   * desktop strip stays text-only — it is already short and horizontal.
+   */
+  icon?: ReactNode
+  /**
+   * A heading rendered above this item in the drawer, starting a group. Repeat
+   * the same string on consecutive items to keep them together; omit it to
+   * continue the current group.
+   *
+   * Seven undifferentiated links is a list you read top to bottom every time.
+   * Three groups of two or three is a list you learn.
+   */
+  section?: string
   /** When present the item renders as a dropdown of these entries. */
   children?: NavChild[]
 }
@@ -150,8 +166,13 @@ export function NavBar({ brand, onBrandClick, brandHref, items, right, drawerFoo
               ✕
             </button>
           </div>
-          {items.map((item) => (
+          {items.map((item, i) => (
             <div key={item.label}>
+              {/* Only when it changes — repeating the heading on every item of a
+                  group would turn the grouping into noise. */}
+              {item.section && item.section !== items[i - 1]?.section && (
+                <p className="ui-nav-mobile-section">{item.section}</p>
+              )}
               {item.href ? (
                 <a
                   className={cn("ui-nav-mobile-link", item.active && "ui-nav-mobile-link--active")}
@@ -159,6 +180,7 @@ export function NavBar({ brand, onBrandClick, brandHref, items, right, drawerFoo
                   aria-current={item.active ? "page" : undefined}
                   onClick={() => setMobileOpen(false)}
                 >
+                  {item.icon && <span className="ui-nav-mobile-icon" aria-hidden="true">{item.icon}</span>}
                   {item.label}
                 </a>
               ) : item.onClick ? (
@@ -171,6 +193,7 @@ export function NavBar({ brand, onBrandClick, brandHref, items, right, drawerFoo
                   aria-current={item.active ? "page" : undefined}
                   onClick={() => { setMobileOpen(false); item.onClick?.() }}
                 >
+                  {item.icon && <span className="ui-nav-mobile-icon" aria-hidden="true">{item.icon}</span>}
                   {item.label}
                 </button>
               ) : null}
