@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { cn } from "../cn"
+import { useRovingSelect } from "./useRovingSelect"
 
 export type ThemeChoice = "light" | "dark" | "system"
 export type ResolvedTheme = "light" | "dark"
@@ -98,12 +99,23 @@ interface Props {
  */
 export function ThemeToggle({ storageKey, compact, onChange, className }: Props) {
   const { theme, setTheme } = useTheme(storageKey)
+  const onKeyDown = useRovingSelect(
+    OPTIONS.map((o) => o.id),
+    theme,
+    (id) => {
+      setTheme(id)
+      onChange?.(id)
+    },
+  )
 
   return (
     <div
       className={cn("ui-theme", compact && "ui-theme--compact", className)}
       role="radiogroup"
       aria-label="Colour theme"
+      // Same contract as the other two radiogroups in the kit: one tab stop,
+      // arrows move and select.
+      onKeyDown={onKeyDown}
     >
       {OPTIONS.map((option) => (
         <button
@@ -111,6 +123,7 @@ export function ThemeToggle({ storageKey, compact, onChange, className }: Props)
           type="button"
           role="radio"
           aria-checked={theme === option.id}
+          tabIndex={theme === option.id ? 0 : -1}
           aria-label={option.label}
           title={option.label}
           className={cn("ui-theme-opt", theme === option.id && "is-on")}

@@ -1,4 +1,5 @@
 import { cn } from "../cn"
+import { useRovingSelect } from "./useRovingSelect"
 
 export interface TimeRangeOption {
   id: string
@@ -33,14 +34,31 @@ export function TimeRangePicker({
   ranges?: TimeRangeOption[]
   className?: string
 }) {
+  // role="radiogroup" promises one tab stop and arrow-key navigation. It
+  // promised both and provided neither.
+  const onKeyDown = useRovingSelect(
+    ranges.map((r) => r.id),
+    value,
+    (id) => {
+      const picked = ranges.find((r) => r.id === id)
+      if (picked) onChange(picked)
+    },
+  )
+
   return (
-    <div className={cn("ui-range", className)} role="radiogroup" aria-label="Time range">
+    <div
+      className={cn("ui-range", className)}
+      role="radiogroup"
+      aria-label="Time range"
+      onKeyDown={onKeyDown}
+    >
       {ranges.map((range) => (
         <button
           key={range.id}
           type="button"
           role="radio"
           aria-checked={range.id === value}
+          tabIndex={range.id === value ? 0 : -1}
           className={cn("ui-range-opt", range.id === value && "is-on")}
           onClick={() => onChange(range)}
         >

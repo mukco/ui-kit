@@ -3087,10 +3087,7 @@ button.ui-matchup--link {
   50% { opacity: 0.35; }
 }
 
-/* One tick is enough of a tell; a blinking wall is a fairground. */
-@media (prefers-reduced-motion: reduce) {
-  .ui-dot--pulse { animation: none; }
-}
+
 
 .ui-statusgrid {
   display: grid;
@@ -3791,3 +3788,38 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-inline-stat--critical .ui-inline-stat-value { color: var(--sev-error); font-weight: 700; }
 .ui-inline-stat--warn .ui-inline-stat-value { color: var(--sev-warn); font-weight: 700; }
 .ui-inline-stat--ok .ui-inline-stat-value { color: var(--sev-ok); font-weight: 650; }
+
+/* One tick is enough of a tell; a blinking wall is a fairground. */
+@media (prefers-reduced-motion: reduce) {
+  .ui-dot--pulse { animation: none; }
+
+  /* Everything else that moves, in one rule.
+     Ten motion declarations existed and exactly one was guarded — including
+     two that never stop: the spinner and the skeleton shimmer. For a reader
+     with a vestibular disorder, an indefinitely animating element is not a
+     nuisance, it is the reason the preference exists, and this kit runs a
+     dashboard people open when something is already going wrong.
+
+     The spinner keeps a heavily slowed rotation rather than freezing: a still
+     spinner reads as a hung page, which trades one problem for another. The
+     rest simply stop.
+
+     Last in the file, so it wins on source order as well as by !important —
+     belt and braces for a preference that must not be half-applied. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* The one exception: a progress indicator that does not move is a progress
+     indicator that is lying. Slow enough not to trigger, fast enough to read
+     as alive. */
+  .ui-spinner {
+    animation-duration: 3s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
