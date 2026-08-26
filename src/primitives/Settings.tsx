@@ -143,8 +143,19 @@ export function Chip({
   onClick?: () => void
   title?: string
 }) {
-  const color = CHIP_TONES[tone]
-  const style = { color, background: `color-mix(in srgb, ${color} 12%, transparent)` }
+  /*
+   * The component names the hue; the stylesheet decides how to render it.
+   *
+   * This used to set both halves inline: color: var(--ok) on a 12% wash of
+   * var(--ok) — the same colour as text on a tint of itself, which measured
+   * 3.6–4.3:1 and failed AA on every tab that shows a chip. It is the same
+   * defect the estate panel's count badge had, and inline styles meant no
+   * stylesheet could correct it.
+   *
+   * Passing the hue as a custom property lets ui.css darken the text in light
+   * and lighten it in dark, which is the only way one tint can work in both.
+   */
+  const style = { ["--chip-hue" as string]: CHIP_TONES[tone] }
 
   if (onClick) {
     return (
