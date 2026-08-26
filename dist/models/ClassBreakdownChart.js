@@ -23,5 +23,5 @@ export function ClassBreakdownChart({ classBreakdown }) {
                             formatter: (val, name, props) => {
                                 const extra = name === "Precision" ? ` (n=${props.payload.support})` : "";
                                 return [`${Number(val).toFixed(3)}${extra}`, String(name)];
-                            } }), _jsx(Legend, { wrapperStyle: { fontSize: 11, color: "var(--muted)" } }), _jsx(Bar, { dataKey: "Precision", fill: "#2563EB", radius: [0, 3, 3, 0], barSize: 8 }), _jsx(Bar, { dataKey: "Recall", fill: "#16A34A", radius: [0, 3, 3, 0], barSize: 8 }), _jsx(Bar, { dataKey: "F1", fill: "#9333EA", radius: [0, 3, 3, 0], barSize: 8 })] }) })] }));
+                            } }), _jsx(Legend, { wrapperStyle: { fontSize: 11, color: "var(--muted)" } }), _jsx(Bar, { dataKey: "Precision", fill: "var(--brand)", radius: [0, 3, 3, 0], barSize: 8 }), _jsx(Bar, { dataKey: "Recall", fill: "var(--series-3)", radius: [0, 3, 3, 0], barSize: 8 }), _jsx(Bar, { dataKey: "F1", fill: "var(--series-2)", radius: [0, 3, 3, 0], barSize: 8 })] }) })] }));
 }

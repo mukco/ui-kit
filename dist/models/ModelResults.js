@@ -34,12 +34,16 @@ export function ModelResults({ results }) {
                                                     const intensity = rowSum > 0 ? val / rowSum : 0;
                                                     const isCorrect = ri === ci;
                                                     return (_jsx("td", { style: {
+                                                            // Tokens with alpha via color-mix rather than a
+                                                            // literal rgba: these were brand and danger
+                                                            // written out by hand, so the matrix could not
+                                                            // follow the theme it sits inside.
                                                             background: isCorrect
-                                                                ? `rgba(37,99,235,${Math.max(0.1, intensity)})`
+                                                                ? `color-mix(in srgb, var(--brand) ${Math.round(Math.max(0.1, intensity) * 100)}%, transparent)`
                                                                 : intensity > 0.05
-                                                                    ? `rgba(239,68,68,${intensity * 0.6})`
+                                                                    ? `color-mix(in srgb, var(--sev-error) ${Math.round(intensity * 60)}%, transparent)`
                                                                     : undefined,
-                                                            color: intensity > 0.4 ? "#fff" : undefined,
+                                                            color: intensity > 0.4 ? "var(--on-brand)" : undefined,
                                                         }, children: val }, ci));
                                                 })] }, ri));
                                     }) })] }) })] }))] }));

@@ -9,7 +9,12 @@ const MUTED = "var(--muted)";
 const SURFACE = "var(--surface-2)";
 const SECONDARY = "var(--text-2)";
 // Categorical palette for multi-series contexts; single-series charts use brand.
-const PALETTE = ["#6366F1", "#F59E0B", "#10B981", "#EF4444", "#8B5CF6", "#F97316", "#14B8A6", "#EC4899"];
+//
+// Tokens, not literals. This was the Tailwind default swatch written out in
+// full, sitting in a kit whose --brand is #1e66e4 — so every multi-series
+// chart was coloured by a palette with no relationship to the product, and it
+// stayed the same eight colours in dark mode where several of them vanish.
+const PALETTE = Array.from({ length: 8 }, (_, i) => `var(--chart-${i + 1})`);
 export function chartPalette(i) {
     return PALETTE[i % PALETTE.length];
 }
@@ -82,6 +87,11 @@ function ExportButtons({ containerRef, title, data }) {
         if (!ctx)
             return;
         ctx.scale(scale, scale);
+        // A literal on purpose, and one of only two left in the kit. This paints
+        // the background of a PNG export: it goes onto a canvas, which cannot
+        // resolve a CSS variable, and a transparent export reads as black in most
+        // viewers. The computed style is used when there is one; this is the
+        // fallback for when the container has no painted background at all.
         const bgColor = getComputedStyle(containerRef.current).backgroundColor || "#ffffff";
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, rect.width, rect.height);

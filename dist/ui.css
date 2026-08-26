@@ -40,6 +40,31 @@
      needs to find. Light already passes at 5.15:1, so this is --brand there
      and a lighter blue in dark. */
   --brand-text: #1e66e4;
+  /* The foreground that goes on --brand. The kit needed this in seven places
+     and wrote #fff in all seven, which is the one case where a literal is
+     almost defensible and still wrong: a brand light enough to need dark text
+     cannot be expressed without it. */
+  --on-brand: #ffffff;
+  /* A second and third series colour, for a chart comparing two runs. These
+     were #9333EA and #16A34A inline, so a comparison chart was painted from
+     nobody's palette and could not follow a theme. */
+  --series-2: #7c3aed;
+  --series-3: #15803d;
+  /* Categorical series colours, for a chart with more than one line.
+     These were a literal array in DynamicChart — the Tailwind default swatch,
+     verbatim, next to a --brand of #1e66e4 — so every multi-series chart in
+     the kit was painted from a palette unrelated to the product and could not
+     follow a theme. As tokens they can, and the light set is darkened so a
+     thin 1px line still reads against white. Hues are spaced around the wheel
+     rather than sampled from one, because the job is telling series apart. */
+  --chart-1: #1e66e4;
+  --chart-2: #b45309;
+  --chart-3: #15803d;
+  --chart-4: #b91c1c;
+  --chart-5: #7c3aed;
+  --chart-6: #0e7490;
+  --chart-7: #a21caf;
+  --chart-8: #4d7c0f;
   --brand-light: #4c91f8;
 
   /* States */
@@ -108,6 +133,18 @@
 
   --brand: #2563eb;
   --brand-text: #5b9cf8; /* 6.79:1 on --surface, up from 3.37:1 */
+  --on-brand: #ffffff;
+  --series-2: #a78bfa;
+  --series-3: #4ade80;
+  /* Lightened for a dark panel: the light set's #b91c1c on #0e1118 is a smudge. */
+  --chart-1: #60a5fa;
+  --chart-2: #fbbf24;
+  --chart-3: #4ade80;
+  --chart-4: #f87171;
+  --chart-5: #c4b5fd;
+  --chart-6: #22d3ee;
+  --chart-7: #f0abfc;
+  --chart-8: #a3e635;
   --brand-light: #60a5fa;
 
   /* Brightened for dark: the light-mode state colours read as mud on #0f1319. */

@@ -4,9 +4,13 @@ import ReactECharts from "echarts-for-react"
 // PALETTE is intentionally static — categorical identity must stay stable
 // across re-renders and theme changes.
 const PALETTE = [
-  "#6366F1", "#F59E0B", "#10B981", "#F97316",
-  "#8B5CF6", "#0EA5E9", "#14B8A6", "#EC4899",
-  "#84CC16", "#06B6D4", "#F43F5E", "#A855F7",
+  // The same eight tokens the rest of the kit charts with, then round again —
+  // this was a second, independent twelve-colour literal palette sharing six
+  // values with the first, which is two palettes to keep in step and no way to
+  // theme either.
+  "var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)",
+  "var(--chart-5)", "var(--chart-6)", "var(--chart-7)", "var(--chart-8)",
+  "var(--chart-1)", "var(--chart-3)", "var(--chart-5)", "var(--chart-7)",
 ]
 
 // Read kit tokens from CSS variables so the chart matches light/dark instead
@@ -229,6 +233,9 @@ function buildOption({ chartType, chartData, xCol, yCols, colorBySeries, objects
       borderColor: T.border,
       textStyle: { color: T.primary, fontSize: 11 },
       appendToBody: true,
+      // A neutral drop shadow, which is the one colour that is the same in
+      // both themes — a shadow is an absence of light, not a hue, and every
+      // --shadow-* token in the kit is likewise black at an alpha.
       extraCssText: "box-shadow:0 4px 24px rgba(0,0,0,0.3);border-radius:8px;",
     }
   }
@@ -239,12 +246,12 @@ function buildOption({ chartType, chartData, xCol, yCols, colorBySeries, objects
     bottom: 4,
     borderColor: T.border,
     backgroundColor: T.elevated,
-    fillerColor: "rgba(99,102,241,0.12)",
-    handleStyle: { color: "#6366F1", borderColor: "#6366F1" },
-    moveHandleStyle: { color: "#6366F1" },
+    fillerColor: "color-mix(in srgb, var(--chart-1) 12%, transparent)",
+    handleStyle: { color: "var(--chart-1)", borderColor: "var(--chart-1)" },
+    moveHandleStyle: { color: "var(--chart-1)" },
     selectedDataBackground: {
-      lineStyle: { color: "#6366F1" },
-      areaStyle: { color: "rgba(99,102,241,0.08)" },
+      lineStyle: { color: "var(--chart-1)" },
+      areaStyle: { color: "color-mix(in srgb, var(--chart-1) 8%, transparent)" },
     },
     dataBackground: {
       lineStyle: { color: T.border },

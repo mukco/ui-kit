@@ -92,8 +92,8 @@ function FeatureCompare({ runA, runB }: { runA: ComparisonRun; runB: ComparisonR
           <YAxis type="category" dataKey="feature" tick={{ fill: "var(--text-2)", fontSize: 11 }} width={110} />
           <Tooltip contentStyle={{ ...TOOLTIP_STYLE }} />
           <Legend wrapperStyle={{ fontSize: 11, color: "var(--muted)" }} />
-          <Bar dataKey="A" name={shortLabel(runA).slice(0, 20)} fill="#2563EB" radius={[0, 3, 3, 0]} barSize={8} />
-          <Bar dataKey="B" name={shortLabel(runB).slice(0, 20)} fill="#9333EA" radius={[0, 3, 3, 0]} barSize={8} />
+          <Bar dataKey="A" name={shortLabel(runA).slice(0, 20)} fill="var(--brand)" radius={[0, 3, 3, 0]} barSize={8} />
+          <Bar dataKey="B" name={shortLabel(runB).slice(0, 20)} fill="var(--series-2)" radius={[0, 3, 3, 0]} barSize={8} />
         </BarChart>
       </ResponsiveContainer>
     </div>
