@@ -15,6 +15,10 @@ interface Props {
   cached?: boolean
   /** ISO timestamp when the cached answer was generated. */
   generatedAt?: string | null
+  /** Optional line under the title explaining what this card covers. */
+  description?: ReactNode
+  /** Render each section's bullets as a numbered list with chip badges instead of a plain bulleted list. */
+  numbered?: boolean
   /** Regeneration callback; omit the button entirely when absent. */
   onRegenerate?: () => void
   sections: InsightSection[]
@@ -32,6 +36,8 @@ export function InsightsCard({
   isRefreshing = false,
   cached = false,
   generatedAt,
+  description,
+  numbered = false,
   onRegenerate,
   sections,
   empty = "Nothing yet.",
@@ -41,6 +47,7 @@ export function InsightsCard({
   const showSkeleton = loading && !hasContent
   const showContent = !showSkeleton && hasContent
   const generatedLabel = generatedAt ? new Date(generatedAt).toLocaleString() : null
+  let bulletNumber = 0
   return (
     <div className={cn("ui-card ui-insights", className)}>
       <div className="ui-insights-head">
@@ -56,6 +63,8 @@ export function InsightsCard({
           )}
         </div>
       </div>
+
+      {description && <p className="ui-insights-desc">{description}</p>}
 
       {showSkeleton && (
         <div className="ui-insights-body">
@@ -77,11 +86,25 @@ export function InsightsCard({
             s.bullets.length > 0 && (
               <section key={i} className="ui-insights-body">
                 {s.heading && <h3 className="ui-insights-heading">{s.heading}</h3>}
-                <ul className="ui-insights-bullets">
-                  {s.bullets.map((b, j) => (
-                    <li key={j}>{b}</li>
-                  ))}
-                </ul>
+                {numbered ? (
+                  <ul className="ui-insights-numbered">
+                    {s.bullets.map((b) => {
+                      bulletNumber += 1
+                      return (
+                        <li key={bulletNumber} className="ui-insights-numbered-item">
+                          <span className="ui-insights-num">{bulletNumber}</span>
+                          <p className="ui-insights-item-text">{b}</p>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (
+                  <ul className="ui-insights-bullets">
+                    {s.bullets.map((b, j) => (
+                      <li key={j}>{b}</li>
+                    ))}
+                  </ul>
+                )}
               </section>
             ),
         )}
