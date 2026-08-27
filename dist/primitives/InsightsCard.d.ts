@@ -12,6 +12,10 @@ interface Props {
     cached?: boolean;
     /** ISO timestamp when the cached answer was generated. */
     generatedAt?: string | null;
+    /** Optional line under the title explaining what this card covers. */
+    description?: ReactNode;
+    /** Render each section's bullets as a numbered list with chip badges instead of a plain bulleted list. */
+    numbered?: boolean;
     /** Regeneration callback; omit the button entirely when absent. */
     onRegenerate?: () => void;
     sections: InsightSection[];
@@ -22,5 +26,5 @@ interface Props {
  * Card for AI-generated text: titled sections of bullets, a cached chip, and
  * a regenerate control. Data fetching stays in the app — pass results in.
  */
-export declare function InsightsCard({ title, loading, isRefreshing, cached, generatedAt, onRegenerate, sections, empty, className, }: Props): import("react").JSX.Element;
+export declare function InsightsCard({ title, loading, isRefreshing, cached, generatedAt, description, numbered, onRegenerate, sections, empty, className, }: Props): import("react").JSX.Element;
 export {};
