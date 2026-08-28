@@ -50,11 +50,25 @@ interface Props {
     onRegenerate?: () => void;
     sections: InsightSection[];
     empty?: ReactNode;
+    /**
+     * Fixed panel height. The body scrolls inside it and fades out at the
+     * bottom, so a card in a grid keeps its row's height however long the answer
+     * runs. Both apps had this as a second, hand-rolled copy of the whole card
+     * — the capped variant was the ONLY thing it did differently, and it is a
+     * prop, not a component.
+     */
+    height?: string | number;
+    /**
+     * A failure to report. Shown instead of the empty line when there is nothing
+     * to display, and above the content when there is — a stale answer that
+     * failed to refresh is still worth reading, but the reader should know.
+     */
+    error?: ReactNode;
     className?: string;
 }
 /**
  * Card for AI-generated text: a titled, badged header with the provenance of
  * the answer, then sections of bullets. Data fetching stays in the app.
  */
-export declare function InsightsCard({ title, badge, headerExtra, loading, isRefreshing, cached, generatedAt, model, description, numbered, layout, onRegenerate, sections, empty, className, }: Props): import("react").JSX.Element;
+export declare function InsightsCard({ title, badge, headerExtra, loading, isRefreshing, cached, generatedAt, model, description, numbered, layout, onRegenerate, sections, empty, height, error, className, }: Props): import("react").JSX.Element;
 export {};
