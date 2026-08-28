@@ -45,6 +45,13 @@ interface Props {
   photoVariant?: string
   /** Ring the avatar — a player whose game is in progress. */
   live?: boolean
+  /**
+   * Send this one link somewhere other than the app's configured playerHref —
+   * a simulation's player pages, say. Overriding the destination is not a
+   * reason to hand-roll the link, which is how the two apps ended up rendering
+   * a named player differently.
+   */
+  href?: string | null
 }
 
 /**
@@ -71,6 +78,7 @@ export function PlayerLink({
   wrap,
   photoVariant,
   live = false,
+  href: hrefOverride,
 }: Props) {
   const identity = sportsIdentity()
   const [resolved, setResolved] = useState<PlayerId | null>(null)
@@ -95,7 +103,8 @@ export function PlayerLink({
 
   if (effectiveId == null && resolved != null) effectiveId = resolved
 
-  const href = effectiveId != null && identity.playerHref ? identity.playerHref(effectiveId) : null
+  const href =
+    hrefOverride ?? (effectiveId != null && identity.playerHref ? identity.playerHref(effectiveId) : null)
   // photoUrl is asked even without an id: its signature takes null precisely so
   // an app whose CDN serves a generic silhouette can return one, and a row then
   // holds its avatar's space instead of jittering as images resolve. An app

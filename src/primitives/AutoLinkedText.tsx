@@ -1,5 +1,6 @@
-import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react"
+import { Fragment, useEffect, useMemo, useState, type ReactElement, type ReactNode } from "react"
 import { sportsIdentity, type PlayerId } from "../sports/config"
+import { PlayerLink } from "../sports/PlayerLink"
 import { extractCandidates, matchKey } from "../sports/playerNames"
 import { cn } from "../cn"
 
@@ -23,8 +24,22 @@ interface Props {
   text: string
   /** Closed set of names to link; deterministic — no guessing what's a name. */
   players?: Array<{ name: string; id: string | number }> | null
-  /** Render the link for a resolved player (router Link, hover card…). */
+  /**
+   * Escape hatch for a caller whose linked player is genuinely not a player
+   * link. Almost nothing should pass this: a name in AI prose renders as the
+   * kit's PlayerLink — headshot, name, the app's own router link — and it used
+   * to be REQUIRED, which is why each app supplied its own and one ended up
+   * with a headshot and the other with a bare coloured word at a different
+   * size. What a linked player looks like is not an app decision.
+   */
   renderPlayerLink?: (name: string, id: string | number) => ReactNode
+  /**
+   * Send a linked player somewhere other than the app's configured playerHref —
+   * a simulation's player pages, say. The link still renders the same.
+   */
+  playerHref?: (id: PlayerId) => string
+  /** Wrap each player link — a hover card. Passed through to PlayerLink. */
+  wrapPlayer?: (link: ReactElement, id: PlayerId) => ReactElement
   /** Arbitrary named links (teams, tables…) keyed by exact name. */
   links?: NamedLink[]
   className?: string
@@ -45,6 +60,8 @@ export function AutoLinkedText({
   text,
   players = null,
   renderPlayerLink,
+  playerHref,
+  wrapPlayer,
   links = [],
   className,
   resolveFromProse = false,
@@ -53,9 +70,15 @@ export function AutoLinkedText({
   const [proseIds, setProseIds] = useState<Record<string, PlayerId>>({})
 
   // Open mode. Only runs when there is no known set to link by membership in.
+  // Prose extraction runs even when a known set was passed. It used to be
+  // skipped entirely if `players` was an array, so a panel that supplied a
+  // roster linked only the names on that roster and silently dropped every
+  // other player in the sentence — and an empty roster (not loaded yet) linked
+  // nothing at all. One app passed a set and the other did not, which is why
+  // the same sentence showed linked players in one and plain text in the other.
   const candidates = useMemo(
-    () => (players || !resolveFromProse ? [] : extractCandidates(text)),
-    [players, resolveFromProse, text],
+    () => (resolveFromProse ? extractCandidates(text) : []),
+    [resolveFromProse, text],
   )
   useEffect(() => {
     if (!candidates.length || !identity.resolvePlayer) return
@@ -84,16 +107,19 @@ export function AutoLinkedText({
   }, [candidates.join("|")])
 
   const nameToId = useMemo(() => {
-    if (!renderPlayerLink) return {}
+    // Not gated on renderPlayerLink any more: a resolved player links whether
+    // or not the caller brought its own renderer.
     if (!players) return proseIds
-    // Link by membership in the known set, longest-name-first so "Mike Johnson"
-    // wins over "Johnson".
-    const map: Record<string, string | number> = {}
+    // Membership in the known set is authoritative — it is the one form of
+    // linking that cannot be wrong — but it layers ON TOP of what prose
+    // resolution found rather than replacing it. Longest-name-first so
+    // "Mike Johnson" wins over "Johnson".
+    const map: Record<string, string | number> = { ...proseIds }
     for (const p of [...players].sort((a, b) => b.name.length - a.name.length)) {
       if (text.includes(p.name)) map[p.name] = p.id
     }
     return map
-  }, [players, text, renderPlayerLink, proseIds])
+  }, [players, text, proseIds])
 
   const linkMap = useMemo(() => {
     const map: Record<string, NamedLink> = {}
@@ -117,8 +143,24 @@ export function AutoLinkedText({
     <span className={cn(className)}>
       {parts.map((part, i) => {
         const playerId = nameToId[part]
-        if (playerId != null && renderPlayerLink) {
-          return <Fragment key={`pl-${i}`}>{renderPlayerLink(part, playerId)}</Fragment>
+        if (playerId != null) {
+          if (renderPlayerLink) {
+            return <Fragment key={`pl-${i}`}>{renderPlayerLink(part, playerId)}</Fragment>
+          }
+          // One rendering of a player named in AI prose, for every app: the
+          // headshot, the name, the app's own router link.
+          return (
+            <PlayerLink
+              key={`pl-${i}`}
+              player={{ id: playerId, name: part }}
+              size={16}
+              photoSize={48}
+              stopPropagation
+              className="ui-autolink-player"
+              href={playerHref ? playerHref(playerId) : undefined}
+              wrap={wrapPlayer}
+            />
+          )
         }
         const named = linkMap[part]
         if (named?.href) {
