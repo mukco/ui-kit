@@ -2,6 +2,7 @@ import type { KeyboardEvent, ReactNode } from "react"
 import { cn } from "../cn"
 import { Button } from "./Button"
 import { SEVERITY_ORDER, StatusDot, type Severity } from "./Status"
+import { age } from "../lib/age"
 
 export interface TriageItem {
   id: string
@@ -12,17 +13,6 @@ export interface TriageItem {
   /** ISO 8601. Rendered as an age, because "3h ago" is the useful form. */
   at?: string | null
   action?: { label: string; href?: string; onClick?: () => void }
-}
-
-function age(iso: string): string | null {
-  const then = Date.parse(iso)
-  if (Number.isNaN(then)) return null
-  const seconds = Math.round((Date.now() - then) / 1000)
-  if (seconds < 90) return "just now"
-  const minutes = Math.round(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
-  const hours = Math.round(minutes / 60)
-  return hours < 48 ? `${hours}h ago` : `${Math.round(hours / 24)}d ago`
 }
 
 /**
