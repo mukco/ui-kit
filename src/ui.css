@@ -1436,6 +1436,21 @@ button.ui-matchup--link {
   scrollbar-width: none;
 }
 
+/* overflow-x on its own is not a thing CSS will give you: setting it to
+   anything but visible computes overflow-y to auto as well, so the strip
+   above clips vertically too. The dropdown is positioned inside that strip,
+   which means the scroller added to stop the controls overlapping the tabs
+   also swallowed every menu — and on a desktop, where the tabs all fit and
+   there is nothing to scroll, the only visible effect was that the items
+   with children stopped opening at all.
+
+   While a menu is open the row does not need to scroll: a pointer opening a
+   menu is not also dragging the strip sideways. So give the overflow back
+   for exactly that long, and the menu escapes. */
+.ui-nav:has(.ui-nav-item--open) .ui-nav-items {
+  overflow: visible;
+}
+
 .ui-nav-items::-webkit-scrollbar { display: none; }
 
 /* A label that compresses is a label you cannot read; the strip scrolls
