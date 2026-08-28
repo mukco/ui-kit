@@ -4,8 +4,13 @@ import { cn } from "../cn"
 interface Props {
   name?: string | null
   src?: string | null
-  /** Rendered size in px (width = height = size). */
-  size?: number
+  /**
+   * Rendered size in px (width = height = size). Pass `null` to set no inline
+   * dimensions at all and let a className govern — a consumer whose avatars are
+   * sized by CSS (per context, per breakpoint) cannot use an inline value,
+   * because inline always wins.
+   */
+  size?: number | null
   className?: string
 }
 
@@ -21,7 +26,10 @@ function initials(name?: string | null): string {
  */
 export function Avatar({ name, src, size = 32, className }: Props) {
   const [broken, setBroken] = useState(false)
-  const px = { width: size, height: size, fontSize: Math.max(9, Math.round(size * 0.38)) }
+  const px =
+    size == null
+      ? undefined
+      : { width: size, height: size, fontSize: Math.max(9, Math.round(size * 0.38)) }
 
   return (
     <span className={cn("ui-avatar", className)} style={px} title={name ?? undefined}>

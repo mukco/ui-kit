@@ -6,8 +6,16 @@ import { sportsIdentity, type PlayerId } from "./config"
 interface Props {
   /** The player. An id links; a name alone resolves via resolvePlayer if configured. */
   player: { id?: PlayerId | null; name?: string | null }
-  /** Photo size in px. */
-  size?: number
+  /**
+   * Rendered size in px. `null` sets no inline dimensions, leaving it to
+   * `imageClassName` — for a consumer that sizes avatars by CSS per context.
+   */
+  size?: number | null
+  /**
+   * Size requested from photoUrl, when it should differ from the rendered one:
+   * ask the CDN for a sharp image and let CSS draw it small. Defaults to `size`.
+   */
+  photoSize?: number
   /** Hide the name, avatar only. */
   avatarOnly?: boolean
   /**
@@ -53,6 +61,7 @@ interface Props {
 export function PlayerLink({
   player,
   size = 28,
+  photoSize,
   avatarOnly = false,
   resolveName,
   className,
@@ -91,7 +100,7 @@ export function PlayerLink({
   // an app whose CDN serves a generic silhouette can return one, and a row then
   // holds its avatar's space instead of jittering as images resolve. An app
   // with no such placeholder returns "" and Avatar falls back to initials.
-  const photo = identity.photoUrl(effectiveId, size, photoVariant)
+  const photo = identity.photoUrl(effectiveId, photoSize ?? size ?? undefined, photoVariant)
 
   const face = (
     <Avatar
