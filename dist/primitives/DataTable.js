@@ -81,7 +81,22 @@ export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No d
     }
     return (_jsx("div", { className: cn("ui-tablecard", className), children: _jsx("div", { className: "ui-tablescroll", style: maxHeight ? { maxHeight, overflowY: "auto" } : undefined, children: _jsxs("table", { className: cn("ui-table", maxHeight && "ui-table--sticky"), children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { className: "ui-th ui-th-num", children: "#" }), columns.map((col) => {
                                     const sorted = sort?.key === col.key;
-                                    return (_jsx("th", { className: cn("ui-th", col.align === "right" && "ui-th--right"), "aria-sort": sorted ? (sort.dir === "asc" ? "ascending" : "descending") : "none", children: _jsx("button", { type: "button", className: "ui-th-sort", onClick: () => toggleSort(col.key), children: _jsxs("span", { className: "ui-th-inner", children: [col.label, sorted && (_jsx("span", { className: "ui-sort-arrow", "aria-hidden": "true", children: sort.dir === "asc" ? "↑" : "↓" }))] }) }) }, col.key));
+                                    return (_jsx("th", { className: cn("ui-th", col.align === "right" && "ui-th--right"), "aria-sort": sorted ? (sort.dir === "asc" ? "ascending" : "descending") : "none", 
+                                        // role="button" + tabIndex + onKeyDown, not a real <button>:
+                                        // col.label is an arbitrary ReactNode specifically so a
+                                        // caller can compose a tooltip into it (GlossaryTip renders
+                                        // its own <button>), and a button cannot contain a button —
+                                        // browsers silently close the outer one, splitting the cell
+                                        // in the real DOM while React still thinks it's intact,
+                                        // which is what made this header's sort occasionally take
+                                        // two clicks to register. tabIndex/onKeyDown restore the
+                                        // keyboard support a real button used to provide for free.
+                                        role: "button", tabIndex: 0, onClick: () => toggleSort(col.key), onKeyDown: (e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
+                                                e.preventDefault();
+                                                toggleSort(col.key);
+                                            }
+                                        }, children: _jsx("span", { className: "ui-th-sort", children: _jsxs("span", { className: "ui-th-inner", children: [col.label, sorted && (_jsx("span", { className: "ui-sort-arrow", "aria-hidden": "true", children: sort.dir === "asc" ? "↑" : "↓" }))] }) }) }, col.key));
                                 })] }) }), _jsx("tbody", { children: rows.map((row, i) => {
                             const k = rowKey ? rowKey(row, i) : String(i);
                             const expandable = !!renderExpanded;

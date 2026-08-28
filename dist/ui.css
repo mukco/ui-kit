@@ -3851,21 +3851,15 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   .ui-facts { grid-template-columns: 1fr; }
 }
 
-/* The sort control fills its cell so the whole header remains the target it
-   always looked like — the change is that it is now reachable by keyboard and
-   announced, not that it got smaller. Inherits every type property from the
-   th, because a button element otherwise brings its own. */
+/* A plain span, not a button: the th itself carries the click/keyboard
+   handling (role="button", tabIndex, onKeyDown in DataTable) because col.label
+   can embed its own interactive content (a GlossaryTip's trigger button), and
+   a button cannot contain a button. This still fills the cell so the whole
+   header stays the click target. */
 .ui-th-sort {
   display: block;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
   text-align: inherit;
-  cursor: pointer;
 }
 
 .ui-th--right .ui-th-sort { text-align: right; }
