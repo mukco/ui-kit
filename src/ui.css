@@ -2725,8 +2725,24 @@ button.ui-matchup--link {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
   min-height: 2.75rem;
+}
+
+/* The control you actually press. The input below is unclickable and exists
+   only for showPicker() to anchor to. */
+.ui-datenav-datebtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 }
 
 /* With "back to today" showing, the column is already two rows; a 44px date
@@ -2743,7 +2759,7 @@ button.ui-matchup--link {
   color: var(--muted);
 }
 
-.ui-datenav-dateline:hover .ui-datenav-cal { color: var(--text-2); }
+.ui-datenav-datebtn:hover .ui-datenav-cal { color: var(--text-2); }
 
 .ui-datenav-date {
   font-size: 1.05rem;
@@ -2766,7 +2782,9 @@ button.ui-matchup--link {
   border: 0;
   background: transparent;
   opacity: 0;
-  cursor: pointer;
+  /* Never the click target: it swallowed taps and opened nothing, because a
+     date input's text does not open its calendar. The button above does. */
+  pointer-events: none;
 }
 
 .ui-datenav-picker:focus { border-color: var(--brand); }

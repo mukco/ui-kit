@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 function fmt(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
@@ -16,6 +16,29 @@ export function DateNav({ date, onChange, disableFuture = false }: Props) {
   const [todayStr] = useState(() => fmt(new Date()))
   const isToday = date === todayStr
   const atMax = disableFuture && isToday
+
+  const pickerRef = useRef<HTMLInputElement>(null)
+
+  // Clicking a date input's *text* does not open the calendar in Chrome —
+  // only its native indicator does, and ours is transparent. So an invisible
+  // input laid over the date looked tappable and did nothing. showPicker() is
+  // the supported way to open it from our own control; the input stays in the
+  // DOM, unclickable, purely as the thing the popup anchors to.
+  const openPicker = () => {
+    const el = pickerRef.current
+    if (!el) return
+    if (typeof el.showPicker === "function") {
+      try {
+        el.showPicker()
+        return
+      } catch {
+        // showPicker() throws if it is not from a user gesture, or on browsers
+        // that expose it but refuse for this input type. Fall through.
+      }
+    }
+    el.focus()
+    el.click()
+  }
 
   const shift = (days: number) => {
     const d = new Date(`${date}T12:00:00`)
@@ -36,20 +59,24 @@ export function DateNav({ date, onChange, disableFuture = false }: Props) {
             calendar instead. The glyph is the affordance — an invisible input
             with nothing to point at reads as a missing calendar. */}
         <span className="ui-datenav-dateline">
-          <span className="ui-datenav-date">
-            {new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
-          </span>
-          <svg className="ui-datenav-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
-            <rect x="3" y="5" width="18" height="16" rx="2" />
-            <path strokeLinecap="round" d="M8 3v4M16 3v4M3 10h18" />
-          </svg>
+          <button type="button" onClick={openPicker} className="ui-datenav-datebtn" aria-label="Choose date">
+            <span className="ui-datenav-date">
+              {new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+            </span>
+            <svg className="ui-datenav-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
+              <rect x="3" y="5" width="18" height="16" rx="2" />
+              <path strokeLinecap="round" d="M8 3v4M16 3v4M3 10h18" />
+            </svg>
+          </button>
           <input
+            ref={pickerRef}
             type="date"
             value={date}
             max={disableFuture ? todayStr : undefined}
             onChange={(e) => e.target.value && onChange(e.target.value)}
             className="ui-datenav-picker"
-            aria-label="Choose date"
+            tabIndex={-1}
+            aria-hidden="true"
           />
         </span>
         {!isToday && (
