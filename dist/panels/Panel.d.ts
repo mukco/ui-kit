@@ -26,8 +26,13 @@ scroll, children, className, }: {
  * the whole row the click target, with the app's own link so it does not
  * reload the page.
  */
-export declare function PanelRow({ href, children, className, }: {
+export declare function PanelRow({ href, 
+/** Stack the children instead of laying them in a line — a row that carries a
+    bar or a second line under its content. A prop, so a caller never reaches
+    for its own layout class on a shared row. */
+stack, children, className, }: {
     href?: string | null;
+    stack?: boolean;
     children: ReactNode;
     className?: string;
 }): import("react").JSX.Element;

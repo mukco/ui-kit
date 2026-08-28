@@ -24,8 +24,12 @@ scroll = true, children, className, }) {
  * the whole row the click target, with the app's own link so it does not
  * reload the page.
  */
-export function PanelRow({ href, children, className, }) {
-    const cls = cn("ui-panelrow", href && "ui-panelrow--link", className);
+export function PanelRow({ href, 
+/** Stack the children instead of laying them in a line — a row that carries a
+    bar or a second line under its content. A prop, so a caller never reaches
+    for its own layout class on a shared row. */
+stack = false, children, className, }) {
+    const cls = cn("ui-panelrow", stack && "ui-panelrow--stack", href && "ui-panelrow--link", className);
     if (!href)
         return _jsx("div", { className: cls, children: children });
     const identity = sportsIdentity();
