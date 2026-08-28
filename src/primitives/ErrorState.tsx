@@ -11,6 +11,13 @@ interface Props {
   onRetry?: () => void
   retryLabel?: string
   icon?: ReactNode
+  /**
+   * Tight variant for a container that cannot give up 2.5rem — a fixed-height
+   * popover, a table cell, an inline row. Without it an app with nowhere to put
+   * the full block hand-rolls a small one instead, which is exactly how these
+   * states diverged between apps.
+   */
+  compact?: boolean
   className?: string
 }
 
@@ -37,10 +44,11 @@ export function ErrorState({
   onRetry,
   retryLabel = "Try again",
   icon = "⚠",
+  compact = false,
   className,
 }: Props) {
   return (
-    <div className={cn("ui-error", className)} role="alert">
+    <div className={cn("ui-error", compact && "ui-errorstate--compact", className)} role="alert">
       <span className="ui-error-icon" aria-hidden="true">
         {icon}
       </span>
