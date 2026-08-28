@@ -58,6 +58,7 @@ export { PercentileGauge } from "./charts/PercentileGauge";
 export { RollingAverageChart } from "./charts/RollingAverageChart";
 export { SparklineChart } from "./charts/SparklineChart";
 // SQL workbench
+export { FloatingAssistant, isMobileViewport, panelGeometry, clampPosition, MOBILE_BREAKPOINT } from "./workbench/FloatingAssistant";
 export { SandboxCell } from "./workbench/SandboxCell";
 export { SandboxChart } from "./workbench/SandboxChart";
 export { SandboxPivot } from "./workbench/SandboxPivot";
