@@ -81,5 +81,5 @@ export { TeamIcon } from "./sports/TeamIcon";
 export { TeamLink } from "./sports/TeamLink";
 export { NewsPanel } from "./sports/NewsPanel";
 export { PlayerLeaders } from "./sports/PlayerLeaders";
-export { Panel, PanelRow, PanelSplit, PanelEmpty } from "./panels/Panel";
+export { Panel, PanelRow, PanelSplit, PanelEmpty, PANEL_HEIGHT } from "./panels/Panel";
 export { age } from "./lib/age";

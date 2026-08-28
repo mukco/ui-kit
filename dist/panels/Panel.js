@@ -12,9 +12,16 @@ import { sportsIdentity } from "../sports/config";
  * the other did not, and why fixing that in one place never fixed it in the
  * other. There is one set now and neither app defines these rules.
  */
+/**
+ * The height of a panel sitting in a dashboard row. Exported because the row's
+ * other tenants — a news list, an insights card — are different components and
+ * have to agree with it. Three panels side by side at three heights is what
+ * this constant exists to prevent.
+ */
+export const PANEL_HEIGHT = 220;
 export function Panel({ label, action, 
 /** Fixed height so a row of panels lines up. `null` grows to fit. */
-height = 220, 
+height = PANEL_HEIGHT, 
 /** Wrap the children in the scrolling region. Off when the panel splits. */
 scroll = true, children, className, }) {
     return (_jsxs("div", { className: cn("ui-card ui-panel", className), style: height != null ? { height } : undefined, children: [label != null && _jsx(SectionLabel, { action: action, children: label }), scroll ? _jsx("div", { className: "ui-panel-scroll", children: children }) : children] }));

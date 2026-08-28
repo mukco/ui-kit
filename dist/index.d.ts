@@ -103,6 +103,6 @@ export { TeamLink } from "./sports/TeamLink";
 export { NewsPanel } from "./sports/NewsPanel";
 export { PlayerLeaders } from "./sports/PlayerLeaders";
 export type { LeaderRow, LeaderColumn } from "./sports/PlayerLeaders";
-export { Panel, PanelRow, PanelSplit, PanelEmpty } from "./panels/Panel";
+export { Panel, PanelRow, PanelSplit, PanelEmpty, PANEL_HEIGHT } from "./panels/Panel";
 export type { NewsItem, NewsSource, NewsPanelProps, NewsPlayerMention, NewsTeamMention } from "./sports/NewsPanel";
 export { age } from "./lib/age";

@@ -9,6 +9,13 @@ import type { ReactNode } from "react";
  * the other did not, and why fixing that in one place never fixed it in the
  * other. There is one set now and neither app defines these rules.
  */
+/**
+ * The height of a panel sitting in a dashboard row. Exported because the row's
+ * other tenants — a news list, an insights card — are different components and
+ * have to agree with it. Three panels side by side at three heights is what
+ * this constant exists to prevent.
+ */
+export declare const PANEL_HEIGHT = 220;
 export declare function Panel({ label, action, 
 /** Fixed height so a row of panels lines up. `null` grows to fit. */
 height, 
