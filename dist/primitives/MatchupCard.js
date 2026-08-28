@@ -19,11 +19,20 @@ function Side({ side }) {
  * this and copying each other's measurements is exactly what it replaces.
  */
 export function MatchupCard({ away, home, status, tone = "upcoming", badges, meta, art, middle, foot, detail, highlighted, onClick, className, }) {
-    const homeWins = tone === "final" &&
+    // Dim the side that is behind, once there is a result to be behind in.
+    //
+    // This used to compute `homeWins` and then dim away-when-homeWins,
+    // home-when-not. With tone "upcoming" homeWins is false, so the home score
+    // was dimmed in every game that had not started — a losing side in a game
+    // with no score. It also only ever applied at "final", so a live game
+    // showed both scores equally weighted.
+    const decided = tone !== "upcoming" &&
         home.score != null &&
         away.score != null &&
         Number(home.score) !== Number(away.score);
-    const body = (_jsxs(_Fragment, { children: [art && (_jsx("div", { "aria-hidden": "true", className: "ui-matchup-art", style: { backgroundImage: `url(${art})` }, children: _jsx("div", { className: "ui-matchup-scrim" }) })), (status != null || badges || meta) && (_jsxs("div", { className: "ui-matchup-head", children: [status != null && _jsx("span", { className: `ui-matchup-status ui-matchup-status--${tone}`, children: status }), badges, meta && _jsx("span", { className: "ui-matchup-meta", children: meta })] })), _jsxs("div", { className: "ui-matchup-body", children: [_jsx(Side, { side: away }), _jsx("div", { className: "ui-matchup-mid", children: middle ?? (_jsxs("span", { className: "ui-matchup-score", children: [_jsx("span", { className: cn(homeWins && "ui-matchup-loser"), children: away.score ?? "–" }), _jsx("span", { className: "ui-matchup-sep", children: "\u2013" }), _jsx("span", { className: cn(!homeWins && "ui-matchup-loser"), children: home.score ?? "–" })] })) }), _jsx(Side, { side: home })] }), (foot || detail) && (_jsx("div", { className: "ui-matchup-foot", children: foot ?? _jsx("p", { className: "ui-matchup-detail", children: detail }) }))] }));
+    const awayBehind = decided && Number(away.score) < Number(home.score);
+    const homeBehind = decided && Number(home.score) < Number(away.score);
+    const body = (_jsxs(_Fragment, { children: [art && (_jsx("div", { "aria-hidden": "true", className: "ui-matchup-art", style: { backgroundImage: `url(${art})` }, children: _jsx("div", { className: "ui-matchup-scrim" }) })), (status != null || badges || meta) && (_jsxs("div", { className: "ui-matchup-head", children: [status != null && _jsx("span", { className: `ui-matchup-status ui-matchup-status--${tone}`, children: status }), badges, meta && _jsx("span", { className: "ui-matchup-meta", children: meta })] })), _jsxs("div", { className: "ui-matchup-body", children: [_jsx(Side, { side: away }), _jsx("div", { className: "ui-matchup-mid", children: middle ?? (_jsxs("span", { className: "ui-matchup-score", children: [_jsx("span", { className: cn(awayBehind && "ui-matchup-loser"), children: away.score ?? "–" }), _jsx("span", { className: "ui-matchup-sep", children: "\u2013" }), _jsx("span", { className: cn(homeBehind && "ui-matchup-loser"), children: home.score ?? "–" })] })) }), _jsx(Side, { side: home })] }), (foot || detail) && (_jsx("div", { className: "ui-matchup-foot", children: foot ?? _jsx("p", { className: "ui-matchup-detail", children: detail }) }))] }));
     const classes = cn("ui-card", "ui-matchup", onClick && "ui-matchup--link", highlighted && "ui-matchup--on", className);
     // A button element cannot legally contain the interactive controls apps put
     // in `foot` (baseball's lineup toggle, a watch link), so a clickable card is
