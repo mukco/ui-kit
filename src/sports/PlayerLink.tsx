@@ -87,7 +87,11 @@ export function PlayerLink({
   if (effectiveId == null && resolved != null) effectiveId = resolved
 
   const href = effectiveId != null && identity.playerHref ? identity.playerHref(effectiveId) : null
-  const photo = effectiveId != null ? identity.photoUrl(effectiveId, size, photoVariant) : ""
+  // photoUrl is asked even without an id: its signature takes null precisely so
+  // an app whose CDN serves a generic silhouette can return one, and a row then
+  // holds its avatar's space instead of jittering as images resolve. An app
+  // with no such placeholder returns "" and Avatar falls back to initials.
+  const photo = identity.photoUrl(effectiveId, size, photoVariant)
 
   const face = (
     <Avatar
