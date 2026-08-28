@@ -1,4 +1,5 @@
-import { type ReactNode } from "react";
+import { type ReactElement, type ReactNode } from "react";
+import { type PlayerId } from "../sports/config";
 export interface NamedLink {
     name: string;
     onClick?: () => void;
@@ -11,8 +12,22 @@ interface Props {
         name: string;
         id: string | number;
     }> | null;
-    /** Render the link for a resolved player (router Link, hover card…). */
+    /**
+     * Escape hatch for a caller whose linked player is genuinely not a player
+     * link. Almost nothing should pass this: a name in AI prose renders as the
+     * kit's PlayerLink — headshot, name, the app's own router link — and it used
+     * to be REQUIRED, which is why each app supplied its own and one ended up
+     * with a headshot and the other with a bare coloured word at a different
+     * size. What a linked player looks like is not an app decision.
+     */
     renderPlayerLink?: (name: string, id: string | number) => ReactNode;
+    /**
+     * Send a linked player somewhere other than the app's configured playerHref —
+     * a simulation's player pages, say. The link still renders the same.
+     */
+    playerHref?: (id: PlayerId) => string;
+    /** Wrap each player link — a hover card. Passed through to PlayerLink. */
+    wrapPlayer?: (link: ReactElement, id: PlayerId) => ReactElement;
     /** Arbitrary named links (teams, tables…) keyed by exact name. */
     links?: NamedLink[];
     className?: string;
@@ -28,5 +43,5 @@ interface Props {
 /** AI-prose renderer: bolds numbers and turns known player/team names into
     links. Pass `players` (the entities already in scope) for deterministic
     linking; without it, only `links` apply. */
-export declare function AutoLinkedText({ text, players, renderPlayerLink, links, className, resolveFromProse, }: Props): import("react").JSX.Element;
+export declare function AutoLinkedText({ text, players, renderPlayerLink, playerHref, wrapPlayer, links, className, resolveFromProse, }: Props): import("react").JSX.Element;
 export {};

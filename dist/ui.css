@@ -5241,3 +5241,10 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
    than writing 220px into its own stylesheet again. */
 .ui-panel--dash { height: 220px; }
 .ui-panel--tall { height: 16rem; }
+
+/* A player named inside AI prose. The name sits on the link colour and the
+   headshot is small enough to run inline with the sentence; both apps used to
+   decide this for themselves, at different sizes and different colours. */
+.ui-autolink-player { display: inline-flex; vertical-align: text-bottom; gap: 0.25rem; }
+.ui-autolink-player .ui-player-name { color: var(--brand-light); font-size: inherit; }
+.ui-autolink-player:hover .ui-player-name { color: var(--text); }

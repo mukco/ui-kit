@@ -45,6 +45,13 @@ interface Props {
     photoVariant?: string;
     /** Ring the avatar — a player whose game is in progress. */
     live?: boolean;
+    /**
+     * Send this one link somewhere other than the app's configured playerHref —
+     * a simulation's player pages, say. Overriding the destination is not a
+     * reason to hand-roll the link, which is how the two apps ended up rendering
+     * a named player differently.
+     */
+    href?: string | null;
 }
 /**
  * Player identity line: headshot + name, linked to the player's page when the
@@ -57,5 +64,5 @@ interface Props {
  * through `resolvePlayer`, so an app that wants it cached supplies a cached
  * implementation rather than the kit growing a query library.
  */
-export declare function PlayerLink({ player, size, photoSize, avatarOnly, resolveName, className, imageClassName, textClassName, stopPropagation, wrap, photoVariant, live, }: Props): import("react").JSX.Element;
+export declare function PlayerLink({ player, size, photoSize, avatarOnly, resolveName, className, imageClassName, textClassName, stopPropagation, wrap, photoVariant, live, href: hrefOverride, }: Props): import("react").JSX.Element;
 export {};
