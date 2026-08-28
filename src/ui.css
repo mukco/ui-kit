@@ -4542,3 +4542,26 @@ samp,
     border-radius: var(--radius-lg);
   }
 }
+
+/* ---------- Mobile input zoom floor ---------- */
+
+/* iOS Safari zooms the whole page whenever a focused field's text is under
+   16px, and it never zooms back out. Every kit control you can type into was
+   under it — .ui-field and .ui-navsearch-input at 14px, .ui-assistant-input at
+   13.6px, .ui-search-input at 13px — so tapping any of them left the page
+   zoomed with no way back.
+
+   `!important` is deliberate. Written as a plain element rule this loses to
+   every one of the classes above, which is the whole problem; and naming them
+   individually is a list that goes stale the next time someone styles a field.
+   The excluded types have no text to zoom to.
+
+   Apps may still override per-field by matching this specificity — the floor
+   is a platform constraint, not a design opinion. */
+@media (max-width: 767px) {
+  input:not([type='range']):not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
