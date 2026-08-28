@@ -5,7 +5,10 @@ import { ErrorState } from "./ErrorState"
 
 export interface TableColumn<T> {
   key: string
-  label: string
+  // ReactNode, not string: a caller composing a stat-help tooltip next to
+  // the label (e.g. GlossaryTip) needs to render more than text here. A
+  // plain string is already a valid ReactNode, so no existing column changes.
+  label: ReactNode
   /** Format the raw value for display. */
   fmt?: (value: unknown) => ReactNode
   align?: "left" | "right"
