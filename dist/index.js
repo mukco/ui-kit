@@ -26,6 +26,8 @@ export { ExpandableCard } from "./primitives/ExpandableCard";
 export { FactGrid } from "./primitives/FactGrid";
 export { HelpTip } from "./primitives/HelpTip";
 export { InsightsCard } from "./primitives/InsightsCard";
+export { PicksCard } from "./primitives/PicksCard";
+export { AiPanelHeader } from "./primitives/AiPanelHeader";
 export { Loading } from "./primitives/Loading";
 export { Skeleton } from "./primitives/Skeleton";
 export { ListRow, ListRows } from "./primitives/ListRow";
