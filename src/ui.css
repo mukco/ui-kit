@@ -2713,6 +2713,8 @@ button.ui-matchup--link {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  align-self: stretch;
   min-width: 120px;
   position: relative;
 }
@@ -2735,7 +2737,7 @@ button.ui-matchup--link {
   top: 0;
   left: 0;
   right: 0;
-  height: 1.6rem;
+  bottom: 0;
   margin: 0;
   padding: 0;
   border: 0;
