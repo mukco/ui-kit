@@ -20,11 +20,15 @@ export interface KitLinkProps {
   href: string
   className?: string
   children: ReactNode
+  /** Set when the link sits inside a clickable row and must not trigger it. */
+  onClick?: (e: { stopPropagation: () => void }) => void
 }
 
 export interface SportsIdentity {
   /** Headshot/photo URL for a player id (0/unknown should return a silhouette). */
-  photoUrl: (id: PlayerId | null | undefined, size?: number) => string
+  /** `variant` selects a photo set where a sport has more than one (baseball's
+      MLB vs minor-league headshots); ignore it where there is only one. */
+  photoUrl: (id: PlayerId | null | undefined, size?: number, variant?: string) => string
   /** Team crest/logo URL for a team id. */
   logoUrl: (teamId: string | number) => string
   /** Where a player profile lives; absent → names render as plain text. */
