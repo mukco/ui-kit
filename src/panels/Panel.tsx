@@ -49,14 +49,19 @@ export function Panel({
  */
 export function PanelRow({
   href,
+  /** Stack the children instead of laying them in a line — a row that carries a
+      bar or a second line under its content. A prop, so a caller never reaches
+      for its own layout class on a shared row. */
+  stack = false,
   children,
   className,
 }: {
   href?: string | null
+  stack?: boolean
   children: ReactNode
   className?: string
 }) {
-  const cls = cn("ui-panelrow", href && "ui-panelrow--link", className)
+  const cls = cn("ui-panelrow", stack && "ui-panelrow--stack", href && "ui-panelrow--link", className)
   if (!href) return <div className={cls}>{children}</div>
   const identity = sportsIdentity()
   return identity.link ? (
