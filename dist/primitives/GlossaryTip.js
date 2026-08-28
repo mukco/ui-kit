@@ -1,9 +1,16 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-/** Portal-positioned "i" tooltip for ML concepts — survives scroll and
+import { cn } from "../cn";
+const TONE_VAR = {
+    red: "var(--danger)",
+    amber: "var(--warn)",
+    green: "var(--ok)",
+    muted: "var(--muted)",
+};
+/** Portal-positioned "i" tooltip for glossary concepts — survives scroll and
     overflow:hidden contexts that defeat ordinary CSS bubbles. */
-export function GlossaryTip({ hint }) {
+export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }) {
     const [open, setOpen] = useState(false);
     const [position, setPosition] = useState(null);
     const id = useId();
@@ -18,8 +25,8 @@ export function GlossaryTip({ hint }) {
         if (!trigger)
             return;
         const rect = trigger.getBoundingClientRect();
-        const maxWidth = Math.min(300, window.innerWidth - 16);
-        const half = maxWidth / 2;
+        const width = Math.min(maxWidth, window.innerWidth - 16);
+        const half = width / 2;
         let left = rect.left + rect.width / 2;
         left = Math.max(8 + half, Math.min(window.innerWidth - 8 - half, left));
         const tooltipHeight = tooltipRef.current?.offsetHeight || 120;
@@ -28,7 +35,7 @@ export function GlossaryTip({ hint }) {
             top = rect.top - tooltipHeight - 8;
         if (top < 8)
             top = 8;
-        setPosition({ top, left, maxWidth });
+        setPosition({ top, left, maxWidth: width });
     }
     useEffect(() => {
         if (!open)
@@ -63,13 +70,14 @@ export function GlossaryTip({ hint }) {
         return null;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const keepOpen = (target) => Boolean(rootRef.current?.contains(target) || tooltipRef.current?.contains(target));
-    return (_jsxs("span", { ref: rootRef, className: "ui-helptip", onMouseEnter: () => setOpen(true), onMouseLeave: (e) => {
+    const toneVar = tone ? TONE_VAR[tone] : undefined;
+    return (_jsxs("span", { ref: rootRef, className: cn("ui-helptip", className), onMouseEnter: () => setOpen(true), onMouseLeave: (e) => {
             if (!keepOpen(e.relatedTarget))
                 setOpen(false);
         }, onFocus: () => setOpen(true), onBlur: (e) => {
             if (!rootRef.current?.contains(e.relatedTarget))
                 setOpen(false);
-        }, children: [_jsx("button", { ref: triggerRef, type: "button", "aria-label": `Explain ${hint.label}`, "aria-expanded": open, "aria-describedby": open ? id : undefined, className: "ui-tip-btn", onMouseDown: (e) => e.stopPropagation(), onClick: (e) => {
+        }, children: [_jsx("button", { ref: triggerRef, type: "button", "aria-label": `Explain ${hint.label}`, "aria-expanded": open, "aria-describedby": open ? id : undefined, className: "ui-tip-btn", style: toneVar ? { color: toneVar, borderColor: toneVar } : undefined, onMouseDown: (e) => e.stopPropagation(), onClick: (e) => {
                     e.stopPropagation();
                     setOpen((v) => !v);
                 }, children: "i" }), open &&
@@ -79,6 +87,12 @@ export function GlossaryTip({ hint }) {
                     }, style: {
                         top: position?.top ?? 8,
                         left: position?.left ?? 8,
-                        width: position?.maxWidth ?? 300,
-                    }, children: [_jsx("span", { className: "ui-tip-label", children: hint.label }), _jsx("span", { className: "ui-tip-def", children: hint.definition }), hint.formula && _jsx("span", { className: "ui-tip-formula ui-mono", children: hint.formula }), hint.interpretation && _jsx("span", { className: "ui-tip-interp", children: hint.interpretation })] }), document.body)] }));
+                        width: position?.maxWidth ?? maxWidth,
+                    }, children: [note && (_jsxs("span", { className: "ui-tip-note", style: toneVar
+                                ? {
+                                    color: toneVar,
+                                    borderColor: `color-mix(in srgb, ${toneVar} 35%, transparent)`,
+                                    background: `color-mix(in srgb, ${toneVar} 12%, transparent)`,
+                                }
+                                : undefined, children: [note.label, note.detail ? ` — ${note.detail}` : ""] })), _jsx("span", { className: "ui-tip-label", children: hint.label }), _jsx("span", { className: "ui-tip-def", children: hint.definition }), hint.formula && _jsx("span", { className: "ui-tip-formula ui-mono", children: hint.formula }), hint.interpretation && _jsx("span", { className: "ui-tip-interp", children: hint.interpretation })] }), document.body)] }));
 }

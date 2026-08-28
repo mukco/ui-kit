@@ -633,6 +633,52 @@ a.ui-team-link:hover {
   border-bottom-color: var(--brand);
 }
 
+/* ---------- SectionLabel ---------- */
+
+.ui-sectionlabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ui-sectionlabel-text {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- SegmentedControl ---------- */
+
+.ui-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 0.125rem;
+}
+
+.ui-segmented-btn {
+  padding: 0.125rem 0.5rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.625rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ui-segmented-btn:hover { color: var(--text-2); }
+
+.ui-segmented-btn--active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
 /* ---------- PageHeader ---------- */
 
 .ui-pagehead {
@@ -2419,12 +2465,26 @@ button.ui-matchup--link {
   text-align: left;
 }
 
+.ui-tip-note {
+  display: block;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
 .ui-tip-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text); }
 .ui-tip-def { display: block; margin-top: 4px; font-size: 0.75rem; color: var(--text-2); }
 
 .ui-tip-formula {
   display: block;
   margin-top: 0.5rem;
+  max-width: 100%;
+  overflow-x: auto;
   background: var(--surface-2);
   border-radius: var(--radius-sm);
   padding: 0.25rem 0.5rem;

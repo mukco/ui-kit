@@ -32,6 +32,8 @@ export { MatchupCard } from "./primitives/MatchupCard";
 export { NavBar } from "./primitives/NavBar";
 export { PageHeader } from "./primitives/PageHeader";
 export { SearchSelect } from "./primitives/SearchSelect";
+export { SectionLabel } from "./primitives/SectionLabel";
+export { SegmentedControl } from "./primitives/SegmentedControl";
 export { NotificationBell } from "./notifications/NotificationBell";
 export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/Settings";
 export { SettingsGroup } from "./primitives/SettingsGroup";
@@ -48,6 +50,7 @@ export { TimeRangePicker, DEFAULT_TIME_RANGES } from "./primitives/TimeRangePick
 export { InlineStatRow, PercentileBar, StatCard } from "./primitives/StatCard";
 export { ThemeToggle, useTheme } from "./primitives/ThemeToggle";
 export { Tabs } from "./primitives/Tabs";
+export { ordinal } from "./lib/ordinal";
 // Charts
 export { DynamicChart, chartPalette } from "./charts/DynamicChart";
 export { PercentileGauge } from "./charts/PercentileGauge";
