@@ -1,7 +1,12 @@
+import type { ReactNode } from "react"
+
 export interface GlossaryEntry {
   label: string
   definition: string
-  formula?: string
+  // ReactNode, not string: most formulas are plain text, but a caller with
+  // its own math renderer (e.g. KaTeX) can pass markup instead. A plain
+  // string is already a valid ReactNode, so every existing entry is unaffected.
+  formula?: ReactNode
   interpretation?: string
 }
 
