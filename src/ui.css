@@ -4691,3 +4691,25 @@ samp,
   font-size: 0.78rem;
   color: var(--muted);
 }
+
+/* A card whose header labels a list rather than introducing prose: the title
+   row becomes a tinted bar meeting the card's edges, with a rule under it.
+
+   The bar escapes the card's own padding with negative margins rather than
+   restructuring Card, so it composes with everything already using it.
+   `overflow: hidden` on the card keeps the bar's corners inside the radius. */
+.ui-card--barred { overflow: hidden; }
+
+.ui-card-head--bar {
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.ui-card-head--bar .ui-card-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-2);
+}
