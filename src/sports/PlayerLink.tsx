@@ -43,19 +43,22 @@ export function PlayerLink({ player, size = 28, avatarOnly = false }: Props) {
 
   const face = <Avatar name={name} src={photo || null} size={size} />
   const label = !avatarOnly && name ? <span className="ui-player-name">{name}</span> : null
-
-  if (href) {
-    return (
-      <a className="ui-player" href={href}>
-        {face}
-        {label}
-      </a>
-    )
-  }
-  return (
-    <span className="ui-player">
+  const body = (
+    <>
       {face}
       {label}
-    </span>
+    </>
   )
+
+  if (href) {
+    // `link` when the app gave us one — a plain <a> reloads the whole app.
+    return identity.link
+      ? identity.link({ href, className: "ui-player", children: body })
+      : (
+        <a className="ui-player" href={href}>
+          {body}
+        </a>
+      )
+  }
+  return <span className="ui-player">{body}</span>
 }

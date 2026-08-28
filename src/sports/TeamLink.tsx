@@ -15,21 +15,25 @@ interface Props {
  * otherwise.
  */
 export function TeamLink({ teamId, name, size = 18, textClassName }: Props) {
-  const href = sportsIdentity().teamHref?.(teamId)
+  const identity = sportsIdentity()
+  const href = identity.teamHref?.(teamId)
   const face = <TeamIcon teamId={teamId} size={size} />
   const label = textClassName ? <span className={textClassName}>{name}</span> : name
-  if (href) {
-    return (
-      <a className="ui-team-link" href={href}>
-        {face}
-        {label}
-      </a>
-    )
-  }
-  return (
-    <span className="ui-team-link">
+  const body = (
+    <>
       {face}
       {label}
-    </span>
+    </>
   )
+  if (href) {
+    // `link` when the app gave us one — a plain <a> reloads the whole app.
+    return identity.link
+      ? identity.link({ href, className: "ui-team-link", children: body })
+      : (
+        <a className="ui-team-link" href={href}>
+          {body}
+        </a>
+      )
+  }
+  return <span className="ui-team-link">{body}</span>
 }
