@@ -1,4 +1,6 @@
-import { Fragment, useMemo, type ReactNode } from "react"
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react"
+import { sportsIdentity, type PlayerId } from "../sports/config"
+import { extractCandidates, matchKey } from "../sports/playerNames"
 import { cn } from "../cn"
 
 const NUM_SPLIT = /(\b\d+\.?\d*%?|\.\d+\b)/g
@@ -26,14 +28,64 @@ interface Props {
   /** Arbitrary named links (teams, tables…) keyed by exact name. */
   links?: NamedLink[]
   className?: string
+  /**
+   * With no closed `players` set, pull candidate names out of the prose and
+   * resolve them through the app's configured resolvePlayer. Off by default:
+   * open-world guessing is strictly worse than membership in a known set, so a
+   * caller that knows its players should pass them instead. Both apps needed
+   * this for AI text where nothing knows the cast in advance.
+   */
+  resolveFromProse?: boolean
 }
 
 /** AI-prose renderer: bolds numbers and turns known player/team names into
     links. Pass `players` (the entities already in scope) for deterministic
     linking; without it, only `links` apply. */
-export function AutoLinkedText({ text, players = null, renderPlayerLink, links = [], className }: Props) {
+export function AutoLinkedText({
+  text,
+  players = null,
+  renderPlayerLink,
+  links = [],
+  className,
+  resolveFromProse = false,
+}: Props) {
+  const identity = sportsIdentity()
+  const [proseIds, setProseIds] = useState<Record<string, PlayerId>>({})
+
+  // Open mode. Only runs when there is no known set to link by membership in.
+  const candidates = useMemo(
+    () => (players || !resolveFromProse ? [] : extractCandidates(text)),
+    [players, resolveFromProse, text],
+  )
+  useEffect(() => {
+    if (!candidates.length || !identity.resolvePlayer) return
+    let alive = true
+    Promise.all(
+      candidates.map((name) =>
+        identity
+          .resolvePlayer!(name)
+          .then((hit: any) =>
+            hit?.id != null && matchKey(hit.name ?? name) === matchKey(name)
+              ? ([name, hit.id] as const)
+              : null,
+          )
+          .catch(() => null),
+      ),
+    ).then((pairs) => {
+      if (!alive) return
+      const map: Record<string, PlayerId> = {}
+      for (const pair of pairs) if (pair) map[pair[0]] = pair[1]
+      setProseIds(map)
+    })
+    return () => {
+      alive = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [candidates.join("|")])
+
   const nameToId = useMemo(() => {
-    if (!players || !renderPlayerLink) return {}
+    if (!renderPlayerLink) return {}
+    if (!players) return proseIds
     // Link by membership in the known set, longest-name-first so "Mike Johnson"
     // wins over "Johnson".
     const map: Record<string, string | number> = {}
@@ -41,7 +93,7 @@ export function AutoLinkedText({ text, players = null, renderPlayerLink, links =
       if (text.includes(p.name)) map[p.name] = p.id
     }
     return map
-  }, [players, text, renderPlayerLink])
+  }, [players, text, renderPlayerLink, proseIds])
 
   const linkMap = useMemo(() => {
     const map: Record<string, NamedLink> = {}

@@ -4737,3 +4737,19 @@ samp,
   font-weight: 700;
   flex-shrink: 0;
 }
+
+/* A player whose game is in progress. */
+.ui-player-avatar--live {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--brand);
+}
+
+.ui-sb-errorask {
+  margin-left: var(--space-2);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--brand);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
