@@ -805,6 +805,7 @@ a.ui-team-link:hover {
   margin-bottom: 0.5rem;
 }
 
+.ui-insights-titlerow { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
 .ui-insights-title {
   margin: 0;
   font-size: 11px;
@@ -812,6 +813,34 @@ a.ui-team-link:hover {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
+}
+/* Says a model wrote what follows. Brand-tinted rather than solid: it is a
+   provenance marker, not a call to action. */
+.ui-insights-badge {
+  font-size: var(--fs9, 9px);
+  font-weight: 600;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  color: var(--brand-text, var(--brand));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+/* Independent sections, two across once there is room. Each is its own box
+   because each is its own answer, generated and cached on its own. */
+.ui-insights-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+@media (min-width: 1024px) { .ui-insights-grid { grid-template-columns: repeat(2, 1fr); } }
+.ui-insights-box {
+  border-radius: 0.5rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .ui-insights-controls {
@@ -826,6 +855,7 @@ a.ui-team-link:hover {
 .ui-insights-cached {
   font-size: 10px;
   color: var(--muted);
+  white-space: nowrap;
 }
 
 .ui-insights-regen {
@@ -4992,11 +5022,18 @@ samp,
 
 /* Which model wrote this. Monospaced and quiet — it is provenance, not content,
    but it is the first thing you want when an answer looks wrong. */
+/* A quiet chip, not loose text running on after the timestamp: it is a machine
+   identifier sitting in a row of prose, and reads as noise unless it is boxed
+   off from it. */
 .ui-insights-model {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--fs9, 9px);
   color: var(--muted);
   white-space: nowrap;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
 }
 
 /* ── NewsPanel ──────────────────────────────────────────────────────────────
