@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 export interface TableColumn<T> {
     key: string;
-    label: string;
+    label: ReactNode;
     /** Format the raw value for display. */
     fmt?: (value: unknown) => ReactNode;
     align?: "left" | "right";
