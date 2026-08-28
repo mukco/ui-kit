@@ -9,6 +9,13 @@ interface Props {
     onRetry?: () => void;
     retryLabel?: string;
     icon?: ReactNode;
+    /**
+     * Tight variant for a container that cannot give up 2.5rem — a fixed-height
+     * popover, a table cell, an inline row. Without it an app with nowhere to put
+     * the full block hand-rolls a small one instead, which is exactly how these
+     * states diverged between apps.
+     */
+    compact?: boolean;
     className?: string;
 }
 /**
@@ -28,5 +35,5 @@ interface Props {
  * role="alert" because a failure that appears after the page has settled is
  * exactly the case a screen reader user cannot see happen.
  */
-export declare function ErrorState({ children, detail, onRetry, retryLabel, icon, className, }: Props): import("react").JSX.Element;
+export declare function ErrorState({ children, detail, onRetry, retryLabel, icon, compact, className, }: Props): import("react").JSX.Element;
 export {};

@@ -18,8 +18,10 @@ interface Props {
      * Baseball had ten of these under ten page-specific names
      * (.bb-stand-head, .bb-bx-titlebar, .bb-st-divhead, ...) before this
      * existed, all the same handful of declarations.
+     *
+     * `"subtle"` is the quieter tint — a toolbar rather than a section heading.
      */
-    headBar?: boolean;
+    headBar?: boolean | "subtle";
 }
 /** The kit's basic surface: bordered, rounded, subtly elevated. */
 export declare function Card({ children, className, title, subtitle, help, actions, headBar }: Props): import("react").JSX.Element;

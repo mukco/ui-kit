@@ -893,6 +893,18 @@ a.ui-team-link:hover {
 }
 .ui-insights-item-text { font-size: 0.85rem; color: var(--text-2); line-height: 1.375; margin: 0; }
 
+/* Round, for an avatar or crest placeholder. Without this both apps drew a bar
+   where a circle was about to appear, so rows visibly re-flowed as images
+   resolved — the jitter each of them had a comment about. */
+.ui-skeleton--circle {
+  border-radius: 50%;
+  height: auto;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.ui-skeleton-stack { display: block; }
+
 .ui-skeleton {
   display: block;
   height: 0.65rem;
@@ -4724,9 +4736,18 @@ samp,
 .ui-card-head--bar .ui-card-title {
   font-size: 0.75rem;
   font-weight: 600;
+  color: var(--text-2);
+}
+/* Only a plain-string title. Card adds this itself; a composed title keeps
+   whatever the caller built. */
+.ui-card-head--caption .ui-card-title {
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-2);
+}
+/* A quieter bar, for a toolbar rather than a section heading. */
+.ui-card-head--bar-subtle {
+  background: color-mix(in srgb, var(--surface-2) 30%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--border) 30%, transparent);
 }
 
 /* Shown in place of a crest when a team has no id, or its logo 404s. */
@@ -4948,3 +4969,23 @@ samp,
 .ui-fa-md-hr { margin: 0.75rem 0; border-color: var(--border); }
 .ui-fa-md-quote { border-left: 2px solid color-mix(in srgb, var(--brand) 40%, transparent); padding-left: 0.75rem; margin: 0.625rem 0; color: var(--text-2); }
 .ui-fa-md-link { color: var(--brand); text-decoration: underline; }
+
+/* The state primitives at their full 2.5rem padding are a block that owns its
+   own area. In a fixed-height popover or a table cell that is wrong — it blows
+   the container out — and an app with nowhere to put a 2.5rem block goes and
+   hand-rolls a tight one instead, which is how these diverged in the first
+   place. */
+.ui-loading--compact,
+.ui-empty--compact,
+.ui-errorstate--compact {
+  padding: 0.5rem;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+}
+/* .ui-error-icon, not .ui-errorstate-icon: ErrorState's block is .ui-error and
+   its icon .ui-error-icon. A selector aimed at a class that does not exist is
+   silent — it type-checks, builds and tests clean and simply never applies. */
+.ui-empty--compact .ui-empty-icon,
+.ui-errorstate--compact .ui-error-icon {
+  font-size: 1rem;
+}

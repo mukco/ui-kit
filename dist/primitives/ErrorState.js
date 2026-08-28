@@ -17,6 +17,6 @@ import { cn } from "../cn";
  * role="alert" because a failure that appears after the page has settled is
  * exactly the case a screen reader user cannot see happen.
  */
-export function ErrorState({ children, detail, onRetry, retryLabel = "Try again", icon = "⚠", className, }) {
-    return (_jsxs("div", { className: cn("ui-error", className), role: "alert", children: [_jsx("span", { className: "ui-error-icon", "aria-hidden": "true", children: icon }), _jsx("span", { className: "ui-error-msg", children: children }), detail != null && _jsx("code", { className: "ui-error-detail", children: detail }), onRetry && (_jsx("button", { type: "button", className: "ui-error-retry", onClick: onRetry, children: retryLabel }))] }));
+export function ErrorState({ children, detail, onRetry, retryLabel = "Try again", icon = "⚠", compact = false, className, }) {
+    return (_jsxs("div", { className: cn("ui-error", compact && "ui-errorstate--compact", className), role: "alert", children: [_jsx("span", { className: "ui-error-icon", "aria-hidden": "true", children: icon }), _jsx("span", { className: "ui-error-msg", children: children }), detail != null && _jsx("code", { className: "ui-error-detail", children: detail }), onRetry && (_jsx("button", { type: "button", className: "ui-error-retry", onClick: onRetry, children: retryLabel }))] }));
 }
