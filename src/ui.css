@@ -5146,3 +5146,96 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   pointer-events: none;
   background: linear-gradient(to bottom, transparent, var(--surface));
 }
+
+/* ── Dashboard panels ───────────────────────────────────────────────────────
+   One definition of the panel, the row and the split. Both apps had their own
+   set of these — same jobs, different values — which is how one ended up with
+   dividers between rows and the other without, and why fixing it in one place
+   never fixed the other. Neither app defines these any more. */
+
+.ui-panel { padding: 0.75rem; display: flex; flex-direction: column; }
+.ui-panel-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+.ui-panel-empty { font-size: var(--fs10, 10px); color: var(--muted); font-style: italic; }
+
+.ui-panelrow {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  min-width: 0;
+}
+.ui-panelrow:last-child { border-bottom: 0; }
+/* A clickable row bleeds its padding outward so the hover fill lines up with
+   the panel's own edge instead of insetting from it. */
+.ui-panelrow--link {
+  margin: 0 -0.25rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.ui-panelrow--link:hover { background: var(--surface-2); }
+
+.ui-panel-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+@media (min-width: 640px) { .ui-panel-split { grid-template-columns: repeat(2, 1fr); } }
+.ui-panel-col { display: flex; flex-direction: column; min-height: 0; }
+/* The rule between the two lists. Without it they read as one block. */
+@media (min-width: 640px) {
+  .ui-panel-col--right { border-left: 1px solid var(--border); padding-left: 1rem; }
+}
+
+/* ── PlayerLeaders ──────────────────────────────────────────────────────────
+   Hot on the left, cold on the right; --ui-leaders-accent carries the column's
+   tone to its heading and its values so a row never has to know which column
+   it is in. Rows are .ui-panelrow, so the dividers are the panel's, not this
+   component's idea of one. */
+
+.ui-leaders { display: grid; grid-template-columns: 1fr; column-gap: 0.75rem; }
+@media (min-width: 640px) { .ui-leaders { grid-template-columns: repeat(2, 1fr); } }
+.ui-leaders-col { --ui-leaders-accent: var(--text-2); min-width: 0; }
+.ui-leaders-col--hot { --ui-leaders-accent: var(--ok); }
+.ui-leaders-col--cold { --ui-leaders-accent: var(--danger); }
+.ui-leaders-head {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--fs9, 9px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  color: var(--ui-leaders-accent);
+}
+.ui-leaders-icon { font-style: normal; }
+.ui-leaders-plink { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.25rem; }
+.ui-leaders-name {
+  font-size: 11px;
+  line-height: 1.25;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-leaders-meta { font-size: var(--fs9, 9px); color: var(--muted); flex-shrink: 0; }
+.ui-leaders-val {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-leaders-accent);
+}
+
+/* The two dashboard panel heights, so a caller that cannot use <Panel> — a
+   panel whose JSX is not a simple wrapper — still gets the shared value rather
+   than writing 220px into its own stylesheet again. */
+.ui-panel--dash { height: 220px; }
+.ui-panel--tall { height: 16rem; }
