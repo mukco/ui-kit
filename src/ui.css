@@ -212,6 +212,37 @@ body {
   min-width: 0;
 }
 
+.ui-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ui-card-head-text { min-width: 0; }
+
+.ui-card-title {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ui-card-subtitle { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--muted); }
+
+.ui-card-actions { min-width: 0; }
+
+@media (min-width: 640px) {
+  .ui-card-head {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .ui-card-actions { flex-shrink: 0; }
+}
+
 /* ---------- StatCard ---------- */
 
 .ui-stat {
