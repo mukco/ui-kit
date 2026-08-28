@@ -19,6 +19,8 @@ export interface PicksCardProps extends AiProvenance {
         pick?: Pick | null;
     }>;
     props?: Pick[] | null;
+    /** Where the market looks soft, if anywhere. Its own callout, not a pick. */
+    valueSide?: string | null;
     summary?: string | null;
     loading?: boolean;
     error?: ReactNode;
@@ -56,4 +58,4 @@ export interface PicksCardProps extends AiProvenance {
  * call instead, which is how betting language ended up in a panel that is not a
  * betting panel.
  */
-export declare function PicksCard({ title, markets, props: playerProps, summary, loading, error, empty, renderText, renderPlayer, odds, bare, className, ...provenance }: PicksCardProps): import("react").JSX.Element;
+export declare function PicksCard({ title, markets, props: playerProps, valueSide, summary, loading, error, empty, renderText, renderPlayer, odds, bare, className, ...provenance }: PicksCardProps): import("react").JSX.Element;
