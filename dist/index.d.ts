@@ -100,3 +100,6 @@ export type { PlayerId, SportsIdentity } from "./sports/config";
 export { PlayerLink } from "./sports/PlayerLink";
 export { TeamIcon } from "./sports/TeamIcon";
 export { TeamLink } from "./sports/TeamLink";
+export { NewsPanel } from "./sports/NewsPanel";
+export type { NewsItem, NewsSource, NewsPanelProps, NewsPlayerMention, NewsTeamMention } from "./sports/NewsPanel";
+export { age } from "./lib/age";

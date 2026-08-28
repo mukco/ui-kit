@@ -4998,3 +4998,97 @@ samp,
   color: var(--muted);
   white-space: nowrap;
 }
+
+/* ── NewsPanel ──────────────────────────────────────────────────────────────
+   Promoted from baseball's favourite-team news list. The dot colour comes in
+   per item as --ui-news-src from the app's `sources` map, so adding an outlet
+   never means adding a rule here. */
+
+.ui-news-panel { padding: 0.75rem; display: flex; flex-direction: column; }
+.ui-news-scroll { flex: 1; min-height: 0; overflow-y: auto; }
+.ui-news-empty { font-size: var(--fs10, 10px); color: var(--muted); font-style: italic; }
+
+.ui-news-item {
+  position: relative;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+.ui-news-item:last-child { border-bottom: 0; }
+
+.ui-news-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+.ui-news-time { font-size: var(--fs10, 10px); color: var(--muted); }
+.ui-news-src { display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; }
+.ui-news-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background: var(--ui-news-src, var(--muted));
+}
+.ui-news-srcname {
+  font-size: var(--fs10, 10px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ui-news-src, var(--muted));
+}
+
+/* The whole article is the click target: this ::after stretches to the nearest
+   positioned ancestor, which is .ui-news-item. Deliberately not making this <a>
+   itself positioned — that would shrink the target back to the title's own box. */
+.ui-news-link::after { content: ""; position: absolute; inset: 0; }
+.ui-news-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.375;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.15s ease;
+}
+.ui-news-item:hover .ui-news-title { color: var(--brand); }
+.ui-news-sum {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.625;
+  margin-top: 0.125rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Above the row-wide ::after, or a mention would navigate to the article. */
+.ui-news-chiprow {
+  position: relative;
+  z-index: 10;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.ui-news-chip {
+  position: relative;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 1.25rem;
+  padding: 0 0.5rem;
+  border-radius: 9999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: var(--fs10, 10px);
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }

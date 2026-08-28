@@ -2,19 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cn } from "../cn";
 import { Button } from "./Button";
 import { SEVERITY_ORDER, StatusDot } from "./Status";
-function age(iso) {
-    const then = Date.parse(iso);
-    if (Number.isNaN(then))
-        return null;
-    const seconds = Math.round((Date.now() - then) / 1000);
-    if (seconds < 90)
-        return "just now";
-    const minutes = Math.round(seconds / 60);
-    if (minutes < 60)
-        return `${minutes}m ago`;
-    const hours = Math.round(minutes / 60);
-    return hours < 48 ? `${hours}h ago` : `${Math.round(hours / 24)}d ago`;
-}
+import { age } from "../lib/age";
 /**
  * Everything wrong, in one place, worst first.
  *

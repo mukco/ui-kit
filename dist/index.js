@@ -79,3 +79,5 @@ export { configureSports, sportsIdentity } from "./sports/config";
 export { PlayerLink } from "./sports/PlayerLink";
 export { TeamIcon } from "./sports/TeamIcon";
 export { TeamLink } from "./sports/TeamLink";
+export { NewsPanel } from "./sports/NewsPanel";
+export { age } from "./lib/age";
