@@ -37,6 +37,13 @@ export interface PicksCardProps extends AiProvenance {
      * change, not something to fake here.
      */
     odds?: ReactNode;
+    /**
+     * Render without the card shell, for use inside another card's slot — a
+     * MatchupCard's `foot`, which is how a picks list shows which game it is
+     * talking about. The AI header stays: the model and how stale the answer is
+     * matter just as much when the card is nested.
+     */
+    bare?: boolean;
     className?: string;
 }
 /**
@@ -49,4 +56,4 @@ export interface PicksCardProps extends AiProvenance {
  * call instead, which is how betting language ended up in a panel that is not a
  * betting panel.
  */
-export declare function PicksCard({ title, markets, props: playerProps, summary, loading, error, empty, renderText, renderPlayer, odds, className, ...provenance }: PicksCardProps): import("react").JSX.Element;
+export declare function PicksCard({ title, markets, props: playerProps, summary, loading, error, empty, renderText, renderPlayer, odds, bare, className, ...provenance }: PicksCardProps): import("react").JSX.Element;

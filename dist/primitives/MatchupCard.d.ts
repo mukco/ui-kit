@@ -13,6 +13,12 @@ interface Props {
     /** The state chip's content — "Final", "7:05 PM", "Top 4". */
     status?: ReactNode;
     tone?: "live" | "final" | "upcoming";
+    /**
+     * De-emphasise the whole card — a game that is settled, in a list about games
+     * that are not. `tone` only colours the status chip; this dims the card, and
+     * it is a prop because "done, so quieter" is the same idea in every sport.
+     */
+    dim?: boolean;
     /** Extra chips beside the status — a watch link, a broadcast badge. */
     badges?: ReactNode;
     /** Right of the header: venue, week, round. */
@@ -44,5 +50,5 @@ interface Props {
  * laid out live here, so the two cannot drift apart. Two apps hand-rolling
  * this and copying each other's measurements is exactly what it replaces.
  */
-export declare function MatchupCard({ away, home, status, tone, badges, meta, art, middle, foot, detail, highlighted, onClick, className, }: Props): import("react").JSX.Element;
+export declare function MatchupCard({ away, home, status, tone, dim, badges, meta, art, middle, foot, detail, highlighted, onClick, className, }: Props): import("react").JSX.Element;
 export {};
