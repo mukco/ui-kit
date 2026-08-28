@@ -4618,19 +4618,25 @@ samp,
   min-width: 0;
   flex: 1;
 }
+/* No clip on the crest. A team logo is square and carries detail to its edges;
+   `border-radius: 9999px` with `overflow: hidden` — inherited from the compact
+   avatar this card used to be — cut the corners off every one of them. Only
+   the initials fallback wants a circle, and it is the only thing that gets it. */
 .ui-matchup-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 9999px;
-  overflow: hidden;
   background: transparent;
   color: var(--text-2);
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
+}
+.ui-matchup-logo:not(:has(img)) {
+  border-radius: 9999px;
+  background: var(--surface-2);
 }
 .ui-matchup-logo img { width: 100%; height: 100%; object-fit: contain; }
 .ui-matchup-name {
