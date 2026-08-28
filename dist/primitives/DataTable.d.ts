@@ -24,6 +24,10 @@ interface Props<T extends Record<string, unknown>> {
     error?: ReactNode;
     /** Offered alongside `error`. */
     onRetry?: () => void;
+    /** Caps the table at this height with an internal scroll region and a
+        sticky header — for tables that can run to hundreds of rows. Omit for
+        a table that should grow with the page (the default). */
+    maxHeight?: string;
     className?: string;
 }
 /** Value pill colored against its column distribution. */
@@ -36,5 +40,5 @@ export declare function HeatPill({ children, color }: {
  * click-to-expand rows. Sorting lives inside the component. Wide tables
  * scroll horizontally on phones.
  */
-export declare function DataTable<T extends Record<string, unknown>>({ data, columns, rowKey, renderExpanded, empty, error, onRetry, className, }: Props<T>): import("react").JSX.Element;
+export declare function DataTable<T extends Record<string, unknown>>({ data, columns, rowKey, renderExpanded, empty, error, onRetry, maxHeight, className, }: Props<T>): import("react").JSX.Element;
 export {};

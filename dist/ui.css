@@ -1309,6 +1309,13 @@ button.ui-matchup--link {
 
 .ui-th:hover { color: var(--text); }
 
+.ui-table--sticky .ui-th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  z-index: 1;
+}
+
 .ui-th--right,
 .ui-td--right { text-align: right; }
 

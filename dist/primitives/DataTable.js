@@ -25,7 +25,7 @@ export function HeatPill({ children, color }) {
  * click-to-expand rows. Sorting lives inside the component. Wide tables
  * scroll horizontally on phones.
  */
-export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No data available.", error, onRetry, className, }) {
+export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No data available.", error, onRetry, maxHeight, className, }) {
     const [sort, setSort] = useState(null);
     const [expandedKey, setExpandedKey] = useState(null);
     const rows = useMemo(() => {
@@ -79,7 +79,7 @@ export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No d
             pct = 1 - pct;
         return ramp(pct);
     }
-    return (_jsx("div", { className: cn("ui-tablecard", className), children: _jsx("div", { className: "ui-tablescroll", children: _jsxs("table", { className: "ui-table", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { className: "ui-th ui-th-num", children: "#" }), columns.map((col) => {
+    return (_jsx("div", { className: cn("ui-tablecard", className), children: _jsx("div", { className: "ui-tablescroll", style: maxHeight ? { maxHeight, overflowY: "auto" } : undefined, children: _jsxs("table", { className: cn("ui-table", maxHeight && "ui-table--sticky"), children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { className: "ui-th ui-th-num", children: "#" }), columns.map((col) => {
                                     const sorted = sort?.key === col.key;
                                     return (_jsx("th", { className: cn("ui-th", col.align === "right" && "ui-th--right"), "aria-sort": sorted ? (sort.dir === "asc" ? "ascending" : "descending") : "none", children: _jsx("button", { type: "button", className: "ui-th-sort", onClick: () => toggleSort(col.key), children: _jsxs("span", { className: "ui-th-inner", children: [col.label, sorted && (_jsx("span", { className: "ui-sort-arrow", "aria-hidden": "true", children: sort.dir === "asc" ? "↑" : "↓" }))] }) }) }, col.key));
                                 })] }) }), _jsx("tbody", { children: rows.map((row, i) => {
