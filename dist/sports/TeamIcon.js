@@ -17,7 +17,7 @@ export function TeamIcon({ teamId, size = 20, name, tint }) {
                 // color-mix keeps the initials readable on any team colour rather
                 // than making the caller pick a matching foreground too.
                 ...(tint ? { background: `color-mix(in srgb, ${tint} 22%, transparent)`, color: tint } : null),
-            }, "aria-hidden": "true", children: (name ?? "").slice(0, 2).toUpperCase() }));
+            }, "aria-hidden": "true", children: size >= 16 ? (name ?? "").slice(0, 2).toUpperCase() : null }));
     }
     return (_jsx("img", { className: "ui-team-icon", src: identity.logoUrl(teamId), alt: "", width: size, height: size, loading: "lazy", onError: () => setBroken(true) }));
 }
