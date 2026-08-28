@@ -2714,10 +2714,36 @@ button.ui-matchup--link {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  align-self: stretch;
   min-width: 120px;
-  position: relative;
 }
+
+/* Wraps the date and the calendar glyph, and is what the invisible picker is
+   positioned against. Scoping matters: stretched over .ui-datenav-mid instead,
+   the picker also lay over the "back to today" button and swallowed its taps. */
+.ui-datenav-dateline {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 2.75rem;
+}
+
+/* With "back to today" showing, the column is already two rows; a 44px date
+   line on top of that makes the header taller than what it labels. The
+   chevrons either side stay 44px either way. */
+.ui-datenav-mid:has(.ui-datenav-today) .ui-datenav-dateline {
+  min-height: 1.75rem;
+}
+
+.ui-datenav-cal {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.ui-datenav-dateline:hover .ui-datenav-cal { color: var(--text-2); }
 
 .ui-datenav-date {
   font-size: 1.05rem;
@@ -2734,10 +2760,7 @@ button.ui-matchup--link {
    the date. The dotted underline is what says it can be tapped. */
 .ui-datenav-picker {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   margin: 0;
   padding: 0;
   border: 0;
@@ -2752,7 +2775,7 @@ button.ui-matchup--link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   padding: 0.125rem 0.5rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);

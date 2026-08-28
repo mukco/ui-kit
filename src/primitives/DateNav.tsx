@@ -29,16 +29,29 @@ export function DateNav({ date, onChange, disableFuture = false }: Props) {
         ‹
       </button>
       <div className="ui-datenav-mid">
-        <span className="ui-datenav-date">
-          {new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+        {/* The picker is an invisible overlay on the date rather than a second
+            control printing the same value underneath it. It is scoped to this
+            line and not to the whole column: stretched over the column it also
+            covered the "back to today" button, so tapping Today opened the
+            calendar instead. The glyph is the affordance — an invisible input
+            with nothing to point at reads as a missing calendar. */}
+        <span className="ui-datenav-dateline">
+          <span className="ui-datenav-date">
+            {new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+          </span>
+          <svg className="ui-datenav-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2" />
+            <path strokeLinecap="round" d="M8 3v4M16 3v4M3 10h18" />
+          </svg>
+          <input
+            type="date"
+            value={date}
+            max={disableFuture ? todayStr : undefined}
+            onChange={(e) => e.target.value && onChange(e.target.value)}
+            className="ui-datenav-picker"
+            aria-label="Choose date"
+          />
         </span>
-        <input
-          type="date"
-          value={date}
-          max={disableFuture ? todayStr : undefined}
-          onChange={(e) => e.target.value && onChange(e.target.value)}
-          className="ui-datenav-picker"
-        />
         {!isToday && (
           <button type="button" onClick={() => onChange(todayStr)} className="ui-datenav-today">
             ⟲ Today
