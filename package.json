@@ -21,7 +21,7 @@
     "check": "tsc -p tsconfig.json && npm run check:conventions",
     "check:conventions": "node scripts/check-conventions.mjs",
     "dev": "vite",
-    "test": "npm run build && node --test test/updateReady.test.mjs"
+    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
