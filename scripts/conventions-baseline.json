@@ -1,5 +1,5 @@
 {
-  "_comment": "Current violation counts. The build fails when one goes UP. Lower them as you fix things; raising one should be a visible decision in the diff.",
+  "_comment": "Current violation counts. The build fails when one goes UP. Lower them as you fix things; raising one should be a visible decision in the diff. offScaleSpacing moved 70 -> 90 when the checker started reading every declaration on a line instead of only the first: the 20 it gains were always there, hidden behind a line-anchored regex.",
   "colourLiteralsInComponents": 2,
-  "offScaleSpacing": 70
+  "offScaleSpacing": 90
 }

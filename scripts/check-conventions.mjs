@@ -49,14 +49,18 @@ for (const file of files.filter((f) => [".tsx", ".ts"].includes(extname(f)))) {
 // Spacing that is neither a token nor a rung of the scale.
 const css = readFileSync("src/ui.css", "utf8")
 css.split("\n").forEach((line, i) => {
-  const m = line.match(/^\s*([a-z-]+)\s*:\s*([^;]+);/)
-  if (!m) return
+  // Every declaration on the line, not just the first. Anchoring this at line
+  // start (/^\s*([a-z-]+):/) meant a rule written on one line — `.foo { padding:
+  // 0.375rem; gap: 0.625rem; }`, which is most of this file — never matched at
+  // all, because the line starts with the selector. 20 off-scale values were
+  // sitting behind that, and the count read "same" whatever anyone added.
+  for (const m of line.matchAll(/([a-z-]+)\s*:\s*([^;{}]+)[;}]/g)) {
   const [, prop, raw] = m
-  if (!SPACING.test(prop)) return
+  if (!SPACING.test(prop)) continue
   const value = raw.trim()
-  if (value.includes("var(") || value.includes("env(") || value.includes("calc(")) return
+  if (value.includes("var(") || value.includes("env(") || value.includes("calc(")) continue
   // The visually-hidden idiom, which is -1px by convention everywhere.
-  if (value === "-1px") return
+  if (value === "-1px") continue
   for (const part of value.split(/\s+/)) {
     // `auto` is not a magnitude — it is "let the layout decide", and there is
     // no rung of a spacing scale that expresses it.
@@ -69,6 +73,7 @@ css.split("\n").forEach((line, i) => {
       findings.offScaleSpacing.push(`ui.css:${i + 1}  ${prop}: ${value}`)
       break
     }
+  }
   }
 })
 

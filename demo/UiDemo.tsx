@@ -16,6 +16,7 @@ import {
   EmptyState,
   ExpandableCard,
   FactGrid,
+  FloatingAssistant,
   HelpTip,
   InlineStatRow,
   InsightsCard,
@@ -205,6 +206,56 @@ const SB_ROWS: unknown[][] = Array.from({ length: 60 }, (_, i) => [
   Number((6 + Math.sin(i * 1.7) * 2 + (i % 5) * 0.4).toFixed(2)),
 ])
 
+// FloatingAssistant: the same mention list DEMO_PLAYERS/TEAMS already model,
+// reshaped to the kit's generic {id, name, kind} — a real app's mentionSearch
+// would hit its own player/team search endpoints instead.
+const FA_MENTIONABLES = [
+  ...DEMO_PLAYERS.map((p) => ({ id: p.name, name: p.name, kind: "player" })),
+  ...TEAMS.map(([id, name]) => ({ id, name, kind: "team" })),
+]
+
+async function faMentionSearch(query: string) {
+  const q = query.toLowerCase()
+  return FA_MENTIONABLES.filter((m) => m.name.toLowerCase().includes(q)).slice(0, 6)
+}
+
+// Stands in for `onAsk`: a real app calls its own API here. Echoes the
+// question back, and demonstrates the chart/sql seams on request so the
+// panel's chart card and "Load in Sandbox" button have something to show.
+async function faOnAsk(question: string, context: any) {
+  await new Promise((resolve) => setTimeout(resolve, 600))
+  const q = question.toLowerCase()
+  if (q.includes("chart")) {
+    return { answer: "Here's the same rolling data as the chart demo above.", charts: [{ type: "bar", title: "Runs per day", data: barData, xKey: "name", yKey: "value" }] }
+  }
+  if (q.includes("sql")) {
+    return { answer: "```sql\nSELECT name, ops FROM batters ORDER BY ops DESC LIMIT 10\n```" }
+  }
+  return { answer: `Echoing test data for "${question}" on a ${context.pageType} page. A real app would call its API here.` }
+}
+
+function faDeriveContext(pathname: string) {
+  return { pageType: pathname.replace(/^\//, "") || "today" }
+}
+
+// Reuses .ui-fa-md-p — the kit ships that class for exactly this: an app's
+// renderMarkdown gets to draw on the same visual language as the panel around
+// it. A real app would hand this to react-markdown's `components` instead of
+// splitting on newlines.
+function faRenderMarkdown(text: string) {
+  return (
+    <>
+      {text.split("\n").map((line, i) => (
+        <p key={i} className="ui-fa-md-p">{line || " "}</p>
+      ))}
+    </>
+  )
+}
+
+function faRenderChart(chart: any) {
+  return <DynamicChart type={chart.type} title={chart.title} data={chart.data} xKey={chart.xKey} yKey={chart.yKey} height={160} />
+}
+
 const DEMO_RUN = {
   result: {
     model_type: "neural_network",
@@ -244,6 +295,7 @@ export function UiDemo() {
     { role: "assistant", content: "Ask me about last night's games." },
   ])
   const [busy, setBusy] = useState(false)
+  const [faSandboxSql, setFaSandboxSql] = useState<string | null>(null)
   const [liveScores, setLiveScores] = useState(true)
   const [team, setTeam] = useState("north")
   const [name, setName] = useState("")
@@ -429,6 +481,22 @@ export function UiDemo() {
             Fixed launcher bottom-right of this page →. The app supplies messages and an onSend;
             the kit draws the conversation.
           </p>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>FloatingAssistant — draggable, resizable, its own window (bottom-right launcher)</h2>
+        <Card>
+          <p className="uidemo-note">
+            Baseball's chat panel, promoted: drag the header, resize the left/bottom/corner
+            grips, minimise back to a bubble — position, size and opacity persist per{" "}
+            <code>storagePrefix</code>. Ask about "chart" or "sql" to see <code>renderChart</code>{" "}
+            and the built-in "Load in Sandbox" action; type <code>@</code> for the mention demo.
+            Everything async — <code>onAsk</code>, <code>mentionSearch</code> — is test data here.
+          </p>
+          {faSandboxSql && (
+            <p className="uidemo-note">onOpenSandbox received: <code>{faSandboxSql}</code></p>
+          )}
         </Card>
       </section>
 
@@ -913,6 +981,24 @@ export function UiDemo() {
             setBusy(false)
           }, 700)
         }}
+      />
+
+      <FloatingAssistant
+        title="Kit Assistant"
+        welcome="Ask me anything about this playground."
+        storagePrefix="kitdemo-assistant"
+        pathname="/demo"
+        deriveContext={faDeriveContext}
+        onAsk={faOnAsk}
+        mentionSearch={faMentionSearch}
+        renderMarkdown={faRenderMarkdown}
+        renderChart={faRenderChart}
+        messageActions={() => (
+          <button type="button" className="ui-fa-obsidian-btn" onClick={() => {}}>
+            Pin
+          </button>
+        )}
+        onOpenSandbox={(sql) => setFaSandboxSql(sql)}
       />
     </div>
   )
