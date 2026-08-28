@@ -152,17 +152,26 @@ export function DataTable<T extends Record<string, unknown>>({
                     // rather than leaving the order a mystery. "none" on the
                     // rest is what tells it the column *can* be sorted.
                     aria-sort={sorted ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
+                    // role="button" + tabIndex + onKeyDown, not a real <button>:
+                    // col.label is an arbitrary ReactNode specifically so a
+                    // caller can compose a tooltip into it (GlossaryTip renders
+                    // its own <button>), and a button cannot contain a button —
+                    // browsers silently close the outer one, splitting the cell
+                    // in the real DOM while React still thinks it's intact,
+                    // which is what made this header's sort occasionally take
+                    // two clicks to register. tabIndex/onKeyDown restore the
+                    // keyboard support a real button used to provide for free.
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => toggleSort(col.key)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        toggleSort(col.key)
+                      }
+                    }}
                   >
-                    {/* A real button, not onClick on the <th>. The cell version
-                        was reachable by mouse only — no tabIndex, no key
-                        handler — so sorting a table was impossible from a
-                        keyboard and silent to assistive tech, while looking
-                        interactive to everyone else. */}
-                    <button
-                      type="button"
-                      className="ui-th-sort"
-                      onClick={() => toggleSort(col.key)}
-                    >
+                    <span className="ui-th-sort">
                       <span className="ui-th-inner">
                         {col.label}
                         {sorted && (
@@ -171,7 +180,7 @@ export function DataTable<T extends Record<string, unknown>>({
                           </span>
                         )}
                       </span>
-                    </button>
+                    </span>
                   </th>
                 )
               })}
