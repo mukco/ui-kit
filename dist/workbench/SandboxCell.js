@@ -73,7 +73,7 @@ function fmtSummary(v) {
         return v.toFixed(1);
     return v.toFixed(3).replace(/\.?0+$/, "");
 }
-function SandboxCellInner({ cell, index, onRun, onUpdateSql, onUpdateTitle, onDelete, onFocus, schema, renderNameLink, dragHandleProps, }) {
+function SandboxCellInner({ cell, index, onRun, tables, onError, askAssistant, onUpdateSql, onUpdateTitle, onDelete, onFocus, schema, renderNameLink, dragHandleProps, }) {
     const [viewMode, setViewMode] = useState("table");
     const [showSummary, setShowSummary] = useState(false);
     const [sortKey, setSortKey] = useState(null);
@@ -98,11 +98,11 @@ function SandboxCellInner({ cell, index, onRun, onUpdateSql, onUpdateTitle, onDe
     }, [cell.id, cell.sql]);
     const isMd = cell.type === "md";
     const sqlExtensions = useMemo(() => {
-        const sqlExt = sqlLang({ schema: (schema ?? {}), tables: [], upperCaseKeywords: true });
+        const sqlExt = sqlLang({ schema: (schema ?? {}), tables: (tables ?? []), upperCaseKeywords: true });
         const runKey = Prec.highest(keymap.of([{ key: "Mod-Enter", run: () => { void run(); return true; } }]));
         return [...BASE_EXTENSIONS, sqlExt, runKey];
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [schema]);
+    }, [schema, tables]);
     async function run() {
         if (!localSql.trim())
             return;
@@ -116,7 +116,9 @@ function SandboxCellInner({ cell, index, onRun, onUpdateSql, onUpdateTitle, onDe
             setViewMode("table");
         }
         catch (err) {
-            setError(err instanceof Error ? err : new Error(String(err)));
+            const e = err instanceof Error ? err : new Error(String(err));
+            setError(e);
+            onError?.(e.message);
         }
         finally {
             setRunning(false);
@@ -185,7 +187,7 @@ function SandboxCellInner({ cell, index, onRun, onUpdateSql, onUpdateTitle, onDe
                                     closeBrackets: true,
                                     highlightActiveLine: true,
                                     tabSize: 2,
-                                }, className: "ui-sb-editor" }), _jsx("button", { type: "button", onClick: () => void run(), disabled: running || !localSql.trim(), className: "ui-sb-runbtn ui-sb-runbtn--floating", children: running ? "Running…" : "▶ Run" })] })), !isMd && error && (_jsx("div", { className: "ui-sb-error", children: _jsx("span", { className: "ui-mono", children: error.message }) })), !isMd && result && (_jsxs("div", { className: "ui-sb-results", children: [_jsxs("div", { className: "ui-sb-resultbar", children: [_jsxs("span", { className: "ui-sb-meta", children: [_jsx("strong", { children: result.rowCount }), " rows \u00B7 ", _jsxs("strong", { children: [result.runtimeMs, "ms"] }), result.truncated && _jsx("em", { children: " \u00B7 truncated" })] }), _jsx("div", { className: "ui-sb-viewtabs", children: ["table", "chart", "pivot"].map((t) => (_jsx("button", { type: "button", onClick: () => setViewMode(t), className: cn("ui-sb-viewtab", viewMode === t && "ui-sb-viewtab--on"), children: t }, t))) }), viewMode === "table" && (_jsx("button", { type: "button", onClick: () => setShowSummary((s) => !s), className: cn("ui-sb-sumbtn", showSummary && "ui-sb-sumbtn--on"), children: "\u2211 Summary" }))] }), viewMode === "table" && (_jsx(BasicTableInCell, { columns: result.columns, rows: sortedRows, allRows: result.rows, sortKey: sortKey, sortDir: sortDir, onSort: handleSort, showSummary: showSummary, renderCell: renderNameLink ? defaultRenderCell : undefined })), viewMode === "chart" && _jsx(SandboxChart, { columns: result.columns, rows: result.rows }, result.columns.join("|")), viewMode === "pivot" && _jsx(SandboxPivot, { columns: result.columns, rows: result.rows }, result.columns.join("|"))] }))] }))] }));
+                                }, className: "ui-sb-editor" }), _jsx("button", { type: "button", onClick: () => void run(), disabled: running || !localSql.trim(), className: "ui-sb-runbtn ui-sb-runbtn--floating", children: running ? "Running…" : "▶ Run" })] })), !isMd && error && (_jsxs("div", { className: "ui-sb-error", children: [_jsx("span", { className: "ui-mono", children: error.message }), askAssistant && (_jsx("button", { type: "button", className: "ui-sb-errorask", onClick: () => askAssistant(`Error in SQL Sandbox:\n\`\`\`\n${error.message}\n\`\`\`\nQuery:\n\`\`\`sql\n${localSql}\n\`\`\`\nHow do I fix it?`), children: "Ask the assistant" }))] })), !isMd && result && (_jsxs("div", { className: "ui-sb-results", children: [_jsxs("div", { className: "ui-sb-resultbar", children: [_jsxs("span", { className: "ui-sb-meta", children: [_jsx("strong", { children: result.rowCount }), " rows \u00B7 ", _jsxs("strong", { children: [result.runtimeMs, "ms"] }), result.truncated && _jsx("em", { children: " \u00B7 truncated" })] }), _jsx("div", { className: "ui-sb-viewtabs", children: ["table", "chart", "pivot"].map((t) => (_jsx("button", { type: "button", onClick: () => setViewMode(t), className: cn("ui-sb-viewtab", viewMode === t && "ui-sb-viewtab--on"), children: t }, t))) }), viewMode === "table" && (_jsx("button", { type: "button", onClick: () => setShowSummary((s) => !s), className: cn("ui-sb-sumbtn", showSummary && "ui-sb-sumbtn--on"), children: "\u2211 Summary" }))] }), viewMode === "table" && (_jsx(BasicTableInCell, { columns: result.columns, rows: sortedRows, allRows: result.rows, sortKey: sortKey, sortDir: sortDir, onSort: handleSort, showSummary: showSummary, renderCell: renderNameLink ? defaultRenderCell : undefined })), viewMode === "chart" && _jsx(SandboxChart, { columns: result.columns, rows: result.rows }, result.columns.join("|")), viewMode === "pivot" && _jsx(SandboxPivot, { columns: result.columns, rows: result.rows }, result.columns.join("|"))] }))] }))] }));
 }
 // Sorting is owned by the cell (it drives both header arrows and row order),
 // so this thin wrapper reuses BasicTable's rendering with external sort state.

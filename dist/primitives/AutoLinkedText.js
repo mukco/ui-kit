@@ -1,5 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { sportsIdentity } from "../sports/config";
+import { extractCandidates, matchKey } from "../sports/playerNames";
 import { cn } from "../cn";
 const NUM_SPLIT = /(\b\d+\.?\d*%?|\.\d+\b)/g;
 function renderWithNumbers(text, keyPrefix) {
@@ -10,10 +12,39 @@ function renderWithNumbers(text, keyPrefix) {
 /** AI-prose renderer: bolds numbers and turns known player/team names into
     links. Pass `players` (the entities already in scope) for deterministic
     linking; without it, only `links` apply. */
-export function AutoLinkedText({ text, players = null, renderPlayerLink, links = [], className }) {
+export function AutoLinkedText({ text, players = null, renderPlayerLink, links = [], className, resolveFromProse = false, }) {
+    const identity = sportsIdentity();
+    const [proseIds, setProseIds] = useState({});
+    // Open mode. Only runs when there is no known set to link by membership in.
+    const candidates = useMemo(() => (players || !resolveFromProse ? [] : extractCandidates(text)), [players, resolveFromProse, text]);
+    useEffect(() => {
+        if (!candidates.length || !identity.resolvePlayer)
+            return;
+        let alive = true;
+        Promise.all(candidates.map((name) => identity
+            .resolvePlayer(name)
+            .then((hit) => hit?.id != null && matchKey(hit.name ?? name) === matchKey(name)
+            ? [name, hit.id]
+            : null)
+            .catch(() => null))).then((pairs) => {
+            if (!alive)
+                return;
+            const map = {};
+            for (const pair of pairs)
+                if (pair)
+                    map[pair[0]] = pair[1];
+            setProseIds(map);
+        });
+        return () => {
+            alive = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [candidates.join("|")]);
     const nameToId = useMemo(() => {
-        if (!players || !renderPlayerLink)
+        if (!renderPlayerLink)
             return {};
+        if (!players)
+            return proseIds;
         // Link by membership in the known set, longest-name-first so "Mike Johnson"
         // wins over "Johnson".
         const map = {};
@@ -22,7 +53,7 @@ export function AutoLinkedText({ text, players = null, renderPlayerLink, links =
                 map[p.name] = p.id;
         }
         return map;
-    }, [players, text, renderPlayerLink]);
+    }, [players, text, renderPlayerLink, proseIds]);
     const linkMap = useMemo(() => {
         const map = {};
         links.forEach((l) => {

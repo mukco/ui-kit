@@ -4,6 +4,7 @@ export { Assistant } from "./primitives/Assistant";
 export type { ChatMessage } from "./primitives/Assistant";
 export { AutoLinkedText } from "./primitives/AutoLinkedText";
 export type { NamedLink } from "./primitives/AutoLinkedText";
+export { NAME_RE, normalizeName, matchKey, extractCandidates, resolveKnownPlayers } from "./sports/playerNames";
 export { Avatar } from "./primitives/Avatar";
 export { BasicTable } from "./primitives/BasicTable";
 export { Button } from "./primitives/Button";
