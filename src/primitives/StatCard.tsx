@@ -2,8 +2,14 @@ import type { Severity } from "./Status"
 import type { ReactNode } from "react"
 import { cn } from "../cn"
 
-/** Map a 0–100 percentile to the stat-ramp tokens. */
-function rampColor(pct: number | null): string | null {
+/**
+ * Map a 0–100 percentile to the stat-ramp tokens.
+ *
+ * Exported because an app that draws its own number beside a PercentileBar has
+ * to agree with it about the same percentile, and the only way to do that
+ * without this was to reimplement the five thresholds — which football did.
+ */
+export function rampColor(pct: number | null): string | null {
   if (pct == null) return null
   if (pct >= 85) return "var(--stat-elite)"
   if (pct >= 65) return "var(--stat-great)"
