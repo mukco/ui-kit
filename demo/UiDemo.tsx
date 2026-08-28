@@ -438,10 +438,12 @@ export function UiDemo() {
         <h2>AI insights card</h2>
         <InsightsCard
           cached
+          model="gpt-5-nano-2025-08-07"
           onRegenerate={() => {}}
           sections={[
             {
               heading: "What changed",
+              footer: <span className="ui-chip">Ava Martinez</span>,
               bullets: [
                 "Ava Martinez raised her rolling OPS from .781 to .894 over her last 10 games.",
                 "Riverton's bullpen has thrown the most innings in the league this month.",
