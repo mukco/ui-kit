@@ -5298,3 +5298,13 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 }
 .ui-conf--high { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); border-color: color-mix(in srgb, var(--ok) 30%, transparent); }
 .ui-conf--med { color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+
+/* Picks inside another card's slot — a MatchupCard's foot. No shell of its own,
+   and its section boxes sit flush rather than being inset a second time. */
+.ui-picks--bare { padding: 0; background: none; border: 0; }
+.ui-picks--bare .ui-insights-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+.ui-picks--bare .ui-insights-box { padding: 0.5rem; }
+
+/* A settled game in a list about games that are not. Quieter, still readable,
+   still clickable — both apps expressed this with their own opacity class. */
+.ui-matchup--dim { opacity: 0.5; }

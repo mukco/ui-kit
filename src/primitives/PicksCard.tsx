@@ -37,6 +37,13 @@ export interface PicksCardProps extends AiProvenance {
    * change, not something to fake here.
    */
   odds?: ReactNode
+  /**
+   * Render without the card shell, for use inside another card's slot — a
+   * MatchupCard's `foot`, which is how a picks list shows which game it is
+   * talking about. The AI header stays: the model and how stale the answer is
+   * matter just as much when the card is nested.
+   */
+  bare?: boolean
   className?: string
 }
 
@@ -67,6 +74,7 @@ export function PicksCard({
   renderText,
   renderPlayer,
   odds,
+  bare = false,
   className,
   ...provenance
 }: PicksCardProps) {
@@ -76,7 +84,7 @@ export function PicksCard({
   const text = (t?: string | null) => (t ? (renderText ? renderText(t) : t) : null)
 
   return (
-    <div className={cn("ui-card ui-insights ui-picks", className)}>
+    <div className={cn(bare ? "ui-insights ui-picks ui-picks--bare" : "ui-card ui-insights ui-picks", className)}>
       <AiPanelHeader title={title} hasContent={hasContent} {...provenance} />
 
       {odds}
