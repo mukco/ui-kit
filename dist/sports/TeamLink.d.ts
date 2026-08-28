@@ -1,5 +1,8 @@
 interface Props {
-    teamId: string | number;
+    /** Absent or null → the crest falls back to initials and nothing links.
+        A roster row whose team could not be resolved is a normal state, not a
+        caller error. */
+    teamId?: string | number | null;
     name: string;
     size?: number;
     /** Applied to the name only — a table row that wants one team's name
