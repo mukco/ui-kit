@@ -35,6 +35,8 @@ import {
   SandboxCell,
   SandboxChart,
   SearchSelect,
+  SectionLabel,
+  SegmentedControl,
   SelectField,
   SortedList,
   SettingRow,
@@ -53,6 +55,7 @@ import {
   Toggle,
   UpdateToast,
   configureSports,
+  ordinal,
   type ChartRow,
 } from "../src"
 import "./demo.css"
@@ -234,6 +237,7 @@ const DEMO_RUN = {
 
 export function UiDemo() {
   const [tab, setTab] = useState("summary")
+  const [statView, setStatView] = useState("season")
   const [drawer, setDrawer] = useState(false)
   const [picked, setPicked] = useState<{ name: string; pos: string } | null>(null)
   const [messages, setMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
@@ -316,6 +320,31 @@ export function UiDemo() {
           <PageHeader title="Filters" actions={<button className="uidemo-toggle" onClick={() => setDrawer(false)}>Done</button>} />
           <p className="uidemo-note">Anything can live in a drawer: filters, settings, lineups.</p>
         </Drawer>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>SectionLabel · SegmentedControl — the inside of a card, not the page</h2>
+        <div className="uidemo-grid">
+          <Card>
+            <SectionLabel
+              action={
+                <SegmentedControl
+                  options={[
+                    { id: "season", label: "Season" },
+                    { id: "l5", label: "L5" },
+                  ]}
+                  active={statView}
+                  onChange={setStatView}
+                />
+              }
+            >
+              Rushing
+            </SectionLabel>
+            <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
+              Showing {statView === "season" ? "full-season" : "last 5 games"} totals. {ordinal(3)} in the league.
+            </p>
+          </Card>
+        </div>
       </section>
 
       <section className="uidemo-section">
