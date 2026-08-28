@@ -85,11 +85,20 @@ export function MatchupCard({
   onClick,
   className,
 }: Props) {
-  const homeWins =
-    tone === "final" &&
+  // Dim the side that is behind, once there is a result to be behind in.
+  //
+  // This used to compute `homeWins` and then dim away-when-homeWins,
+  // home-when-not. With tone "upcoming" homeWins is false, so the home score
+  // was dimmed in every game that had not started — a losing side in a game
+  // with no score. It also only ever applied at "final", so a live game
+  // showed both scores equally weighted.
+  const decided =
+    tone !== "upcoming" &&
     home.score != null &&
     away.score != null &&
     Number(home.score) !== Number(away.score)
+  const awayBehind = decided && Number(away.score) < Number(home.score)
+  const homeBehind = decided && Number(home.score) < Number(away.score)
 
   const body = (
     <>
@@ -112,9 +121,9 @@ export function MatchupCard({
         <div className="ui-matchup-mid">
           {middle ?? (
             <span className="ui-matchup-score">
-              <span className={cn(homeWins && "ui-matchup-loser")}>{away.score ?? "–"}</span>
+              <span className={cn(awayBehind && "ui-matchup-loser")}>{away.score ?? "–"}</span>
               <span className="ui-matchup-sep">–</span>
-              <span className={cn(!homeWins && "ui-matchup-loser")}>{home.score ?? "–"}</span>
+              <span className={cn(homeBehind && "ui-matchup-loser")}>{home.score ?? "–"}</span>
             </span>
           )}
         </div>

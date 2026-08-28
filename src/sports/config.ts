@@ -1,3 +1,5 @@
+import type { ReactElement, ReactNode } from "react"
+
 /**
  * Sport identity adapters. Kit components never hardcode where photos, logos,
  * or player pages live; each app configures that once at boot and futbol is a
@@ -13,6 +15,13 @@
 
 export type PlayerId = number | string
 
+/** What the kit needs to render one internal link. */
+export interface KitLinkProps {
+  href: string
+  className?: string
+  children: ReactNode
+}
+
 export interface SportsIdentity {
   /** Headshot/photo URL for a player id (0/unknown should return a silhouette). */
   photoUrl: (id: PlayerId | null | undefined, size?: number) => string
@@ -24,6 +33,24 @@ export interface SportsIdentity {
   teamHref?: (teamId: string | number) => string
   /** Name → id resolution for rows that only have a name; absent → no lookup. */
   resolvePlayer?: (name: string) => Promise<{ id: PlayerId } | null>
+  /**
+   * How this app renders an internal link. Absent → a plain `<a href>`, which
+   * in a single-page app is a full page reload rather than a client-side
+   * transition — which is why every consumer so far hand-rolled its own
+   * TeamLink and PlayerLink instead of using these. Set it once at boot:
+   *
+   *   import { Link } from "react-router-dom"
+   *   configureSports({
+   *     link: ({ href, className, children }) => (
+   *       <Link to={href} className={className}>{children}</Link>
+   *     ),
+   *   })
+   *
+   * Taking a render function rather than a component type keeps the kit free
+   * of any router dependency, and free of assumptions about whether the
+   * destination prop is called `to` or `href`.
+   */
+  link?: (props: KitLinkProps) => ReactElement
 }
 
 const IDENTITY: SportsIdentity = {
