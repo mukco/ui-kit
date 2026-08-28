@@ -19,6 +19,8 @@ export interface PicksCardProps extends AiProvenance {
   /** Moneyline, spread, total — whatever markets this sport has. */
   markets?: Array<{ label: string; pick?: Pick | null }>
   props?: Pick[] | null
+  /** Where the market looks soft, if anywhere. Its own callout, not a pick. */
+  valueSide?: string | null
   summary?: string | null
   loading?: boolean
   error?: ReactNode
@@ -67,6 +69,7 @@ export function PicksCard({
   title = "Picks",
   markets = [],
   props: playerProps,
+  valueSide,
   summary,
   loading = false,
   error,
@@ -80,7 +83,7 @@ export function PicksCard({
 }: PicksCardProps) {
   const live = markets.filter((m) => m.pick?.pick)
   const props = (playerProps ?? []).filter((p) => p.prop || p.pick)
-  const hasContent = live.length > 0 || props.length > 0 || Boolean(summary)
+  const hasContent = live.length > 0 || props.length > 0 || Boolean(summary) || Boolean(valueSide)
   const text = (t?: string | null) => (t ? (renderText ? renderText(t) : t) : null)
 
   return (
@@ -140,6 +143,13 @@ export function PicksCard({
             ))}
           </div>
         </section>
+      )}
+
+      {valueSide && (
+        <p className="ui-picks-value">
+          <span className="ui-picks-value-label">Value</span>
+          <span>{text(valueSide)}</span>
+        </p>
       )}
 
       {summary && <p className="ui-picks-summary">{text(summary)}</p>}

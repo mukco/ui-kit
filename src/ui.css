@@ -5308,3 +5308,59 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 /* A settled game in a list about games that are not. Quieter, still readable,
    still clickable — both apps expressed this with their own opacity class. */
 .ui-matchup--dim { opacity: 0.5; }
+
+/* ── OddsGrid ───────────────────────────────────────────────────────────────
+   The market in three boxes. Promoted from baseball, where it was the block a
+   picks card argues against. */
+.ui-odds-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+@media (max-width: 480px) { .ui-odds-grid { grid-template-columns: 1fr; } }
+.ui-odds {
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  padding: 0.5rem 0.75rem;
+  min-width: 0;
+}
+.ui-odds-label {
+  font-size: var(--fs9, 9px);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.ui-odds-row { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 12px; font-family: var(--font-mono); }
+.ui-odds-team { display: flex; align-items: center; gap: 0.25rem; min-width: 0; }
+.ui-odds-val { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.ui-odds-total { font-size: 18px; font-weight: 700; font-family: var(--font-mono); color: var(--text); text-align: center; }
+.ui-odds-ou {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs10, 10px);
+  font-family: var(--font-mono);
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+.ui-odds-prov { font-size: var(--fs9, 9px); color: var(--muted); margin-top: 0.25rem; }
+
+/* The value read — where the market is soft, if anywhere. Its own callout
+   because it is a verdict about the block above, not another pick. */
+.ui-picks-value {
+  margin: 0.75rem 0 0;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, transparent);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+.ui-picks-value-label {
+  font-size: var(--fs9, 9px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-text, var(--brand));
+  flex-shrink: 0;
+}
