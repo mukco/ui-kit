@@ -32,6 +32,10 @@ interface Props<T extends Record<string, unknown>> {
   error?: ReactNode
   /** Offered alongside `error`. */
   onRetry?: () => void
+  /** Caps the table at this height with an internal scroll region and a
+      sticky header — for tables that can run to hundreds of rows. Omit for
+      a table that should grow with the page (the default). */
+  maxHeight?: string
   className?: string
 }
 
@@ -66,6 +70,7 @@ export function DataTable<T extends Record<string, unknown>>({
   empty = "No data available.",
   error,
   onRetry,
+  maxHeight,
   className,
 }: Props<T>) {
   const [sort, setSort] = useState<{ key: string; dir: "asc" | "desc" } | null>(null)
@@ -132,8 +137,8 @@ export function DataTable<T extends Record<string, unknown>>({
 
   return (
     <div className={cn("ui-tablecard", className)}>
-      <div className="ui-tablescroll">
-        <table className="ui-table">
+      <div className="ui-tablescroll" style={maxHeight ? { maxHeight, overflowY: "auto" } : undefined}>
+        <table className={cn("ui-table", maxHeight && "ui-table--sticky")}>
           <thead>
             <tr>
               <th className="ui-th ui-th-num">#</th>
