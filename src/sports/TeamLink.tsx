@@ -2,7 +2,10 @@ import { sportsIdentity } from "./config"
 import { TeamIcon } from "./TeamIcon"
 
 interface Props {
-  teamId: string | number
+  /** Absent or null → the crest falls back to initials and nothing links.
+      A roster row whose team could not be resolved is a normal state, not a
+      caller error. */
+  teamId?: string | number | null
   name: string
   size?: number
   /** Applied to the name only — a table row that wants one team's name
@@ -16,8 +19,8 @@ interface Props {
  */
 export function TeamLink({ teamId, name, size = 18, textClassName }: Props) {
   const identity = sportsIdentity()
-  const href = identity.teamHref?.(teamId)
-  const face = <TeamIcon teamId={teamId} size={size} />
+  const href = teamId == null ? undefined : identity.teamHref?.(teamId)
+  const face = <TeamIcon teamId={teamId} size={size} name={name} />
   const label = textClassName ? <span className={textClassName}>{name}</span> : name
   const body = (
     <>
