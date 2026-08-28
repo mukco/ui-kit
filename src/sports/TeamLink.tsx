@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { cn } from "../cn"
 import { sportsIdentity } from "./config"
 import { TeamIcon } from "./TeamIcon"
 
@@ -18,13 +19,15 @@ interface Props {
   /** Applied to the name only — a table row that wants one team's name
       emphasized (the row's own team, say) without resizing its icon. */
   textClassName?: string
+  /** Applied to the link itself, so a caller can shape it — a chip, say. */
+  className?: string
 }
 
 /**
  * Team crest + name, linked when the app configured teamHref; plain text
  * otherwise.
  */
-export function TeamLink({ teamId, name, size = 18, textClassName }: Props) {
+export function TeamLink({ teamId, name, size = 18, textClassName, className }: Props) {
   const identity = sportsIdentity()
   const href = teamId == null ? undefined : identity.teamHref?.(teamId)
   const face = <TeamIcon teamId={teamId} size={size} name={typeof name === "string" ? name : null} />
@@ -35,15 +38,16 @@ export function TeamLink({ teamId, name, size = 18, textClassName }: Props) {
       {label}
     </>
   )
+  const cls = cn("ui-team-link", className)
   if (href) {
     // `link` when the app gave us one — a plain <a> reloads the whole app.
     return identity.link
-      ? identity.link({ href, className: "ui-team-link", children: body })
+      ? identity.link({ href, className: cls, children: body })
       : (
-        <a className="ui-team-link" href={href}>
+        <a className={cls} href={href}>
           {body}
         </a>
       )
   }
-  return <span className="ui-team-link">{body}</span>
+  return <span className={cls}>{body}</span>
 }
