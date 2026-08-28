@@ -1,5 +1,5 @@
 {
   "_comment": "Current violation counts. The build fails when one goes UP. Lower them as you fix things; raising one should be a visible decision in the diff.",
   "colourLiteralsInComponents": 2,
-  "offScaleSpacing": 70
+  "offScaleSpacing": 69
 }
