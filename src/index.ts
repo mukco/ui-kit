@@ -48,6 +48,9 @@ export { NavBar } from "./primitives/NavBar"
 export type { NavChild, NavItem } from "./primitives/NavBar"
 export { PageHeader } from "./primitives/PageHeader"
 export { SearchSelect } from "./primitives/SearchSelect"
+export { SectionLabel } from "./primitives/SectionLabel"
+export { SegmentedControl } from "./primitives/SegmentedControl"
+export type { SegmentedOption } from "./primitives/SegmentedControl"
 export { NotificationBell } from "./notifications/NotificationBell"
 export type { NotificationItem } from "./notifications/NotificationBell"
 export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/Settings"
@@ -72,6 +75,8 @@ export { ThemeToggle, useTheme } from "./primitives/ThemeToggle"
 export type { ResolvedTheme, ThemeChoice } from "./primitives/ThemeToggle"
 export { Tabs } from "./primitives/Tabs"
 export type { TabItem } from "./primitives/Tabs"
+
+export { ordinal } from "./lib/ordinal"
 
 // Charts
 export { DynamicChart, chartPalette } from "./charts/DynamicChart"
