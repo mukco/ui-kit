@@ -5164,8 +5164,10 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   padding: 0.25rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
   min-width: 0;
+  font-size: 12px;
 }
 .ui-panelrow:last-child { border-bottom: 0; }
+.ui-panelrow--stack { flex-direction: column; align-items: stretch; }
 /* A clickable row bleeds its padding outward so the hover fill lines up with
    the panel's own edge instead of insetting from it. */
 .ui-panelrow--link {
