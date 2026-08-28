@@ -41,7 +41,11 @@ export function TeamIcon({ teamId, size = 20, name, tint }: Props) {
         }}
         aria-hidden="true"
       >
-        {(name ?? "").slice(0, 2).toUpperCase()}
+        {/* Initials only where they can actually be read. Below 16px the font
+            works out to 5-6px, which is not a label — and inside a chip that
+            already prints the abbreviation beside the crest it renders as
+            "LALAR". The badge still holds its space either way. */}
+        {size >= 16 ? (name ?? "").slice(0, 2).toUpperCase() : null}
       </span>
     )
   }
