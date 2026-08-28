@@ -1,7 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cn } from "../cn";
-/** Map a 0–100 percentile to the stat-ramp tokens. */
-function rampColor(pct) {
+/**
+ * Map a 0–100 percentile to the stat-ramp tokens.
+ *
+ * Exported because an app that draws its own number beside a PercentileBar has
+ * to agree with it about the same percentile, and the only way to do that
+ * without this was to reimplement the five thresholds — which football did.
+ */
+export function rampColor(pct) {
     if (pct == null)
         return null;
     if (pct >= 85)

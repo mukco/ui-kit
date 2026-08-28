@@ -47,7 +47,7 @@ export { SortedList } from "./primitives/SortedList";
 export { StatusDot, StatusGrid, SEVERITY_ORDER } from "./primitives/Status";
 export { TriageList } from "./primitives/TriageList";
 export { TimeRangePicker, DEFAULT_TIME_RANGES } from "./primitives/TimeRangePicker";
-export { InlineStatRow, PercentileBar, StatCard } from "./primitives/StatCard";
+export { InlineStatRow, PercentileBar, StatCard, rampColor } from "./primitives/StatCard";
 export { ThemeToggle, useTheme } from "./primitives/ThemeToggle";
 export { Tabs } from "./primitives/Tabs";
 export { ordinal } from "./lib/ordinal";

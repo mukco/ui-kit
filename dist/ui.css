@@ -111,6 +111,11 @@
   --radius-lg: 14px;
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 24px rgba(15, 23, 42, 0.06);
+  /* For things that float above the page rather than sit on it — modals,
+     dropdowns, hover cards, trays. Both apps had already written this exact
+     value by hand: baseball defines it locally in baseball.css, football
+     repeated the literal in four places. */
+  --shadow-lg: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
 
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -161,6 +166,7 @@
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 /* Base type — the kit owns this so every app reads the same. Sans for UI,
