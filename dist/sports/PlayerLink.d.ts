@@ -6,8 +6,16 @@ interface Props {
         id?: PlayerId | null;
         name?: string | null;
     };
-    /** Photo size in px. */
-    size?: number;
+    /**
+     * Rendered size in px. `null` sets no inline dimensions, leaving it to
+     * `imageClassName` — for a consumer that sizes avatars by CSS per context.
+     */
+    size?: number | null;
+    /**
+     * Size requested from photoUrl, when it should differ from the rendered one:
+     * ask the CDN for a sharp image and let CSS draw it small. Defaults to `size`.
+     */
+    photoSize?: number;
     /** Hide the name, avatar only. */
     avatarOnly?: boolean;
     /**
@@ -49,5 +57,5 @@ interface Props {
  * through `resolvePlayer`, so an app that wants it cached supplies a cached
  * implementation rather than the kit growing a query library.
  */
-export declare function PlayerLink({ player, size, avatarOnly, resolveName, className, imageClassName, textClassName, stopPropagation, wrap, photoVariant, live, }: Props): import("react").JSX.Element;
+export declare function PlayerLink({ player, size, photoSize, avatarOnly, resolveName, className, imageClassName, textClassName, stopPropagation, wrap, photoVariant, live, }: Props): import("react").JSX.Element;
 export {};

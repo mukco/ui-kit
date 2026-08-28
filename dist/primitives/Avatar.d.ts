@@ -1,8 +1,13 @@
 interface Props {
     name?: string | null;
     src?: string | null;
-    /** Rendered size in px (width = height = size). */
-    size?: number;
+    /**
+     * Rendered size in px (width = height = size). Pass `null` to set no inline
+     * dimensions at all and let a className govern — a consumer whose avatars are
+     * sized by CSS (per context, per breakpoint) cannot use an inline value,
+     * because inline always wins.
+     */
+    size?: number | null;
     className?: string;
 }
 /**

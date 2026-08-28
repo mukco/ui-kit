@@ -14,7 +14,7 @@ import { sportsIdentity } from "./config";
  * through `resolvePlayer`, so an app that wants it cached supplies a cached
  * implementation rather than the kit growing a query library.
  */
-export function PlayerLink({ player, size = 28, avatarOnly = false, resolveName, className, imageClassName, textClassName, stopPropagation = false, wrap, photoVariant, live = false, }) {
+export function PlayerLink({ player, size = 28, photoSize, avatarOnly = false, resolveName, className, imageClassName, textClassName, stopPropagation = false, wrap, photoVariant, live = false, }) {
     const identity = sportsIdentity();
     const [resolved, setResolved] = useState(null);
     const name = player.name ?? null;
@@ -37,7 +37,11 @@ export function PlayerLink({ player, size = 28, avatarOnly = false, resolveName,
     if (effectiveId == null && resolved != null)
         effectiveId = resolved;
     const href = effectiveId != null && identity.playerHref ? identity.playerHref(effectiveId) : null;
-    const photo = effectiveId != null ? identity.photoUrl(effectiveId, size, photoVariant) : "";
+    // photoUrl is asked even without an id: its signature takes null precisely so
+    // an app whose CDN serves a generic silhouette can return one, and a row then
+    // holds its avatar's space instead of jittering as images resolve. An app
+    // with no such placeholder returns "" and Avatar falls back to initials.
+    const photo = identity.photoUrl(effectiveId, photoSize ?? size ?? undefined, photoVariant);
     const face = (_jsx(Avatar, { name: name, src: photo || null, size: size, className: cn(live && "ui-player-avatar--live", imageClassName) }));
     const label = !avatarOnly && name ? _jsx("span", { className: cn("ui-player-name", textClassName), children: name }) : null;
     const body = (_jsxs(_Fragment, { children: [face, label] }));

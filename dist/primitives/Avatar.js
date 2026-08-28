@@ -13,6 +13,8 @@ function initials(name) {
  */
 export function Avatar({ name, src, size = 32, className }) {
     const [broken, setBroken] = useState(false);
-    const px = { width: size, height: size, fontSize: Math.max(9, Math.round(size * 0.38)) };
+    const px = size == null
+        ? undefined
+        : { width: size, height: size, fontSize: Math.max(9, Math.round(size * 0.38)) };
     return (_jsx("span", { className: cn("ui-avatar", className), style: px, title: name ?? undefined, children: src && !broken ? (_jsx("img", { src: src, alt: name ?? "", loading: "lazy", onError: () => setBroken(true) })) : (initials(name)) }));
 }

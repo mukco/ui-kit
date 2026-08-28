@@ -614,7 +614,10 @@ a.ui-player:hover .ui-player-name {
 
 .ui-player-name {
   font-size: 0.875rem;
-  color: var(--text);
+  /* Inherit, so a name inside a link is the link's colour. .ui-player already
+     sets `color: inherit` for exactly that reason; hard-coding --text here
+     undid it, and a player link rendered as body text. */
+  color: inherit;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -8,7 +8,7 @@ import { TeamIcon } from "./TeamIcon";
 export function TeamLink({ teamId, name, size = 18, textClassName }) {
     const identity = sportsIdentity();
     const href = teamId == null ? undefined : identity.teamHref?.(teamId);
-    const face = _jsx(TeamIcon, { teamId: teamId, size: size, name: name });
+    const face = _jsx(TeamIcon, { teamId: teamId, size: size, name: typeof name === "string" ? name : null });
     const label = textClassName ? _jsx("span", { className: textClassName, children: name }) : name;
     const body = (_jsxs(_Fragment, { children: [face, label] }));
     if (href) {
