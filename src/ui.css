@@ -1061,95 +1061,6 @@ button.ui-matchup--link {
   color: inherit;
 }
 
-.ui-matchup-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.ui-matchup-side {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.ui-matchup-side:last-child {
-  justify-content: flex-end;
-  text-align: right;
-}
-
-.ui-matchup-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--surface-2);
-  color: var(--text-2);
-  font-size: 0.6rem;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.ui-matchup-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.ui-matchup-name {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ui-matchup-mid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.125rem;
-}
-
-.ui-matchup-status {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.ui-matchup-status--live { color: var(--danger); }
-.ui-matchup-status--final { color: var(--muted); }
-.ui-matchup-status--upcoming { color: var(--brand); }
-
-.ui-matchup-score {
-  font-family: var(--font-mono);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--text);
-  display: inline-flex;
-  gap: 0.4rem;
-  align-items: baseline;
-}
-
-.ui-matchup-sep { color: var(--muted); font-weight: 400; }
-
-.ui-matchup-loser { opacity: 0.55; font-weight: 500; }
-
-.ui-matchup-detail {
-  margin: 0;
-  padding-top: 0.625rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
 /* ---------- Assistant ---------- */
 
 .ui-assistant-root {
@@ -1830,7 +1741,6 @@ button.ui-matchup--link {
   .ui-insights-cached { font-size: 12px; }
   .ui-inline-stat-label { font-size: 11px; }
   .ui-award-label { font-size: 11px; }
-  .ui-matchup-status { font-size: 11px; }
   .ui-chip { font-size: 12px; }
 }
 
@@ -4605,4 +4515,179 @@ samp,
   textarea {
     font-size: 16px !important;
   }
+}
+
+
+/* ---------- Matchup card ---------- */
+
+/* The shell for "these two, at it": a photograph, a state chip, two sides and
+   a slot the sport fills. Ported from baseball's game tile, which is the
+   reference look; football composes the same shell with its own footer, so
+   the two match by construction rather than by copying measurements. */
+.ui-matchup {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  /* .ui-card is a flex column with a gap, which is right for stacked content
+     and wrong here: head, body and foot carry their own padding, and the gap
+     lands on top of it — two of them added 20px of height the design does not
+     have. The card's own padding stays: the content is deliberately inset
+     twice, once by the card and once by each section. */
+  gap: 0;
+}
+.ui-matchup--link { cursor: pointer; }
+.ui-matchup--link:hover { box-shadow: 0 4px 12px rgb(0 0 0 / 0.08); }
+.ui-matchup--on { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+.ui-matchup-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Full-card scrim keeps the image continuous while preserving legibility. */
+.ui-matchup-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 60%, transparent),
+    color-mix(in srgb, var(--bg) 75%, transparent),
+    color-mix(in srgb, var(--bg) 95%, transparent)
+  );
+}
+
+.ui-matchup-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 0.5rem;
+}
+
+.ui-matchup-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.ui-matchup-status--live { background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--brand-text); }
+.ui-matchup-status--upcoming { color: var(--text-2); }
+
+.ui-matchup-meta {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
+}
+
+.ui-matchup-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 1.25rem;
+}
+
+.ui-matchup-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+.ui-matchup-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.ui-matchup-logo img { width: 100%; height: 100%; object-fit: contain; }
+.ui-matchup-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.ui-matchup-record {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A pulsing dot for a live state. Generic furniture — every sport has one. */
+.ui-matchup-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: currentColor;
+}
+.ui-matchup-status--live .ui-matchup-dot { animation: ui-matchup-pulse 2s ease-in-out infinite; }
+@keyframes ui-matchup-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-matchup-status--live .ui-matchup-dot { animation: none; }
+}
+
+.ui-matchup-mid { flex-shrink: 0; padding: 0 0.5rem; }
+
+/* Before first pitch/kickoff there is no score to show. */
+.ui-matchup-vs {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.ui-matchup-score {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--text);
+  font-weight: 700;
+}
+.ui-matchup-sep { color: var(--muted); font-size: 1rem; font-weight: 400; }
+.ui-matchup-loser { color: var(--muted); font-weight: 600; }
+
+.ui-matchup-foot {
+  position: relative;
+  z-index: 1;
+  padding: 0 1rem 1rem;
+}
+.ui-matchup-detail {
+  margin: 0;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--muted);
 }
