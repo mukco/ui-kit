@@ -4,6 +4,12 @@ import { cn } from "../cn"
 export interface InsightSection {
   heading?: string
   bullets: ReactNode[]
+  /**
+   * Rendered under the section's bullets — the entities the section talks
+   * about, as links. Baseball's game insights put a row of player links there
+   * and that slot is the only reason its panel could not be this component.
+   */
+  footer?: ReactNode
 }
 
 interface Props {
@@ -122,6 +128,7 @@ export function InsightsCard({
                     ))}
                   </ul>
                 )}
+                {s.footer}
               </section>
             ),
         )}
