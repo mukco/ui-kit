@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { type Severity } from "./Status";
 export interface ListRowProps {
-    /** A dot in the leading column. Omit for a row that is not about health. */
+    /** A dot at the title's baseline. Omit for a row that is not about health. */
     tone?: Severity;
     pulse?: boolean;
     /** The thing itself — a job class, a container, an error. */
@@ -18,6 +18,11 @@ export interface ListRowProps {
     onClick?: () => void;
     /** A coloured left edge, for rows that carry a severity of their own. */
     edge?: boolean;
+    /** Content before the title/body — an avatar or icon. Centered on the whole
+     * row, unlike the tone dot, which sits at the title's own baseline. */
+    leading?: ReactNode;
+    /** Content after the title/body — typically an action button. */
+    trailing?: ReactNode;
     className?: string;
 }
 /**
@@ -32,7 +37,7 @@ export interface ListRowProps {
  * Having it once is the difference between a panel and a set of pages that
  * happen to share a stylesheet.
  */
-export declare function ListRow({ tone, pulse, title, meta, detail, mono, clamp, onClick, edge, className, }: ListRowProps): import("react").JSX.Element;
+export declare function ListRow({ tone, pulse, title, meta, detail, mono, clamp, onClick, edge, leading, trailing, className, }: ListRowProps): import("react").JSX.Element;
 /** The list they sit in. Separate so a caller cannot forget the spacing. */
 export declare function ListRows({ children, className }: {
     children: ReactNode;

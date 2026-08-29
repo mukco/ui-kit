@@ -7,6 +7,7 @@ export { AutoLinkedText } from "./primitives/AutoLinkedText";
 export { NAME_RE, normalizeName, matchKey, extractCandidates, resolveKnownPlayers } from "./sports/playerNames";
 export { Avatar } from "./primitives/Avatar";
 export { BasicTable } from "./primitives/BasicTable";
+export { Box } from "./primitives/Box";
 export { Button } from "./primitives/Button";
 export { Card } from "./primitives/Card";
 export { CardStrip } from "./primitives/CardStrip";
@@ -55,6 +56,7 @@ export { TimeRangePicker, DEFAULT_TIME_RANGES } from "./primitives/TimeRangePick
 export { InlineStatRow, PercentileBar, StatCard, rampColor } from "./primitives/StatCard";
 export { ThemeToggle, useTheme } from "./primitives/ThemeToggle";
 export { Tabs } from "./primitives/Tabs";
+export { Text } from "./primitives/Text";
 export { ordinal } from "./lib/ordinal";
 // Charts
 export { DynamicChart, chartPalette } from "./charts/DynamicChart";

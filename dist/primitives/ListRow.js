@@ -13,9 +13,9 @@ import { StatusDot } from "./Status";
  * Having it once is the difference between a panel and a set of pages that
  * happen to share a stylesheet.
  */
-export function ListRow({ tone, pulse, title, meta, detail, mono, clamp = 0, onClick, edge, className, }) {
+export function ListRow({ tone, pulse, title, meta, detail, mono, clamp = 0, onClick, edge, leading, trailing, className, }) {
     const Tag = onClick ? "button" : "div";
-    return (_jsxs(Tag, { ...(onClick ? { type: "button", onClick } : {}), className: cn("ui-row", tone && edge && `ui-row--${tone}`, onClick && "ui-row--button", className), children: [tone && _jsx(StatusDot, { tone: tone, pulse: pulse, className: "ui-row-dot" }), _jsxs("span", { className: "ui-row-body", children: [_jsxs("span", { className: "ui-row-head", children: [_jsx("span", { className: "ui-row-title", children: title }), meta != null && _jsx("span", { className: "ui-row-meta", children: meta })] }), detail != null && (_jsx("span", { className: cn("ui-row-detail", mono && "ui-row-detail--mono", clamp > 0 && "is-clamped"), style: clamp > 0 ? ({ ["--ui-row-clamp"]: clamp }) : undefined, children: detail }))] })] }));
+    return (_jsxs(Tag, { ...(onClick ? { type: "button", onClick } : {}), className: cn("ui-row", tone && edge && `ui-row--${tone}`, onClick && "ui-row--button", className), children: [leading != null && (_jsx("span", { className: "ui-row-leading", onClick: (e) => e.stopPropagation(), children: leading })), _jsxs("span", { className: "ui-row-main", children: [tone && _jsx(StatusDot, { tone: tone, pulse: pulse, className: "ui-row-dot" }), _jsxs("span", { className: "ui-row-body", children: [_jsxs("span", { className: "ui-row-head", children: [_jsx("span", { className: "ui-row-title", children: title }), meta != null && _jsx("span", { className: "ui-row-meta", children: meta })] }), detail != null && (_jsx("span", { className: cn("ui-row-detail", mono && "ui-row-detail--mono", clamp > 0 && "is-clamped"), style: clamp > 0 ? ({ ["--ui-row-clamp"]: clamp }) : undefined, children: detail }))] })] }), trailing != null && (_jsx("span", { className: "ui-row-trailing", onClick: (e) => e.stopPropagation(), children: trailing }))] }));
 }
 /** The list they sit in. Separate so a caller cannot forget the spacing. */
 export function ListRows({ children, className }) {
