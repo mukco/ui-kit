@@ -820,10 +820,27 @@ export function UiDemo() {
               detail="Completed 500 Internal Server Error in 288ms (Views: 1.1ms | ActiveRecord: 12.4ms)"
               onClick={() => {}}
             />
+            <ListRow
+              tone="ok"
+              edge
+              leading={<Avatar name="Jonathan Taylor" size={32} />}
+              title="Jonathan Taylor"
+              meta="RB · IND"
+              detail="Best value at your slot — the tier below empties in 6 picks."
+              trailing={<Button tone="primary" size="sm">Assign</Button>}
+            />
+            <ListRow
+              leading={<Avatar name="Chris Olave" size={32} />}
+              title="Chris Olave"
+              meta="WR · NO"
+              trailing={<Button size="sm">Assign</Button>}
+            />
           </ListRows>
           <p className="uidemo-note" style={{ marginTop: "0.5rem" }}>
             Estate had hand-rolled this four times — failed jobs, running jobs, worker processes
-            and log hits — each with its own truncation rule. The last row is a door.
+            and log hits — each with its own truncation rule. The last row is a door. The bottom
+            two show <code>leading</code>/<code>trailing</code>: an avatar and an action button
+            that center on the whole row, unlike the tone dot, which sits at the title's baseline.
           </p>
         </Card>
       </section>

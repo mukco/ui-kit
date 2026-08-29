@@ -3,7 +3,7 @@ import { cn } from "../cn"
 import { StatusDot, type Severity } from "./Status"
 
 export interface ListRowProps {
-  /** A dot in the leading column. Omit for a row that is not about health. */
+  /** A dot at the title's baseline. Omit for a row that is not about health. */
   tone?: Severity
   pulse?: boolean
   /** The thing itself — a job class, a container, an error. */
@@ -20,6 +20,11 @@ export interface ListRowProps {
   onClick?: () => void
   /** A coloured left edge, for rows that carry a severity of their own. */
   edge?: boolean
+  /** Content before the title/body — an avatar or icon. Centered on the whole
+   * row, unlike the tone dot, which sits at the title's own baseline. */
+  leading?: ReactNode
+  /** Content after the title/body — typically an action button. */
+  trailing?: ReactNode
   className?: string
 }
 
@@ -45,6 +50,8 @@ export function ListRow({
   clamp = 0,
   onClick,
   edge,
+  leading,
+  trailing,
   className,
 }: ListRowProps) {
   const Tag = onClick ? "button" : "div"
@@ -58,21 +65,33 @@ export function ListRow({
         className,
       )}
     >
-      {tone && <StatusDot tone={tone} pulse={pulse} className="ui-row-dot" />}
-      <span className="ui-row-body">
-        <span className="ui-row-head">
-          <span className="ui-row-title">{title}</span>
-          {meta != null && <span className="ui-row-meta">{meta}</span>}
+      {leading != null && (
+        <span className="ui-row-leading" onClick={(e) => e.stopPropagation()}>
+          {leading}
         </span>
-        {detail != null && (
-          <span
-            className={cn("ui-row-detail", mono && "ui-row-detail--mono", clamp > 0 && "is-clamped")}
-            style={clamp > 0 ? ({ ["--ui-row-clamp" as string]: clamp }) : undefined}
-          >
-            {detail}
+      )}
+      <span className="ui-row-main">
+        {tone && <StatusDot tone={tone} pulse={pulse} className="ui-row-dot" />}
+        <span className="ui-row-body">
+          <span className="ui-row-head">
+            <span className="ui-row-title">{title}</span>
+            {meta != null && <span className="ui-row-meta">{meta}</span>}
           </span>
-        )}
+          {detail != null && (
+            <span
+              className={cn("ui-row-detail", mono && "ui-row-detail--mono", clamp > 0 && "is-clamped")}
+              style={clamp > 0 ? ({ ["--ui-row-clamp" as string]: clamp }) : undefined}
+            >
+              {detail}
+            </span>
+          )}
+        </span>
       </span>
+      {trailing != null && (
+        <span className="ui-row-trailing" onClick={(e) => e.stopPropagation()}>
+          {trailing}
+        </span>
+      )}
     </Tag>
   )
 }

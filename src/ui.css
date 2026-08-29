@@ -1405,6 +1405,30 @@ button.ui-matchup--link {
   padding: 0 1rem 1rem;
 }
 
+/* ---------- Box — plain container, no built-in header (see Card) ---------- */
+.ui-box { min-width: 0; }
+.ui-box--surface { background: var(--surface); }
+.ui-box--surface-2 { background: var(--surface-2); }
+.ui-box--transparent { background: transparent; }
+.ui-box--border { border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.ui-box--pad-none { padding: 0; }
+.ui-box--pad-sm { padding: var(--space-2); }
+.ui-box--pad-md { padding: var(--space-4); }
+.ui-box--pad-lg { padding: var(--space-5); }
+
+/* ---------- Text ---------- */
+.ui-text { margin: 0; line-height: 1.5; }
+.ui-text--sm { font-size: 0.75rem; }
+.ui-text--md { font-size: 0.875rem; }
+.ui-text--lg { font-size: 1rem; }
+.ui-text--xl { font-size: 1.25rem; }
+.ui-text--default { color: var(--text); }
+.ui-text--muted { color: var(--muted); }
+.ui-text--brand { color: var(--brand-text); }
+.ui-text--normal { font-weight: 400; }
+.ui-text--medium { font-weight: 600; }
+.ui-text--bold { font-weight: 700; }
+
 /* ---------- CardStrip ---------- */
 
 .ui-strip {
@@ -3577,10 +3601,9 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-rows { display: grid; gap: var(--space-2); }
 
 .ui-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0 var(--space-2);
-  align-items: baseline;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-3) var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -3600,6 +3623,19 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-row--critical { border-left: 2px solid var(--sev-error); }
 .ui-row--ok { border-left: 2px solid var(--sev-ok); }
 .ui-row--unknown { border-left: 2px solid var(--sev-unknown); }
+
+/* The avatar/icon slot and the trailing action slot both center on the whole
+   row — unlike the tone dot below, which sits at the title's own baseline. */
+.ui-row-leading, .ui-row-trailing { flex-shrink: 0; display: flex; align-items: center; }
+
+.ui-row-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 var(--space-2);
+  align-items: baseline;
+  min-width: 0;
+}
 
 .ui-row-dot { transform: translateY(-0.1rem); }
 
