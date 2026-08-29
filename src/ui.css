@@ -1,3 +1,12 @@
+/* Micro font sizes route through variables so phones can raise them wholesale.
+   Kit rules already read var(--fs8/9/10, …) in about thirty places; the floor
+   that raises them lived in baseball.css alone, so the same kit component was
+   legible on a phone in one app and 9px in the other. It belongs here, next to
+   the rules that read it. Desktop keeps the tuned sizes via the fallbacks. */
+@media (max-width: 640px) {
+  :root { --fs8: 10px; --fs9: 11px; --fs10: 12px; }
+}
+
 /* Estate UI kit — structural styles + default tokens.
 
    Components reference ONLY these semantic custom properties, never raw
