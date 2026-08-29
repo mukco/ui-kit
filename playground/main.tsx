@@ -1,14 +1,15 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import { UiDemo } from "../demo/UiDemo"
+import { Builder } from "../demo/builder/Builder"
 import "../src/ui.css"
 
-/* The playground entry: kit components + test data, nothing else.
-   No auth, no router, no API — it must always render offline. */
+/* The playground root is the Kit Builder — drag-and-drop assembly from real
+   kit components, test data, nothing else. The old full-inventory demo lives
+   at /library.html now; this is the one people (and agents, via the dev
+   bridge) actually build pages in. */
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <UiDemo />
+    <Builder />
   </StrictMode>,
 )
-
