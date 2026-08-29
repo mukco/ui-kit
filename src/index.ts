@@ -81,6 +81,8 @@ export { TimeRangePicker, DEFAULT_TIME_RANGES } from "./primitives/TimeRangePick
 export type { TimeRangeOption } from "./primitives/TimeRangePicker"
 export { InlineStatRow, PercentileBar, StatCard, rampColor } from "./primitives/StatCard"
 export type { StatComparison, StatProgress } from "./primitives/StatCard"
+export { MetricCells } from "./primitives/MetricCells"
+export type { MetricCellDef, MetricOpts } from "./primitives/MetricCells"
 export { ThemeToggle, useTheme } from "./primitives/ThemeToggle"
 export type { ResolvedTheme, ThemeChoice } from "./primitives/ThemeToggle"
 export { Tabs } from "./primitives/Tabs"
