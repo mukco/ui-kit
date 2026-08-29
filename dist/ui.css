@@ -392,6 +392,35 @@ body {
   color: var(--text);
 }
 
+/* ---------- MetricCells — shared value strip (baseball + football) ----------
+   Fixed-width `align` mode keeps columns at same x across rows; salary badge
+   sits in the middle as a divider. Kit-mutable, so both apps use one strip. */
+.ui-metriccells { display: flex; align-items: stretch; flex-shrink: 0; }
+.ui-metriccells--dense { display: flex; width: 100%; align-items: stretch; text-align: center; }
+.ui-metriccell { padding: 0 var(--space-2); text-align: right; min-width: 0; }
+.ui-metriccell + .ui-metriccell { border-left: 1px solid color-mix(in srgb, var(--border) 50%, transparent); }
+.ui-metriccell--flex { min-width: 56px; }
+.ui-metriccell--fixed { width: 72px; flex-shrink: 0; }
+.ui-metriccell--flex-sm { min-width: 44px; }
+.ui-metriccell--fixed-sm { width: 60px; flex-shrink: 0; }
+.ui-metriccell--dense { flex: 1; min-width: 0; padding: 0 var(--space-1); text-align: center; }
+.ui-metricval { font-family: var(--font-mono); font-weight: 700; font-size: 14px; line-height: 1; font-variant-numeric: tabular-nums; }
+.ui-metricval--sm { font-size: 12px; }
+.ui-metricval--dense { font-size: 11px; }
+.ui-metricval--muted { color: var(--muted); }
+.ui-metriclabel { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-1); font-size: 9px; color: var(--muted); line-height: 1; margin-top: var(--space-1); }
+.ui-metricsub { font-size: 9px; color: color-mix(in srgb, var(--muted) 60%, transparent); line-height: 1; margin-top: var(--space-1); }
+.ui-metricsalary { display: flex; align-items: center; }
+.ui-metricsalary--row { padding-right: var(--space-3); }
+.ui-metricsalary--align { justify-content: flex-end; flex-shrink: 0; padding-right: var(--space-3); width: 40px; }
+.ui-salarybadge { display: inline-flex; align-items: center; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--brand); border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent); font-family: var(--font-mono); font-size: 10px; font-weight: 700; }
+.ui-metric-bar { height: 2px; width: 2rem; margin-left: auto; border-radius: 999px; background: var(--border); overflow: hidden; margin-top: var(--space-1); }
+.ui-metric-bar-fill { height: 100%; border-radius: 999px; }
+.ui-metric-bar--hi { background: var(--ok); }
+.ui-metric-bar--mid { background: var(--brand); }
+.ui-metric-bar--warn { background: var(--warn); }
+.ui-metric-bar--low { background: var(--danger); }
+
 /* ---------- Avatar ---------- */
 
 .ui-avatar {
