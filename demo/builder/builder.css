@@ -1,0 +1,1095 @@
+/* Kit Builder — drag-and-drop page assembler. Reads only tokens from
+   src/ui.css; nothing here is a hex/rgb literal. */
+
+.builder {
+  --code-h: 240px;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  grid-template-rows: auto 1fr var(--code-h);
+  grid-template-areas:
+    "head head head"
+    "palette canvas inspector"
+    "code code code";
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 960px) {
+  .builder {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr var(--code-h);
+    grid-template-areas:
+      "head"
+      "palette"
+      "canvas"
+      "code";
+  }
+  .builder-palette { max-height: 220px; }
+  .builder-inspector-desktop { display: none; }
+}
+
+/* ---------- Header ---------- */
+.builder-head {
+  grid-area: head;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-4);
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.builder-head-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.builder-head-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: var(--on-brand);
+  font-weight: 800;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.builder-head-titles {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.builder-head-title { font-weight: 700; font-size: 0.92rem; }
+.builder-head-sub { font-size: 0.68rem; color: var(--muted); }
+
+.builder-head-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.builder-head-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.builder-head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.builder-viewport {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px;
+  background: var(--surface-2);
+}
+
+.builder-viewport button {
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.builder-viewport button.is-active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.builder-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.builder-stat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sev-ok);
+}
+
+/* ---------- Palette ---------- */
+.builder-palette {
+  grid-area: palette;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.builder-palette-head {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.builder-palette-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.builder-palette-title h2 { margin: 0; font-size: 0.82rem; font-weight: 700; }
+.builder-palette-count { font-size: 0.66rem; color: var(--muted); }
+
+.builder-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.builder-search-icon {
+  position: absolute;
+  left: var(--space-2);
+  color: var(--muted);
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+.builder-search {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 0.45rem 1.8rem;
+  font-size: 0.78rem;
+}
+
+.builder-search-clear {
+  position: absolute;
+  right: var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.72rem;
+}
+
+.builder-palette-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.builder-cat { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.builder-cat-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.builder-cat-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.builder-cat-count { font-size: 0.62rem; color: var(--muted); }
+
+.builder-palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 0.5rem 0.65rem;
+  cursor: grab;
+  text-align: left;
+  width: 100%;
+}
+
+.builder-palette-item:hover { border-color: var(--border-strong); background: var(--surface-2); }
+
+.builder-palette-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+.builder-palette-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.builder-palette-name { font-size: 0.78rem; font-weight: 600; }
+.builder-palette-desc { font-size: 0.64rem; color: var(--muted); }
+
+.builder-palette-add {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.builder-palette-add:hover { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+
+.builder-palette-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+/* ---------- Canvas ---------- */
+.builder-canvas {
+  grid-area: canvas;
+  overflow-y: auto;
+  padding: var(--space-5) var(--space-4);
+  background: var(--bg);
+}
+
+.builder-canvas-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.builder-canvas-inner.is-mobile { max-width: 390px; }
+
+.builder-canvas-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.builder-canvas-label { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 600; }
+.builder-canvas-label i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sev-ok);
+}
+
+.builder-canvas-actions { display: flex; align-items: center; gap: var(--space-2); }
+
+.builder-canvas-empty {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--surface);
+}
+
+.builder-canvas-empty-icon { font-size: 1.6rem; color: var(--muted); }
+.builder-canvas-empty h3 { margin: 0; font-size: 1rem; }
+.builder-canvas-empty p { margin: 0; max-width: 42ch; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+
+.builder-presets { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
+
+.builder-preset {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 0.42rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.builder-preset--primary { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+
+.builder-row-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.builder-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.builder-row.is-mobile {
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ---------- Resize divider — a plain pointer-drag control, not a dnd-kit
+   droppable, between two blocks sharing a row. ---------- */
+.builder-divider {
+  position: relative;
+  flex-shrink: 0;
+  width: 16px;
+  align-self: stretch;
+  cursor: col-resize;
+  border-radius: var(--radius-sm);
+}
+
+.builder-row.is-mobile .builder-divider {
+  display: none;
+}
+
+.builder-divider::after {
+  content: "";
+  position: absolute;
+  top: var(--space-4);
+  bottom: var(--space-4);
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--border-strong);
+  border-radius: 2px;
+  transition: background 0.12s ease;
+}
+
+.builder-divider:hover {
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+}
+
+.builder-divider:hover::after {
+  background: var(--brand);
+}
+
+/* ---------- Whole-block drop targets ----------
+   Every rendered block doubles as a drop target — far more forgiving for a
+   real mouse than a thin sliver between items. Which quadrant of the block
+   you drop on decides the outcome: top/bottom = new row before/after,
+   left/right = join that row before/after this block. */
+.builder-block--drop-target {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.builder-block-zones {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  --edge: 15%;
+}
+
+/* Every zone a drop COULD land in shows faintly the moment you're hovering a
+   target, so the full set of options is visible before you've aimed —
+   the currently-targeted one (.is-active) then lights up solid with a label
+   naming the exact outcome, so you confirm before releasing instead of
+   guessing from geometry. */
+.builder-zone {
+  position: absolute;
+  background: color-mix(in srgb, var(--brand) 7%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--brand) 30%, transparent);
+  transition: background 0.1s ease, border-color 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.builder-zone.is-active {
+  background: color-mix(in srgb, var(--brand) 30%, transparent);
+  border: 1px solid var(--brand);
+}
+
+.builder-zone.is-active::after {
+  content: attr(data-label);
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.builder-zone--top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--edge);
+}
+
+.builder-zone--bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--edge);
+}
+
+.builder-zone--left {
+  top: var(--edge);
+  bottom: var(--edge);
+  left: 0;
+  width: 50%;
+}
+
+.builder-zone--right {
+  top: var(--edge);
+  bottom: var(--edge);
+  right: 0;
+  width: 50%;
+}
+
+.builder-zone--half-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+}
+
+.builder-zone--half-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+}
+
+/* A container target's middle zone means "drop inside," split top/bottom to
+   match its own vertically-stacked contents (not left/right — it has no row
+   sibling to share width with). */
+.builder-zone--mid-top {
+  top: var(--edge);
+  left: 0;
+  right: 0;
+  height: calc(50% - var(--edge));
+}
+
+.builder-zone--mid-bottom {
+  bottom: var(--edge);
+  left: 0;
+  right: 0;
+  height: calc(50% - var(--edge));
+}
+
+/* ---------- Canvas-end — the generous "append a new row" drop zone below
+   everything, and the sole drop target when the canvas is empty. ---------- */
+.builder-canvas-end {
+  flex: 1;
+  min-height: var(--space-6);
+  border-radius: var(--radius-lg);
+  transition: background 0.12s ease, outline-color 0.12s ease;
+}
+
+.builder-canvas-end.is-dragging {
+  outline: 1px dashed var(--border-strong);
+  outline-offset: -1px;
+}
+
+.builder-canvas-end.is-over {
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+
+.builder-drop-active {
+  background: color-mix(in srgb, var(--brand) 5%, var(--bg)) !important;
+}
+
+.builder-block {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  background: transparent;
+}
+
+.builder-block--hovered {
+  border-color: color-mix(in srgb, var(--border-strong) 70%, transparent);
+}
+
+.builder-block--selected {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 14%, transparent), var(--shadow-sm);
+  background: var(--surface);
+}
+
+.builder-block--selected.builder-block--hovered { border-color: var(--brand); }
+
+.builder-block--multi-selected {
+  outline: 2px dashed var(--brand);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+}
+
+/* A stack (or a container mid-drag) doesn't render a real component's own
+   surface, so it gets a faint one of its own to read as "a column" among row
+   siblings rather than empty space. */
+.builder-block--stack {
+  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+  border: 1px dashed var(--border);
+  padding: var(--space-3);
+}
+
+.builder-row-list--nested {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.builder-block-toolbar {
+  position: absolute;
+  top: -12px;
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 3px;
+  box-shadow: var(--shadow-md);
+  z-index: 5;
+}
+
+.builder-block-toolbar button {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+}
+
+.builder-block-toolbar button:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.builder-block-toolbar button.danger:hover {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.builder-block-handle {
+  /* Centered on the TOP edge, never the sides — a side-anchored handle would
+     overhang into the resize divider between row siblings and steal its
+     pointerdown, since that divider is a real (non-dnd-kit) event listener,
+     not just a droppable rect. */
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: grab;
+  font-size: 10px;
+  touch-action: none;
+  z-index: 4;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.builder-block--show-chrome > .builder-block-handle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.builder-block-handle:active { cursor: grabbing; transform: translateX(-50%) scale(0.96); }
+
+.builder-height-handle {
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 14px;
+  padding-top: 5px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: row-resize;
+  touch-action: none;
+  z-index: 4;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.builder-height-handle::after {
+  content: "";
+  width: 16px;
+  height: 2px;
+  background: var(--muted);
+  border-radius: 2px;
+  display: block;
+  margin: 0 auto;
+}
+
+.builder-block--show-chrome > .builder-height-handle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.builder-height-handle:hover::after {
+  background: var(--brand);
+}
+
+.builder-block-meta {
+  position: absolute;
+  top: -10px;
+  left: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(2px);
+  transition: all 0.15s;
+}
+
+.builder-block--show-chrome > .builder-block-meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.builder-block-content { min-width: 0; }
+
+/* ---------- Inspector — desktop grid slot ---------- */
+.builder-inspector-desktop {
+  grid-area: inspector;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  overflow-y: auto;
+}
+
+.builder-inspector-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: color-mix(in srgb, black 45%, transparent);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: flex-end;
+}
+
+.builder-inspector-mobile > div {
+  width: 100%;
+  max-height: 80vh;
+  background: var(--surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow-y: auto;
+}
+
+.builder-inspector {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.builder-inspector-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.builder-inspector-head-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.builder-inspector-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+
+.builder-inspector-title { font-weight: 700; font-size: 0.84rem; }
+.builder-inspector-sub { font-size: 0.68rem; color: var(--muted); }
+
+.builder-inspector-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.builder-inspector-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+}
+
+.builder-inspector-empty-icon { font-size: 1.4rem; color: var(--muted); }
+
+.builder-inspector-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  padding: var(--space-3);
+  font-size: 0.76rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.builder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.builder-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.builder-field-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.builder-field-hint { font-size: 0.7rem; color: var(--muted); }
+
+.builder-field input,
+.builder-field select,
+.builder-field textarea {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.4rem 0.55rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+}
+
+.builder-field textarea { resize: vertical; }
+
+.builder-width-row {
+  display: flex;
+  gap: 4px;
+}
+
+.builder-width-btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.builder-width-btn.is-active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--on-brand);
+}
+
+.builder-inspector-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ---------- Code panel ---------- */
+.builder-code-panel {
+  grid-area: code;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  min-height: 0;
+}
+
+.builder-code-resize-handle {
+  height: 6px;
+  cursor: row-resize;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.builder-code-resize-handle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-strong);
+  transform: translateX(-50%);
+}
+
+.builder-code-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.builder-code-title {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.builder-code-count { color: var(--muted); font-weight: 400; }
+
+.builder-code-tabs {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px;
+  background: var(--surface-2);
+}
+
+.builder-code-tabs button {
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.builder-code-tabs button.is-active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.builder-code-actions {
+  margin-left: auto;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.builder-code-actions button {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.builder-code-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.builder-code-lines {
+  overflow: auto;
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.builder-code-line {
+  padding: 0 var(--space-2);
+  border-radius: 3px;
+}
+
+.builder-code-line.is-glow {
+  background: color-mix(in srgb, var(--brand) 12%, transparent);
+  box-shadow: inset 2px 0 0 var(--brand);
+}
+
+/* ---------- Styles panel — DevTools-style computed/editable declarations ---------- */
+.builder-styles-panel {
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.builder-styles-head {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.builder-styles-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.builder-decl-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 1px 0;
+}
+
+.builder-decl-row.is-seeded {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.builder-decl-prop,
+.builder-decl-value {
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1px 2px;
+  border-radius: 3px;
+  min-width: 0;
+}
+
+.builder-decl-prop { flex: 1; color: var(--brand-text); }
+.builder-decl-value { flex: 1; }
+
+.builder-decl-row:not(.is-seeded) .builder-decl-value { color: var(--text); }
+
+.builder-decl-prop:focus,
+.builder-decl-value:focus {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  outline: none;
+}
+
+.builder-decl-colon,
+.builder-decl-semi {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.builder-decl-remove,
+.builder-decl-add {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.68rem;
+  width: 16px;
+  opacity: 0;
+}
+
+.builder-decl-row:hover .builder-decl-remove { opacity: 1; }
+.builder-decl-row--new .builder-decl-add { opacity: 1; color: var(--brand-text); }
+
+.builder-styles-hint {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: 0.66rem;
+  color: var(--muted);
+  line-height: 1.4;
+  margin: 0;
+}
