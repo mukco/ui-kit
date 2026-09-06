@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react"
 import { useFocusTrap } from "./useFocusTrap"
 import { IconSearch } from "./Icon"
 import { cn } from "../cn"
@@ -114,6 +114,20 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
     return () => document.removeEventListener("mousedown", onDown)
   }, [])
 
+  // Everything that is a hook happens before the chip form returns below.
+  // Sitting under that return, useFocusTrap was skipped the moment something
+  // was picked, and React threw "rendered fewer hooks than expected" (#300) —
+  // the gateway panel's model and call pickers died on the first selection.
+  //
+  // Tracking the render condition rather than `open` alone: only a sheet is a
+  // real dialog, and only a sheet that is on screen may lock the page behind
+  // it. `close` is stable because the trap keys its effect on it, and a fresh
+  // arrow every render would tear the trap down and rebuild it each time,
+  // taking focus off the sheet's own input on the way past.
+  const listOpen = value == null && open && query.trim().length >= minChars
+  const close = useCallback(() => setOpen(false), [])
+  useFocusTrap(Boolean(sheet && listOpen), sheetRef, close)
+
   if (value != null) {
     return (
       <div className={cn("ui-search-chip", className)}>
@@ -126,10 +140,6 @@ export function SearchSelect<T>({ value, onChange, fetcher, getLabel, getHint, r
       </div>
     )
   }
-
-  const listOpen = open && query.trim().length >= minChars
-  // Only when it is actually a dialog — a dropdown must not lock the page.
-  useFocusTrap(Boolean(sheet && open), sheetRef, () => setOpen(false))
 
   function choose(item: T) {
     onChange(item)
