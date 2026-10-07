@@ -768,6 +768,7 @@ a.ui-team-link:hover {
 
 .ui-pagehead {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.625rem;
   margin-bottom: 1rem;
@@ -785,22 +786,28 @@ a.ui-team-link:hover {
   cursor: pointer;
 }
 
+/* At least 12rem before the actions wrap under it: a search box beside a
+   32px title left the title a column one word wide. */
 .ui-pagehead-titles {
   min-width: 0;
-  flex: 1;
+  flex: 1 1 12rem;
 }
 
+/* The size the apps' own page titles settled on (baseball's .bb-h1,
+   football's .fb-h1-lg): one title size across all three. */
 .ui-pagehead-title {
   margin: 0;
-  font-size: calc(1.15rem + var(--fs-bump, 0px));
-  font-weight: 700;
+  font-size: calc(1.5rem + var(--fs-bump, 0px));
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.2;
   color: var(--text);
 }
+@media (min-width: 640px) { .ui-pagehead-title { font-size: calc(2rem + var(--fs-bump, 0px)); } }
 
 .ui-pagehead-sub {
-  margin: 0.125rem 0 0;
-  font-size: calc(0.8rem + var(--fs-bump, 0px));
+  margin: 0.25rem 0 0;
+  font-size: calc(13px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
