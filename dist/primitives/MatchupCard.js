@@ -8,7 +8,7 @@ function Side({ side, linked }) {
     const [broken, setBroken] = useState(false);
     const showImage = !!side.logoUrl && !broken;
     const identity = sportsIdentity();
-    const href = linked && side.teamId != null ? identity.teamHref?.(side.teamId) : undefined;
+    const href = !linked ? undefined : side.href ?? (side.teamId != null ? identity.teamHref?.(side.teamId) : undefined);
     const body = (_jsxs(_Fragment, { children: [_jsx("span", { className: "ui-matchup-logo", "aria-hidden": "true", children: showImage ? (_jsx("img", { src: side.logoUrl, alt: "", onError: () => setBroken(true) })) : (side.name.slice(0, 2).toUpperCase()) }), _jsx("span", { className: "ui-matchup-name", children: side.name }), side.record != null && _jsx("span", { className: "ui-matchup-record", children: side.record })] }));
     if (!href)
         return _jsx("div", { className: "ui-matchup-side", children: body });

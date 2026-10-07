@@ -9,6 +9,9 @@ export interface MatchupSide {
     /** Links the side to its team page (configureSports' teamHref) on a card
         that is not itself a link — the game page's header. */
     teamId?: string | number | null;
+    /** Where the side links instead of the team page — a simulated league's
+        own team page, say. */
+    href?: string | null;
 }
 interface Props {
     away: MatchupSide;
