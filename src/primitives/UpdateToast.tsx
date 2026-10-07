@@ -3,7 +3,8 @@ import { readyForNewBuild } from "./updateReady"
 
 interface Props {
   /** Return the remote build id; polled periodically and on tab focus. */
-  getRemoteBuild: () => Promise<string | null | undefined>
+  /** Defaults to versionJsonBuild: /version.json, written next to the build. */
+  getRemoteBuild?: () => Promise<string | null | undefined>
   localBuild: string | undefined
   appName?: string
   intervalMs?: number
@@ -33,7 +34,7 @@ const DEFAULT_READY_TIMEOUT = 5_000
  *  `activated`, at which point a plain reload is genuinely enough.
  */
 export function UpdateToast({
-  getRemoteBuild,
+  getRemoteBuild = versionJsonBuild,
   localBuild,
   appName = "the app",
   intervalMs = DEFAULT_INTERVAL,
@@ -100,3 +101,17 @@ export function UpdateToast({
   )
 }
 
+
+/**
+ * The build id the server is serving now: /version.json, which every app's
+ * build writes next to its assets, read past every cache. Null when it can't
+ * be read (offline, mid-deploy) — the toast just waits for the next check.
+ */
+export async function versionJsonBuild(): Promise<string | null> {
+  try {
+    const res = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" })
+    return res.ok ? ((await res.json()) as { build?: string }).build ?? null : null
+  } catch {
+    return null
+  }
+}

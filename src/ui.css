@@ -786,6 +786,7 @@ a.ui-team-link:hover {
 .ui-pagehead-title {
   margin: 0;
   font-size: 1.15rem;
+  font-weight: 700;
   line-height: 1.2;
   color: var(--text);
 }
@@ -2946,6 +2947,25 @@ button.ui-matchup--link {
 }
 
 .ui-bell-item:last-child { border-bottom: 0; }
+
+/* A row with its own dismiss and action: the item fills it, the × sits in
+   its top-right corner and the action under the text. */
+.ui-bell-row { position: relative; border-bottom: 1px solid var(--border); }
+.ui-bell-row:last-child { border-bottom: 0; }
+.ui-bell-row > .ui-bell-item { border-bottom: 0; padding-right: var(--space-6); }
+.ui-bell-row:has(.ui-bell-action) > .ui-bell-item { padding-bottom: var(--space-6); }
+.ui-bell-dismiss {
+  position: absolute; top: var(--space-2); right: var(--space-2);
+  width: 24px; height: 24px; border: 0; border-radius: var(--radius-sm);
+  background: none; color: var(--muted); font-size: 1rem; line-height: 1; cursor: pointer;
+}
+.ui-bell-dismiss:hover { color: var(--text); background: var(--surface-2); }
+.ui-bell-action {
+  position: absolute; right: var(--space-4); bottom: var(--space-2);
+  border: 0; background: none; padding: 0; cursor: pointer;
+  font-size: 10px; font-weight: 600; color: var(--brand); white-space: nowrap;
+}
+.ui-bell-item-source { color: var(--brand); font-weight: 500; }
 .ui-bell-item:hover { background: var(--surface-2); }
 
 .ui-bell-item-icon {
@@ -3071,6 +3091,41 @@ button.ui-matchup--link {
   font-size: 0.78rem;
   color: var(--muted);
 }
+
+/* Head with an icon tile and/or a status aside: icon · text · aside in a row. */
+.ui-settingsgroup-head--icon,
+.ui-settingsgroup-head:has(.ui-settingsgroup-aside) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.ui-settingsgroup-headtext { min-width: 0; flex: 1; }
+
+.ui-settingsgroup-aside { flex-shrink: 0; margin-left: auto; }
+
+.ui-settingsgroup-icon {
+  --ui-tile: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--ui-tile) 10%, transparent);
+  color: var(--ui-tile);
+}
+
+.ui-settingsgroup-icon--ok { --ui-tile: var(--ok); }
+.ui-settingsgroup-icon--warn { --ui-tile: var(--warn); }
+.ui-settingsgroup-icon--info { --ui-tile: var(--chart-1); }
+
+/* A settings group's stacked contents: rows, notes and sub-groups. */
+.ui-settings-stack { display: flex; flex-direction: column; gap: var(--space-3); }
+.ui-settings-sub { display: flex; flex-direction: column; gap: var(--space-2); }
+.ui-settings-note { margin: 0; font-size: 0.875rem; color: var(--muted); }
+.ui-settings-error { margin: 0; font-size: 0.75rem; color: var(--danger); }
 
 /* ---------- SortedList (drag-to-reorder) ---------- */
 
@@ -5474,3 +5529,15 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 }
 .ui-race-legend-item { display: flex; align-items: center; gap: 0.25rem; }
 .ui-race-legend-abbr { font-size: var(--fs9, 9px); font-weight: 500; }
+
+/* ---------- Follow button and settings actions ---------- */
+.ui-follow { white-space: nowrap; }
+.ui-follow svg { flex: none; }
+.ui-follow--on { color: var(--brand); border-color: var(--brand); }
+.ui-settings-actions { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+
+/* ---------- Navbar account controls (NavSessionButtons) ---------- */
+/* Icon buttons on desktop; on a phone they live in the drawer instead. */
+.ui-navsession { display: none; }
+@media (min-width: 640px) { .ui-navsession { display: inline-flex; } }
+.ui-navsession-px { width: 1rem; height: 1rem; }
