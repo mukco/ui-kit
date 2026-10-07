@@ -54,6 +54,7 @@ import {
   TeamIcon,
   TeamLink,
   LineScore,
+  ProfileHero,
   PlayFeed,
   BoxScore,
   PlayTag,
@@ -689,6 +690,20 @@ export function UiDemo() {
             ]}
           />
         </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>ProfileHero</h2>
+        <ProfileHero
+          name="Ava Martinez"
+          image={null}
+          initials="AM"
+          line={<><strong>SS</strong><span>#7</span><span>·</span><TeamLink teamId={TEAMS[0][0]} name={TEAMS[0][1]} /></>}
+          actions={<select className="ui-select" defaultValue="2026"><option>2026</option><option>2025</option></select>}
+          facts={[{ label: "HT", value: "5' 10\"" }, { label: "AGE", value: 27 }, { label: "DRAFT", value: "2017: Rd 1, Pk 4" }, { label: "EXP", value: "6th season" }]}
+          links={[{ label: "Reference", href: "https://example.com" }, { label: "News", href: "https://example.com" }]}
+          awards={[{ name: "All-Star", seasons: [2022, 2023, 2024] }, { name: "MVP", seasons: [2024] }, { name: "Silver Slugger", seasons: [2023, 2024] }]}
+        />
       </section>
 
       <section className="uidemo-section">
