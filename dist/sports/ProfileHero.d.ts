@@ -41,11 +41,18 @@ export interface ProfileHeroProps {
     status?: ReactNode;
     /** Top right: a season picker, a follow star. */
     actions?: ReactNode;
+    /** The actions are wide (a season picker): on a phone they take a row of
+        their own rather than squeezing the name's column. */
+    wideActions?: boolean;
     facts?: ProfileFact[];
     links?: ProfileLink[];
     awards?: ProfileAward[];
+    /** A photograph behind the card (the team's arena), under a scrim. */
+    art?: string | null;
+    /** The top bar's colour — a team's own; the brand gradient otherwise. */
+    accent?: string | null;
     /** Under the detail, inside the card — a team's record and lineup. */
     children?: ReactNode;
     className?: string;
 }
-export declare function ProfileHero({ name, image, imageKind, initials, nameAside, line, status, actions, facts, links, awards, children, className }: ProfileHeroProps): import("react").JSX.Element;
+export declare function ProfileHero({ name, image, imageKind, initials, nameAside, line, status, actions, wideActions, facts, links, awards, art, accent, children, className }: ProfileHeroProps): import("react").JSX.Element;
