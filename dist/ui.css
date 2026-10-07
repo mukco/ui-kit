@@ -5650,3 +5650,48 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-linescore--compact .ui-linescore-cell,
 .ui-linescore--compact .ui-linescore-total { padding: 0.125rem 0.5rem; }
 .ui-linescore--compact .ui-th { padding: 0.125rem 0.5rem; }
+
+/* PlayFeed — a game's plays. A row is when · whose · what · score; the
+   scoring plays carry a rule at the left so a scroll through all of them
+   still shows where the points came. */
+.ui-playfeed { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+.ui-playfeed-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.ui-playfeed-empty { margin: 0; padding: 1rem 0; font-size: calc(0.875rem + var(--fs-bump, 0px)); color: var(--muted); }
+/* Capped, so a basketball game's four hundred plays scroll inside the card
+   rather than pushing the box score a page away. */
+.ui-playfeed-list { list-style: none; margin: 0; padding: 0; max-height: 32rem; overflow-y: auto; overscroll-behavior: contain; }
+.ui-playfeed-play {
+  display: grid;
+  grid-template-columns: 4.5rem 1.25rem minmax(0, 1fr) auto;
+  grid-template-areas: "when team head score" "when team text score";
+  align-items: start;
+  column-gap: 0.5rem;
+  padding: 0.5rem;
+  border-top: 1px solid var(--border);
+  border-left: 2px solid transparent;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
+  color: var(--text-2);
+}
+/* On a phone the play's text takes the full width under its line — beside
+   the clock and crest it was a column a few words wide. */
+@media (max-width: 640px) {
+  .ui-playfeed-play { grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "when team head score" "text text text text"; }
+}
+.ui-playfeed-play:first-child { border-top: 0; }
+.ui-playfeed-play--scoring { border-left-color: var(--brand); color: var(--text); }
+.ui-playfeed-when { grid-area: when; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); white-space: nowrap; padding-top: 0.125rem; }
+.ui-playfeed-team { grid-area: team; display: inline-flex; padding-top: 0.125rem; }
+.ui-playfeed-head { grid-area: head; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; text-align: left; gap: 0.25rem 0.5rem; min-width: 0; font-weight: 600; color: var(--text); }
+.ui-playfeed-head:empty { display: none; }
+.ui-playfeed-text { grid-area: text; min-width: 0; text-align: left; overflow-wrap: anywhere; }
+.ui-playfeed-head:not(:empty) ~ .ui-playfeed-text { margin-top: 0.25rem; }
+.ui-playfeed-score { grid-area: score; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); white-space: nowrap; padding-top: 0.125rem; }
+.ui-playfeed-play--scoring .ui-playfeed-score { color: var(--text); font-weight: 700; }
+.ui-playtag {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  padding: 0 0.5rem; border-radius: 9999px;
+  font-size: calc(10px + var(--fs-bump, 0px)); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  background: var(--surface-2); color: var(--text-2);
+}
+.ui-playtag--score { background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand-text); }
+.ui-playtag--bad { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }

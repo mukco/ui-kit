@@ -113,6 +113,8 @@ export { PlayerLink } from "./sports/PlayerLink";
 export { TeamIcon } from "./sports/TeamIcon";
 export { TeamLink } from "./sports/TeamLink";
 export { LineScore } from "./sports/LineScore";
+export { PlayFeed, PlayTag } from "./sports/PlayFeed";
+export type { FeedPlay, PlayFeedProps } from "./sports/PlayFeed";
 export type { LineScoreProps, LineScorePeriod, LineScoreSide, LineScoreTotal } from "./sports/LineScore";
 export { NewsPanel } from "./sports/NewsPanel";
 export { PlayerLeaders } from "./sports/PlayerLeaders";
