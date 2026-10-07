@@ -54,6 +54,8 @@ import {
   TeamIcon,
   TeamLink,
   LineScore,
+  FantasyTeamBar,
+  FantasyLayout,
   ProfileHero,
   PlayFeed,
   BoxScore,
@@ -704,6 +706,24 @@ export function UiDemo() {
           links={[{ label: "Reference", href: "https://example.com" }, { label: "News", href: "https://example.com" }]}
           awards={[{ name: "All-Star", seasons: [2022, 2023, 2024] }, { name: "MVP", seasons: [2024] }, { name: "Silver Slugger", seasons: [2023, 2024] }]}
         />
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Fantasy frame</h2>
+        <FantasyLayout sidebar={<Card title="Teams in league · 12"><p className="uidemo-note">Standings, roster, watchlist…</p></Card>}>
+          <FantasyTeamBar
+            team="Dingers and Dugouts"
+            record="4-38"
+            items={[
+              { key: "r", content: "42 rostered", tone: "muted" },
+              { key: "il", content: "9 on IL", tone: "bad" },
+              { key: "s", content: <>Salary: <strong>$306</strong> / $400</>, tone: "muted" },
+              { key: "c", content: "$94 available", tone: "good" },
+            ]}
+            note="Full roster · IL players cannot score"
+          />
+          <Card><p className="uidemo-note">Tabs and the tab's content go here.</p></Card>
+        </FantasyLayout>
       </section>
 
       <section className="uidemo-section">
