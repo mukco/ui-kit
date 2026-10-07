@@ -85,3 +85,48 @@ export const IconBell = (p: IconProps) => (
     <path d="M13.7 20a1.9 1.9 0 0 1-3.4 0" />
   </Svg>
 )
+
+export const IconBellOff = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5" />
+    <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    <path d="m2 2 20 20" />
+  </Svg>
+)
+
+export const IconMonitor = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="2" y="3" width="20" height="14" rx="2" />
+    <path d="M8 21h8M12 17v4" />
+  </Svg>
+)
+
+export const IconStar = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+  </Svg>
+)
+
+export const IconDownload = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <path d="m7 10 5 5 5-5M12 15V3" />
+  </Svg>
+)
+
+export const IconTrophy = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+    <path d="M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+  </Svg>
+)
+
+/** A CRT screen: the look button's hint that the next look is Phosphor. */
+export const IconCrt = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="3" y="4" width="18" height="13" rx="1" />
+    <path d="M8 21h8M12 17v4M7 9h4M7 12h7" />
+  </Svg>
+)

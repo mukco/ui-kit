@@ -8,6 +8,14 @@ export interface NotificationItem {
   title: ReactNode
   body?: ReactNode
   time?: ReactNode
+  /** Where it came from, shown before the time ("ESPN", "League"). */
+  source?: ReactNode
+}
+
+/** A secondary action on every row, e.g. "Open in chat →". */
+export interface NotificationAction {
+  label: ReactNode
+  onClick: (item: NotificationItem) => void
 }
 
 interface Props {
@@ -15,13 +23,16 @@ interface Props {
   /** Called when an item is clicked (typically to dismiss + navigate). */
   onItemClick?: (item: NotificationItem) => void
   onDismissAll?: () => void
+  /** Per-row dismiss (×). */
+  onDismiss?: (item: NotificationItem) => void
+  action?: NotificationAction
   empty?: string
   className?: string
 }
 
 /** Bell with unread badge opening a dropdown list. Items and dismissal are
     the app's business; the kit draws the affordance. */
-export function NotificationBell({ items, onItemClick, onDismissAll, empty = "You're all caught up.", className }: Props) {
+export function NotificationBell({ items, onItemClick, onDismissAll, onDismiss, action, empty = "You're all caught up.", className }: Props) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
 
@@ -55,17 +66,40 @@ export function NotificationBell({ items, onItemClick, onDismissAll, empty = "Yo
           {items.length === 0 ? (
             <p className="ui-bell-empty">{empty}</p>
           ) : (
-            items.map((n) => (
-              <button key={n.id} type="button" className="ui-bell-item" onClick={() => onItemClick?.(n)}>
-                <span className={cn(items.length > 0 && "ui-bell-dot")} style={{ background: undefined }} aria-hidden="true" />
-                {n.icon && <span className="ui-bell-item-icon">{n.icon}</span>}
-                <span className="ui-bell-item-body">
-                  <span className="ui-bell-item-title">{n.title}</span>
-                  {n.body && <span className="ui-bell-item-body-text">{n.body}</span>}
-                  {n.time && <span className="ui-bell-item-time">{n.time}</span>}
-                </span>
-              </button>
-            ))
+            items.map((n) => {
+              const meta = n.source != null || n.time != null
+              const item = (
+                <button key={n.id} type="button" className="ui-bell-item" onClick={() => onItemClick?.(n)}>
+                  <span className={cn(items.length > 0 && "ui-bell-dot")} style={{ background: undefined }} aria-hidden="true" />
+                  {n.icon && <span className="ui-bell-item-icon">{n.icon}</span>}
+                  <span className="ui-bell-item-body">
+                    <span className="ui-bell-item-title">{n.title}</span>
+                    {n.body && <span className="ui-bell-item-body-text">{n.body}</span>}
+                    {meta && (
+                      <span className="ui-bell-item-time">
+                        {n.source != null && <span className="ui-bell-item-source">{n.source}</span>}
+                        {n.source != null && n.time != null && " · "}
+                        {n.time}
+                      </span>
+                    )}
+                  </span>
+                </button>
+              )
+              if (!onDismiss && !action) return item
+              // A row with its own controls: the item stays one button, and the
+              // dismiss and the action sit beside it rather than inside it.
+              return (
+                <div key={n.id} className="ui-bell-row">
+                  {item}
+                  {onDismiss && (
+                    <button type="button" className="ui-bell-dismiss" aria-label="Dismiss" onClick={() => onDismiss(n)}>×</button>
+                  )}
+                  {action && (
+                    <button type="button" className="ui-bell-action" onClick={() => { action.onClick(n); setOpen(false) }}>{action.label}</button>
+                  )}
+                </div>
+              )
+            })
           )}
         </div>
       )}

@@ -59,6 +59,11 @@ import {
   ordinal,
   type ChartRow,
 } from "../src"
+import {
+  AppearanceCard, Baseball, Basketball, FollowButton, Football, Glyph, IconStar, InstallAppCard, NavSessionButtons, TabBar,
+  type NotificationItem,
+} from "../src"
+import { Article, Calendar, ChartBarBig, SettingsCog, Users } from "pixelarticons/react"
 import "./demo.css"
 
 /* ---------- Offline test identity: SVG data URIs, no network needed. ---------- */
@@ -286,7 +291,13 @@ const DEMO_RUN = {
 
 /* ---------- Page ---------- */
 
+const DEMO_BELL: NotificationItem[] = [
+  { id: "1", title: "Lineup posted", body: "Starters are in.", source: "System", time: "just now" },
+  { id: "2", title: "Weekly digest ready", source: "Scheduled", time: "2h ago" },
+]
+
 export function UiDemo() {
+  const [following, setFollowing] = useState(false)
   const [tab, setTab] = useState("summary")
   const [statView, setStatView] = useState("season")
   const [drawer, setDrawer] = useState(false)
@@ -946,6 +957,31 @@ export function UiDemo() {
               </span>
             </SettingRow>
           </SettingsGroup>
+        </div>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>Shared app shell — skin theme, settings cards, follow, bell rows, tab bar</h2>
+        <p>One implementation for every sport. Switch the look with the Appearance card (Phosphor shows the tab bar at phone width).</p>
+        <div className="uidemo-section" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <AppearanceCard appName="Demo" />
+          <SettingsGroup title="Favorite team" icon={<IconStar size={18} />} aside={<Chip tone="ok">Set</Chip>} description="Shown on Today.">
+            <SelectField value={team} onChange={setTeam} options={TEAMS.map(([id, name]) => ({ value: id, label: name }))} />
+          </SettingsGroup>
+          <InstallAppCard appName="Demo" storageKey="uidemo-install-dismissed" />
+          <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+            <FollowButton on={following} onToggle={() => setFollowing(!following)} title={{ on: "Following this game", off: "Follow this game" }} />
+            <NavSessionButtons email="kit@example.com" onSettings={() => {}} onSignOut={() => {}} />
+            <NotificationBell items={DEMO_BELL} onDismiss={() => {}} onDismissAll={() => {}} action={{ label: "Open in chat →", onClick: () => {} }} />
+            <span>Balls: <Basketball className="px-icon" /> <Football className="px-icon" /> <Baseball className="px-icon" /> · Glyph <Glyph e="🏆" /></span>
+          </div>
+          <TabBar pathname="/" onNavigate={() => {}} tabs={[
+            { to: "/", label: "Today", Icon: Calendar, match: ["/"] },
+            { to: "/teams", label: "Teams", Icon: Users, match: ["/teams"] },
+            { to: "/stats", label: "Stats", Icon: ChartBarBig, match: ["/stats"] },
+            { to: "/news", label: "News", Icon: Article, match: ["/news"] },
+            { to: "/settings", label: "Settings", Icon: SettingsCog, match: ["/settings"] },
+          ]} />
         </div>
       </section>
 

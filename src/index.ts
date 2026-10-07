@@ -31,7 +31,7 @@ export { NavSearch } from "./primitives/NavSearch"
 export { ThemeSwitch } from "./primitives/ThemeSwitch"
 export {
   IconSun, IconMoon, IconSignOut, IconSettings,
-  IconSearch, IconRefresh, IconClose, IconBell,
+  IconSearch, IconRefresh, IconClose, IconBell, IconBellOff, IconMonitor, IconStar, IconDownload, IconTrophy, IconCrt,
 } from "./primitives/Icon"
 
 export { ExpandableCard } from "./primitives/ExpandableCard"
@@ -62,11 +62,11 @@ export { SectionLabel } from "./primitives/SectionLabel"
 export { SegmentedControl } from "./primitives/SegmentedControl"
 export type { SegmentedOption } from "./primitives/SegmentedControl"
 export { NotificationBell } from "./notifications/NotificationBell"
-export type { NotificationItem } from "./notifications/NotificationBell"
+export type { NotificationItem, NotificationAction } from "./notifications/NotificationBell"
 export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/Settings"
 export type { ChipTone } from "./primitives/Settings"
 export { SettingsGroup } from "./primitives/SettingsGroup"
-export { UpdateToast } from "./primitives/UpdateToast"
+export { UpdateToast, versionJsonBuild } from "./primitives/UpdateToast"
 // Exported on its own for apps that cannot take ui.css yet. That file is not
 // scoped — it sets :root, html, body and focus styles — so an app with its own
 // design system cannot import it just to get one toast. Those apps keep their
@@ -143,3 +143,23 @@ export type { RaceTeam } from "./sports/DivisionRaceChart"
 export { Panel, PanelRow, PanelSplit, PanelEmpty, PANEL_HEIGHT } from "./panels/Panel"
 export type { NewsItem, NewsSource, NewsPanelProps, NewsPlayerMention, NewsTeamMention } from "./sports/NewsPanel"
 export { age } from "./lib/age"
+
+// Skin theme (light / dark / Phosphor), pixel icons and the Phosphor tab bar.
+// The skin's CSS ships separately: import "@mukco/ui-kit/phosphor.css".
+export { SKIN_THEMES, PHOSPHOR_FONTS_HREF, configureSkinTheme, applySkinTheme, setSkinTheme, nextSkinTheme, useSkinTheme } from "./primitives/skinTheme"
+export type { SkinTheme, SkinThemeOptions } from "./primitives/skinTheme"
+export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage } from "./primitives/Pixel"
+export type { PixelIcon } from "./primitives/Pixel"
+export { TabBar } from "./primitives/TabBar"
+export type { TabBarTab, TabBarProps } from "./primitives/TabBar"
+export { Basketball, Football, Baseball } from "./sports/pixelBalls"
+
+// Device notifications: the push client every app shares, its settings card,
+// the Follow button; and the standard settings cards.
+export { createPushClient, pushSupported, isStandalone, isIos, PushApiError } from "./primitives/push"
+export type { PushClient, PushClientOptions, PushStatus, NotifyKind, NotifyPrefs } from "./primitives/push"
+export { NotificationSettings } from "./primitives/NotificationSettings"
+export { FollowButton } from "./primitives/FollowButton"
+export { AppearanceCard, InstallAppCard } from "./primitives/AppCards"
+export type { SettingsGroupTone } from "./primitives/SettingsGroup"
+export { NavSessionButtons, NavSessionDrawer } from "./primitives/NavSession"

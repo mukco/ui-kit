@@ -1,0 +1,559 @@
+/* Phosphor — Family Hub's amber CRT (family-hub web/src/index.css,
+   body[data-theme="phosphor"]) fused with the apps that use this kit: the same
+   pages, photos and logos in their own colour, the kit's tokens re-pointed so
+   every component follows. One copy, for every app; an app adds only rules
+   for its own classes, after this file, and sets --px-sport to its ball.
+
+   Set by the kit's skin theme (configureSkinTheme) as data-skin="phosphor" on <html>, beside
+   data-theme="dark", so the kit's dark-mode fixes all still apply and this
+   only has to say what is different.
+
+   The palette: amber, and five companions that sit with it on near-black —
+   warm means good or hot, teal means cold, everywhere. Chosen to match each
+   other in brightness so nothing shouts out of the theme. */
+/* VT323 sets far smaller than the mono it replaces — an 11px line score
+   came out with 7px digits. The same face, sized up once here, so every
+   number in mono reads at the size its page asked for. Only fetched when a
+   page under Phosphor asks for it. */
+@font-face {
+  font-family: "Phosphor Mono";
+  src: url(https://fonts.gstatic.com/s/vt323/v18/pxiKyp0ihIEF2isfFJU.woff2) format("woff2");
+  size-adjust: 128%;
+  font-display: swap;
+}
+
+
+/* Pixelify's 5 is an S and its 8 a B — "inning S", "$S8". The chrome face
+   is the same Pixelify with the digits left out, so every number in a
+   heading, tab or table head falls through to the mono beside it. */
+@font-face {
+  font-family: "Phosphor Chrome";
+  src: url(https://fonts.gstatic.com/s/pixelifysans/v3/CHylV-3HFUT7aC4iv1TxGDR9Jn0Eiw.woff2) format("woff2");
+  font-weight: 400 700;
+  unicode-range: U+0000-002F, U+003A-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215;
+  font-display: swap;
+}
+
+:root[data-skin="phosphor"] {
+  color-scheme: dark;
+  --amber: #ffb000;
+  --gold: #ffd27a;
+  --ember: #ff6a3d;
+  --rust: #d9442b;
+  --green: #9be564;
+  --teal: #46c7c0;
+  --paper: #0a0a07;
+
+  --bg: #070705;
+  --surface: #0a0a07;
+  --surface-2: #14110a;
+  --raised: #1d180b;
+  --border: rgba(255, 176, 0, 0.28);
+  /* Not the amber itself: the kit and the pages paint neutral things with
+     this — the losing side of a comparison bar, chart grid lines, dividers —
+     and at full amber they were indistinguishable from the brand. Frames
+     that should be full amber say var(--amber). */
+  --border-strong: #86651f;
+
+  --text: #ffb000;
+  --text-2: #e3a21e;
+  /* Family Hub steps secondary text back to 0.7 on Phosphor, not 0.6: amber
+     is darker than white. 7.0:1 on --surface. */
+  --muted: #b98c33;
+
+  --brand: #ffb000;
+  --brand-text: #ffd27a;
+  --brand-light: #ffd27a;
+  --on-brand: #0a0a07;
+  --series-2: #46c7c0;
+  --series-3: #9be564;
+  --chart-1: #ffb000;
+  --chart-2: #46c7c0;
+  --chart-3: #9be564;
+  --chart-4: #ff6a3d;
+  --chart-5: #ffd27a;
+  --chart-6: #d9442b;
+  --chart-7: #e8a46a;
+  --chart-8: #7fb8a4;
+
+  --ok: #9be564;
+  --warn: #ffd27a;
+  --danger: #ff6a3d;
+  --sev-ok: #9be564;
+  --sev-warn: #ffd27a;
+  --sev-error: #ff6a3d;
+
+  /* The heat ramp: hot is ember, then amber; average a dim amber; cold teal. */
+  --stat-elite: #ff6a3d;
+  --stat-great: #ffb000;
+  --stat-avg: #8c7238;
+  --stat-below: #3a9f99;
+  --stat-poor: #46c7c0;
+
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --shadow-sm: 3px 3px 0 #000;
+  --shadow-md: 3px 3px 0 #000;
+  --shadow-lg: 4px 4px 0 #000;
+
+  --font-mono: "Phosphor Mono", "VT323", "JetBrains Mono", ui-monospace, monospace;
+  --px-chrome: "Phosphor Chrome", "Phosphor Mono", "Pixelify Sans", "Inter", system-ui, sans-serif;
+  --px-body: "DotGothic16", "Inter", system-ui, sans-serif;
+}
+
+
+/* ---- the screen -------------------------------------------------------- */
+:root[data-skin="phosphor"] body {
+  font-family: var(--px-body);
+  background: var(--bg);
+  background-image: repeating-conic-gradient(#050503 0% 25%, #070705 0% 50%);
+  background-size: 4px 4px;
+}
+
+/* Scanlines, fixed to the glass and drawn with plain alpha. Never a blend
+   mode: Family Hub's blended overlay re-composited the whole page every
+   frame and froze the PWA. One static fixed layer is free. */
+:root[data-skin="phosphor"] body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 45;
+  background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0, 0, 0, 0.16) 2px 3px);
+}
+
+/* Photos and logos are themselves: above the lines, in their own colour. */
+:root[data-skin="phosphor"] img { position: relative; z-index: 46; }
+
+:root[data-skin="phosphor"] :is(h1, h2, h3, .ui-pagehead-title, .ui-card-title, .ui-nav-brand) {
+  font-family: var(--px-chrome);
+  text-shadow: 0 0 6px rgba(255, 176, 0, 0.35);
+}
+
+:root[data-skin="phosphor"] :is(.ui-pagehead-title) { font-weight: 700; letter-spacing: 0.01em; }
+
+
+/* ---- windows: every card --------------------------------------------- */
+:root[data-skin="phosphor"] .ui-card {
+  border: 2px solid var(--amber);
+  box-shadow: 3px 3px 0 #000;
+}
+
+/* The title row becomes a System 7 title bar: stripes across the card's
+   width, a close box at the left, the title on a patch of paper. */
+:root[data-skin="phosphor"] .ui-card > .ui-card-head {
+  margin: -1rem -1rem 0.85rem;
+  padding: 0.3rem 0.5rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 2px solid var(--amber);
+  background: repeating-linear-gradient(to bottom, var(--surface) 0 2px, var(--amber) 2px 3px);
+}
+
+:root[data-skin="phosphor"] .ui-card > .ui-card-head::before {
+  content: ""; flex: none; width: 1.05rem; height: 1.05rem;
+  border: 2px solid var(--amber); background: var(--surface);
+}
+
+:root[data-skin="phosphor"] .ui-card-head-text {
+  margin: 0 auto; padding: 0 0.6rem; background: var(--surface); text-align: center; min-width: 0;
+}
+
+:root[data-skin="phosphor"] .ui-card-title { justify-content: center; font-size: 1rem; font-weight: 700; }
+
+:root[data-skin="phosphor"] .ui-card-subtitle { margin-top: 0; font-size: 0.7rem; }
+
+:root[data-skin="phosphor"] .ui-card-actions { background: var(--surface); padding: 0 0.25rem; }
+
+/* Cards that bleed to their edges keep their bar flush. */
+
+/* ---- the menu bar ------------------------------------------------------ */
+:root[data-skin="phosphor"] .ui-nav {
+  border-bottom: 2px solid var(--amber);
+  font-family: var(--px-chrome);
+}
+
+:root[data-skin="phosphor"] :is(.ui-nav-item, .ui-nav-entry, .ui-nav-mobile-link, .ui-nav-mobile-sub) { font-family: var(--px-chrome); border-radius: 0; }
+
+:root[data-skin="phosphor"] .ui-nav-item--active, :root[data-skin="phosphor"] .ui-nav-item--active:hover { background: var(--amber); color: var(--paper); }
+
+:root[data-skin="phosphor"] :is(.ui-nav-menu, .ui-drawer, .ui-bell-panel) {
+  border: 2px solid var(--amber); border-radius: 0; box-shadow: 4px 4px 0 #000;
+}
+
+
+/* ---- controls ---------------------------------------------------------- */
+:root[data-skin="phosphor"] .ui-tabs { border-bottom: 2px solid var(--amber); gap: 0; }
+
+:root[data-skin="phosphor"] .ui-tab { font-family: var(--px-chrome); border-bottom: 0; margin-bottom: 0; }
+
+:root[data-skin="phosphor"] .ui-tab--active { background: var(--amber); color: var(--paper); }
+
+:root[data-skin="phosphor"] .ui-segmented { border: 2px solid var(--amber); padding: 0; gap: 0; background: var(--surface); }
+
+:root[data-skin="phosphor"] .ui-segmented-btn { font-family: var(--px-chrome); font-size: 0.72rem; border-radius: 0; padding: 0.15rem 0.6rem; color: var(--text-2); }
+
+:root[data-skin="phosphor"] .ui-segmented-btn--active { background: var(--amber); color: var(--paper); box-shadow: none; }
+
+
+/* Family Hub's buttons: a 2px frame, rounded, a hard shadow; pressed, they
+   invert and sink into it. */
+:root[data-skin="phosphor"] :is(.ui-btn) {
+  font-family: var(--px-chrome); border: 2px solid var(--amber); border-radius: 9px;
+  box-shadow: 3px 3px 0 #000; background: var(--surface); color: var(--amber);
+}
+
+:root[data-skin="phosphor"] :is(.ui-btn):active { background: var(--amber); color: var(--paper); box-shadow: none; translate: 2px 2px; }
+
+:root[data-skin="phosphor"] .ui-btn--primary { background: var(--surface); color: var(--amber); box-shadow: 3px 3px 0 #000, inset 0 0 0 3px var(--surface), inset 0 0 0 5px var(--amber); }
+
+:root[data-skin="phosphor"] .ui-btn--danger { background: var(--rust); border-color: var(--rust); color: var(--paper); }
+
+:root[data-skin="phosphor"] :is(.ui-field, .ui-navsearch-input, input[type="text"], input:not([type]), select, textarea) {
+  border: 2px solid var(--amber); border-radius: 0; background: var(--surface-2); color: var(--amber); font-family: var(--px-body);
+}
+
+:root[data-skin="phosphor"] .ui-navsearch { border-radius: 0; }
+
+
+/* ---- tables: headers in reverse video ---------------------------------- */
+:root[data-skin="phosphor"] :is(.ui-table th, .ui-th, table thead th) {
+  background: var(--amber); color: var(--paper); font-family: var(--px-chrome);
+}
+
+:root[data-skin="phosphor"] :is(.ui-table th, .ui-th) .ui-sort-arrow { color: var(--paper); }
+
+:root[data-skin="phosphor"] :is(.ui-table td, .ui-td) { border-bottom: 1px dotted rgba(255, 176, 0, 0.28); }
+
+:root[data-skin="phosphor"] .ui-tr--clickable:hover { background: rgba(255, 176, 0, 0.08); }
+
+:root[data-skin="phosphor"] :is(.ui-td-num, .ui-mono) { font-family: var(--px-chrome); }
+
+
+/* Heat pills: square, filled — the heat is the fill. */
+:root[data-skin="phosphor"] .ui-heatpill { border-radius: 0; font-family: var(--px-chrome); }
+
+
+/* ---- small things ------------------------------------------------------ */
+:root[data-skin="phosphor"] :is(.ui-chip, .ui-chipbadge, .ui-insights-badge) { border-radius: 0; font-family: var(--px-chrome); }
+
+:root[data-skin="phosphor"] :is(.ui-toggle) { border-radius: 0; border: 2px solid var(--amber); }
+
+:root[data-skin="phosphor"] .ui-toggle-knob { border-radius: 0; }
+
+:root[data-skin="phosphor"] .ui-insights-num { border-radius: 0; font-family: var(--px-chrome); }
+
+:root[data-skin="phosphor"] .ui-skeleton { background: rgba(255, 176, 0, 0.1); }
+
+/* Live is ember everywhere: the clock, the dot, the word. */
+:root[data-skin="phosphor"] :is(.ui-matchup-status--live) { color: var(--ember); }
+
+
+/* Photos keep a thin amber frame; round ones go square, as the hub's do. */
+:root[data-skin="phosphor"] :is(.ui-avatar) {
+  border-radius: 0; border: 2px solid var(--amber);
+}
+
+
+/* The page's assistant button and update toast follow the windows. */
+:root[data-skin="phosphor"] :is(.ui-fa-launcher, .ui-updatetoast-card, .ui-fa-panel, .ui-confirm) { border-radius: 0; border: 2px solid var(--amber); box-shadow: 4px 4px 0 #000; }
+
+
+/* ---- the phone: Family Hub's tab bar along the foot -------------------- */
+.ph-tabbar { display: none; }
+
+@media (max-width: 640px) {:root[data-skin="phosphor"] .ph-tabbar {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 48;
+    background: var(--surface); border-top: 2px solid var(--amber);
+    padding: 0.375rem 0 calc(0.375rem + env(safe-area-inset-bottom));
+  }
+
+:root[data-skin="phosphor"] body { padding-bottom: calc(2px + 0.75rem + 3.5rem + env(safe-area-inset-bottom)); }
+
+  /* The bar's own launcher and the assistant stand on the tab bar. */
+:root[data-skin="phosphor"] .ui-fa-launcher { bottom: calc(5rem + env(safe-area-inset-bottom)); }
+
+}
+
+.ph-tabbar-track {
+  display: flex; gap: 0.25rem; height: 3.5rem; align-items: center;
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+  padding-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.25rem), rgba(0, 0, 0, 0.15));
+  mask-image: linear-gradient(to right, #000 calc(100% - 2.25rem), rgba(0, 0, 0, 0.15));
+}
+
+.ph-tabbar-track::-webkit-scrollbar { display: none; }
+
+.ph-tab {
+  flex: 0 0 auto; box-sizing: border-box; width: max(3.9rem, calc((100vw - 1rem) / 5.5 - 0.25rem)); min-height: 3.25rem;
+  display: grid; place-items: center; align-content: center; gap: 0.2rem; padding: 0.35rem 0.15rem;
+  border: 2px solid transparent; background: none; color: var(--amber); cursor: pointer;
+  font-family: var(--px-chrome); font-size: 1.35rem; line-height: 1; text-shadow: 0 0 6px rgba(255, 176, 0, 0.35);
+}
+
+.ph-tab span { font-size: 0.7rem; }
+
+.ph-tab-icon { width: 1.6rem; height: 1.6rem; filter: drop-shadow(0 0 4px rgba(255, 176, 0, 0.35)); }
+
+.ph-tab--here { border-color: var(--amber); background: rgba(255, 176, 0, 0.12); }
+
+
+/* ---- fixes found in screenshots ---------------------------------------- */
+/* Settings groups get the same title bar as every other window. The head
+   becomes a grid: row one is the bar — stripes across the card's width, the
+   group's icon as the close box (a plain box when it has none), the title on
+   a patch of paper in the middle, any status chip at the right end — and the
+   description drops beneath it, inside the window. */
+:root[data-skin="phosphor"] .ui-settingsgroup > .ui-settingsgroup-head {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center;
+  column-gap: 0.6rem; row-gap: 0.85rem; margin: -1.5rem -1.5rem 0; position: relative; text-align: left;
+}
+:root[data-skin="phosphor"] .ui-settingsgroup > .ui-settingsgroup-head::before {
+  content: ""; grid-area: 1 / 1 / 2 / -1; align-self: stretch;
+  background: repeating-linear-gradient(to bottom, var(--surface) 0 2px, var(--amber) 2px 3px);
+  border-bottom: 2px solid var(--amber);
+}
+:root[data-skin="phosphor"] .ui-settingsgroup > .ui-settingsgroup-head > * { position: relative; z-index: 1; }
+:root[data-skin="phosphor"] .ui-settingsgroup-headtext { display: contents; }
+:root[data-skin="phosphor"] .ui-settingsgroup-head h2 {
+  grid-area: 1 / 2; justify-self: center; position: relative; z-index: 1; margin: 0 0 2px; padding: 0 0.6rem;
+  background: var(--surface); font-size: 1rem; font-weight: 700; line-height: 1.85rem;
+}
+:root[data-skin="phosphor"] .ui-settingsgroup-head p { grid-row: 2; grid-column: 1 / -1; margin: 0 1.5rem; position: relative; z-index: 1; }
+:root[data-skin="phosphor"] .ui-settingsgroup-icon,
+:root[data-skin="phosphor"] .ui-settingsgroup > .ui-settingsgroup-head:not(.ui-settingsgroup-head--icon)::after {
+  grid-area: 1 / 1; width: 1.6rem; height: 1.6rem; margin: 0.3rem 0 calc(0.3rem + 2px) 0.5rem;
+  border: 2px solid var(--amber); border-radius: 0; background: var(--surface); color: var(--amber);
+}
+:root[data-skin="phosphor"] .ui-settingsgroup > .ui-settingsgroup-head:not(.ui-settingsgroup-head--icon)::after { content: ""; position: relative; z-index: 1; }
+:root[data-skin="phosphor"] .ui-settingsgroup-icon svg { width: 0.9rem; height: 0.9rem; }
+:root[data-skin="phosphor"] .ui-settingsgroup-aside { grid-area: 1 / 3; margin: 0 0.5rem 2px 0; background: var(--surface); }
+
+
+/* The switch: a square track, an amber block that slides. */
+:root[data-skin="phosphor"] .ui-toggle { background: var(--surface-2); }
+
+:root[data-skin="phosphor"] .ui-toggle-knob { top: 1px; left: 1px; background: var(--amber); box-shadow: none; }
+
+:root[data-skin="phosphor"] .ui-toggle--on { background: var(--amber); }
+
+:root[data-skin="phosphor"] .ui-toggle--on .ui-toggle-knob { background: var(--paper); }
+
+
+/* The search box already has its frame; the input inside it stays bare. */
+:root[data-skin="phosphor"] .ui-navsearch { border: 2px solid var(--amber); }
+
+:root[data-skin="phosphor"] .ui-navsearch .ui-navsearch-input { border: 0; background: transparent; }
+
+
+/* ---- charts ------------------------------------------------------------
+   Recharts series in the apps carry their own hex colours as SVG attributes.
+   CSS outranks a presentation attribute, so each one is mapped onto the
+   palette here — indigo to amber, orange and red to ember, yellows and pink
+   to gold, greens to green, blues to teal, violet to sage, slate to dim
+   amber — rather than threading the theme through every chart. */
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#6366f1" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#818cf8" i] { stroke: #ffb000; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#6366f1" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#818cf8" i] { fill: #ffb000; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#6366f1" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#818cf8" i] { stop-color: #ffb000; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#f97316" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#ef4444" i] { stroke: #ff6a3d; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#f97316" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#ef4444" i] { fill: #ff6a3d; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#f97316" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#ef4444" i] { stop-color: #ff6a3d; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#f59e0b" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#fbbf24" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#eab308" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#ec4899" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#f472b6" i] { stroke: #ffd27a; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#f59e0b" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#fbbf24" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#eab308" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#ec4899" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#f472b6" i] { fill: #ffd27a; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#f59e0b" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#fbbf24" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#eab308" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#ec4899" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#f472b6" i] { stop-color: #ffd27a; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#22c55e" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#34d399" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#10b981" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#84cc16" i] { stroke: #9be564; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#22c55e" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#34d399" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#10b981" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#84cc16" i] { fill: #9be564; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#22c55e" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#34d399" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#10b981" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#84cc16" i] { stop-color: #9be564; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#14b8a6" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#0ea5e9" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#60a5fa" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#3b82f6" i] { stroke: #46c7c0; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#14b8a6" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#0ea5e9" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#60a5fa" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#3b82f6" i] { fill: #46c7c0; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#14b8a6" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#0ea5e9" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#60a5fa" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#3b82f6" i] { stop-color: #46c7c0; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#a855f7" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#a78bfa" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#8b5cf6" i] { stroke: #7fb8a4; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#a855f7" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#a78bfa" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#8b5cf6" i] { fill: #7fb8a4; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#a855f7" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#a78bfa" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#8b5cf6" i] { stop-color: #7fb8a4; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stroke="#4b5563" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#8b95a3" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#6b7280" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#374151" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#64748b" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#94a3b8" i], :root[data-skin="phosphor"] .recharts-wrapper [stroke="#cbd5e1" i] { stroke: #8c7238; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [fill="#4b5563" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#8b95a3" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#6b7280" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#374151" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#64748b" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#94a3b8" i], :root[data-skin="phosphor"] .recharts-wrapper [fill="#cbd5e1" i] { fill: #8c7238; }
+
+:root[data-skin="phosphor"] .recharts-wrapper [stop-color="#4b5563" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#8b95a3" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#6b7280" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#374151" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#64748b" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#94a3b8" i], :root[data-skin="phosphor"] .recharts-wrapper [stop-color="#cbd5e1" i] { stop-color: #8c7238; }
+
+
+/* ---- legibility and fit -------------------------------------------------
+   From a review on a phone: what read well in Inter did not all survive the
+   pixel faces. */
+
+/* Numbers in VT323, the hub's own mono. Pixelify's 5 is an S and its 8 a B
+   ("28.S pts", "$S8"); VT323 keeps them apart, at the size "Phosphor
+   Mono" gives it above. */
+:root[data-skin="phosphor"] :is(.ui-td-num, .ui-heatpill, .ui-insights-num, .ui-mono, .ui-stat-value, .ui-metriccard-value, .ui-inline-stat-value, .ui-chip-value, .ui-summarychip-value, .ui-gauge-value, .ui-picks-value, .ui-matchup-score) {
+  font-family: var(--font-mono); letter-spacing: 0.02em;
+}
+
+:root[data-skin="phosphor"] .ui-heatpill { font-weight: 400; }
+
+
+/* Average on the heat ramp was dim amber on a dim tint: unreadable. Still
+   the quietest step, but one you can read. */
+:root[data-skin="phosphor"] { --stat-avg: #c2a062; }
+
+
+/* Table heads: Pixelify runs wider than Inter, so headings were colliding
+   with the sort and help marks beside them. Tighter, and those marks drawn
+   in paper so they show on the amber at all. */
+:root[data-skin="phosphor"] :is(.ui-table th, .ui-th) { font-size: 0.68rem; letter-spacing: 0.03em; }
+
+:root[data-skin="phosphor"] :is(.ui-table th, .ui-th) :is(.ui-tip-btn, .ui-helptip-btn) { color: var(--paper); border-color: var(--paper); background: transparent; }
+
+
+/* A card's controls cannot share the title bar on a phone — there is no
+   room, and they ran off the card. They drop to a toolbar under the bar. */
+@media (max-width: 640px) {:root[data-skin="phosphor"] .ui-card > .ui-card-head { flex-wrap: wrap; row-gap: 0; }
+
+:root[data-skin="phosphor"] .ui-card > .ui-card-head > .ui-card-actions {
+    order: 3; flex: 1 0 100%; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem;
+    margin: 0.3rem -0.5rem -0.3rem; padding: 0.4rem 0.5rem; border-top: 2px solid var(--amber);
+  }
+
+}
+
+
+/* ---- pixel icons ---------------------------------------------------------
+   Family Hub draws icons from Pixelarticons, never emoji or line icons, so
+   Phosphor does too. The kit's icons are drawn by the kit, so here each one
+   is masked: the line drawing hidden, the pixel icon painted in its place
+   in the text colour. Generated from pixelarticons (gen_px.py). */
+:root[data-skin="phosphor"] {
+  --px-arrows-horizontal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M13 13v-2h10v2zm6 2v-2h2v2zm-2 2v-2h2v2zm2-6V9h2v2z'/%3E %3Cpath d='M17 15V7h2v8zm-6-2v-2H1v2zm-6 2v-2H3v2zm2 2v-2H5v2zm-2-6V9H3v2z'/%3E %3Cpath d='M7 15V7H5v8z'/%3E %3C/svg%3E");
+  --px-bell: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M9 2h6v2H9zM7 4h2v2H7zm8 0h2v2h-2zM5 6h2v7H5zm12 0h2v7h-2zM3 13h2v4H3zm16 0h2v4h-2z'/%3E %3Cpath d='M3 15h18v2H3zm5 3h2v2H8zm6 0h2v2h-2zm-4 2h4v2h-4z'/%3E %3C/svg%3E");
+  --px-bell-off: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M9 2h6v2H9zm6 2h2v2h-2zM5 6h2v7H5zm12 0h2v6h-2zM3 13h2v4H3z'/%3E %3Cpath d='M3 15h14v2H3zm5 3h2v2H8zm6 0h2v2h-2zm-4 2h4v2h-4zM5 4h2v2H5zm2 2h2v2H7zm2 2h2v2H9zm2 2h2v2h-2zm2 2h2v2h-2z'/%3E %3Cpath d='M15 14h2v2h-2zm2 2h2v2h-2zm2 2h2v2h-2zM3 2h2v2H3z'/%3E %3C/svg%3E");
+  --px-calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M5 4h14v2H5zm0 16h14v2H5zM3 10h2v10H3zm0-4h2v2H3zm16 0h2v2h-2zm0 4h2v10h-2zM3 8h18v2H3zm12-6h2v2h-2zM7 2h2v2H7z'/%3E %3C/svg%3E");
+  --px-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M10 18H8v-2h2v2Zm-2-2H6v-2h2v2Zm4-2v2h-2v-2h2Zm-6 0H4v-2h2v2Zm8 0h-2v-2h2v2Zm2-2h-2v-2h2v2Zm2-2h-2V8h2v2Zm2-2h-2V6h2v2Z'/%3E %3C/svg%3E");
+  --px-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M13 16h-2v-2h2v2Zm-2-2H9v-2h2v2Zm4 0h-2v-2h2v2Zm-6-2H7v-2h2v2Zm8 0h-2v-2h2v2ZM7 10H5V8h2v2Zm12 0h-2V8h2v2Z'/%3E %3C/svg%3E");
+  --px-chevron-left: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M8 13v-2h2v2H8Zm2-2V9h2v2h-2Zm0 4v-2h2v2h-2Zm2-6V7h2v2h-2Zm0 8v-2h2v2h-2Zm2-10V5h2v2h-2Zm0 12v-2h2v2h-2Z'/%3E %3C/svg%3E");
+  --px-chevron-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M16 13v-2h-2v2h2Zm-2-2V9h-2v2h2Zm0 4v-2h-2v2h2Zm-2-6V7h-2v2h2Zm0 8v-2h-2v2h2ZM10 7V5H8v2h2Zm0 12v-2H8v2h2Z'/%3E %3C/svg%3E");
+  --px-chevron-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M13 8h-2v2h2V8Zm-2 2H9v2h2v-2Zm4 0h-2v2h2v-2Zm-6 2H7v2h2v-2Zm8 0h-2v2h2v-2ZM7 14H5v2h2v-2Zm12 0h-2v2h2v-2Z'/%3E %3C/svg%3E");
+  --px-clipboard: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M4 6h2v14H4zm2 14h12v2H6zM18 6h2v14h-2zM6 4h2v2H6zm10 0h2v2h-2zm-6-2h4v2h-4zm0 4h4v2h-4zM8 2h2v6H8zm6 0h2v6h-2z'/%3E %3C/svg%3E");
+  --px-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M7 19H5V17H7V19ZM19 19H17V17H19V19ZM9 15V17H7V15H9ZM17 17H15V15H17V17ZM11 15H9V13H11V15ZM15 15H13V13H15V15ZM13 13H11V11H13V13ZM11 11H9V9H11V11ZM15 11H13V9H15V11ZM9 9H7V7H9V9ZM17 9H15V7H17V9ZM7 7H5V5H7V7ZM19 7H17V5H19V7Z'/%3E %3C/svg%3E");
+  --px-coins: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M6 2h6v2H6zM4 4h2v2H4zm8 0h2v2h-2zm-8 8h2v2H4zm8 0h2v2h-2zm-6 2h6v2H6zM2 6h2v6H2zm12 0h2v6h-2z'/%3E %3Cpath d='M14 8h4v2h-4zm-4 10h2v2h-2zm8-8h2v2h-2zm-6 10h2v2h-2zm6-2h2v2h-2z'/%3E %3Cpath d='M12 20h6v2h-6zm-4-6h2v4H8zm12-2h2v6h-2zM7 6h4v2H7z'/%3E %3Cpath d='M9 6h2v6H9zm6 8h2v4h-2zm-1-2h3v2h-3z'/%3E %3C/svg%3E");
+  --px-colors-swatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M14 2h6v2h-6zm0 18h6v2h-6zM4 20h10v2H4zm8-16h2v16h-2zm8 0h2v16h-2zM2 16h2v4H2zm2-2h8v2H4zm12 2h2v2h-2zM6 12h2v2H6zM4 8h2v4H4zm2-2h4v2H6zm4 2h2v2h-2z'/%3E %3C/svg%3E");
+  --px-crown: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M3 3h2v12H3zm16 0h2v12h-2zm-8 0h2v2h-2zM9 5h2v2H9zM5 5h2v2H5z'/%3E %3Cpath d='M3 3h2v2H3zm4 4h2v2H7zm6-2h2v2h-2zm2 2h2v2h-2zm2-2h2v2h-2zM5 15h14v2H5zm-2 4h18v2H3z'/%3E %3C/svg%3E");
+  --px-cut: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M1 17h2v4H1zm14 0h2v4h-2zM3 21h4v2H3zm14 0h4v2h-4zM3 15h4v2H3zm14 0h4v2h-4zM7 17h2v4H7zm14 0h2v4h-2zM7 15h2v2H7zm8 0h2v2h-2zm-6-2h2v2H9zm6 0h-2v2h2zm-4-2h2v2h-2z'/%3E %3Cpath d='M13 11h-2v2h2zm0-2h2v2h-2zm-2 0H9v2h2zm4-2h2v2h-2zM9 7H7v2h2zm8-2h2v2h-2zM7 5H5v2h2zm12-2h2v2h-2zM5 3H3v2h2z'/%3E %3C/svg%3E");
+  --px-database: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M2 6h2v4H2zm0 4h2v4H2zm0 4h2v4H2zm18-8h2v4h-2zm0 4h2v4h-2zm0 4h2v4h-2zM4 4h4v2H4zm0 8h4v-2H4zm0 4h4v-2H4zm0 4h4v-2H4zM16 4h4v2h-4zm0 8h4v-2h-4zm0 4h4v-2h-4zm0 4h4v-2h-4zM8 2h8v2H8zm0 12h8v-2H8zm0 4h8v-2H8zm0 4h8v-2H8z'/%3E %3C/svg%3E");
+  --px-drag-and-drop: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M11 21H9v-2h2v2Zm10 0h-2v-2h2v2ZM9 19H7V9h2v10Zm10-4h-2v2h-2v2h-2v-6h6v2Zm0 4h-2v-2h2v2ZM5 17H3v-2h2v2Zm0-4H3v-2h2v2Zm16-2h-2V9h2v2ZM5 9H3V7h2v2Zm14 0H9V7h10v2ZM5 5H3V3h2v2Zm4 0H7V3h2v2Zm4 0h-2V3h2v2Zm4 0h-2V3h2v2Z'/%3E%3C/svg%3E");
+  --px-external-link: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M11 5H5v2h6V5ZM5 7H3v12h2V7Zm12 12H5v2h12v-2Zm2-6h-2v6h2v-6Zm-8 0H9v2h2v-2Zm2-2h-2v2h2v-2Zm2-2h-2v2h2V9Zm2-2h-2v2h2V7Zm2-2h-2v2h2V5Zm2-2h-2v8h2V3Z'/%3E %3Cpath d='M21 3h-8v2h8V3Z'/%3E %3C/svg%3E");
+  --px-eye: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M16 20H8v-2h8v2Zm-8-2H4v-2h4v2Zm12 0h-4v-2h4v2ZM4 16H2v-2h2v2Zm10-6h-2v2h2v-2h2v4h-2v2h-4v-2H8v-4h2V8h4v2Zm8 6h-2v-2h2v2ZM2 14H0v-4h2v4Zm22 0h-2v-4h2v4ZM4 10H2V8h2v2Zm18 0h-2V8h2v2ZM8 8H4V6h4v2Zm12 0h-4V6h4v2Zm-4-2H8V4h8v2Z'/%3E %3C/svg%3E");
+  --px-invert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M4 2h16v2H4zm0 18h16v2H4zM2 4h2v16H2zm18 0h2v16h-2zM4 18h2v2H4zm0-2h4v2H4zm0-2h6v2H4zm0-2h8v2H4zm0-2h10v2H4zm0-2h12v2H4zm0-2h14v2H4zm0-2h16v2H4z'/%3E %3C/svg%3E");
+  --px-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M1 18h2v4H1zm2-2h2v2H3zm2-2h6v2H5zm6-2h2v2h-2zm-6 6h4v2H5zm4 2h4v2H9zm4-2h4v2h-4zm4-2h2v2h-2zm2-8h2v8h-2zm0-4h2v4h-2zm-2-2h2v2h-2zm-4 2h4v2h-4zM7 6h6v2H7zM5 8h2v2H5zm-2 2h2v4H3z'/%3E %3C/svg%3E");
+  --px-logout: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M8 11h12v2H8zm8-2h2v2h-2z'/%3E %3Cpath d='M14 7h2v10h-2zm2 6h2v2h-2zM6 2h12v2H6zm0 18h12v2H6zM4 4h2v16H4zm14 0h2v3h-2zm0 13h2v3h-2z'/%3E %3C/svg%3E");
+  --px-menu: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M20 18H4v-2h16v2Zm0-5H4v-2h16v2Zm0-5H4V6h16v2Z'/%3E %3C/svg%3E");
+  --px-message: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M20 2H4v2h16zm0 14H6v2h14zm2-12h-2v12h2zM4 4H2v18h2zm2 14H4v2h2z'/%3E %3C/svg%3E");
+  --px-minus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M4 11h16v2H4z'/%3E %3C/svg%3E");
+  --px-monitor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M4 2h16v2H4zm0 14h16v2H4zM2 4h2v12H2zm18 0h2v12h-2zm-9 14h2v2h-2zm-3 2h8v2H8z'/%3E %3C/svg%3E");
+  --px-moon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M18 22H8v-2h10v2ZM8 20H6v-2h2v2Zm12 0h-2v-2h2v2ZM6 18H4v-2h2v2Zm16 0h-2v-4h-2v-2h2v-2h2v8ZM4 16H2V6h2v10Zm14 0h-6v-2h6v2Zm-6-2h-2v-2h2v2Zm-2-2H8V6h2v6ZM6 6H4V4h2v2Zm8-2h-2v2h-2V4H6V2h8v2Z'/%3E %3C/svg%3E");
+  --px-package: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M10 20h4v2h-4zm0-16h4V2h-4zm0 6h4v2h-4zm4 8h4v2h-4zm0-12h4V4h-4zm0 2h4v2h-4zm4 8h4v2h-4zm0-8h4V6h-4zM6 18h4v2H6zM6 6h4V4H6zm0 2h4v2H6zm-4 8h4v2H2zm0-8h4V6H2z'/%3E %3Cpath d='M2 6h2v12H2zm18 0h2v12h-2zm-8 6h2v8h-2zm-2-6h4v2h-4z'/%3E %3C/svg%3E");
+  --px-plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M13 11h7v2h-7v7h-2v-7H4v-2h7V4h2v7Z'/%3E %3C/svg%3E");
+  --px-refresh: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M13 20H9V18H13V20ZM19 16H21V18H19V20H17V18H15V16H17V8H19V16ZM9 18H7V16H9V18ZM7 6H9V8H7V16H5V8H3V6H5V4H7V6ZM15 16H13V14H15V16ZM23 16H21V14H23V16ZM3 10H1V8H3V10ZM11 10H9V8H11V10ZM17 8H15V6H17V8ZM15 6H11V4H15V6Z'/%3E%3C/svg%3E");
+  --px-reload: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M16 4h2v6h-2zm-2-2h2v2h-2zm0 2h2v8h-2zM4 8H2v5h2z'/%3E %3Cpath d='M4 6h16v2H4zm4 14H6v-6h2zm2 2H8v-2h2zm0-2H8v-8h2zm10-4h2v-5h-2z'/%3E %3Cpath d='M20 18H4v-2h16z'/%3E %3C/svg%3E");
+  --px-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M22 22h-2v-2h2v2Zm-2-2h-2v-2h2v2Zm-6-2H6v-2h8v2Zm4 0h-2v-2h2v2ZM6 16H4v-2h2v2Zm10 0h-2v-2h2v2ZM4 14H2V6h2v8Zm14 0h-2V6h2v8ZM6 6H4V4h2v2Zm10 0h-2V4h2v2Zm-2-2H6V2h8v2Z'/%3E %3C/svg%3E");
+  --px-send: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M4 19h4v2H2v-8h2v6Zm8 0H8v-2h4v2Zm4-2h-4v-2h4v2Zm4-2h-4v-2h4v2Zm-10-2H4v-2h6v2Zm12 0h-2v-2h2v2ZM8 5H4v6H2V3h6v2Zm12 6h-4V9h4v2Zm-4-2h-4V7h4v2Zm-4-2H8V5h4v2Z'/%3E %3C/svg%3E");
+  --px-settings-cog: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M4 20h3v-2h4v4h2v-4h4v2h-2v4H9v-4H7v2H2v-5h2v3Zm18 2h-5v-2h3v-3h2v5ZM6 11H2v2h4v4H4v-2H0V9h4V7h2v4Zm14-2h4v6h-4v2h-2v-4h4v-2h-4V7h2v2Zm-6 7h-4v-2h4v2Zm-4-2H8v-4h2v4Zm6 0h-2v-4h2v4Zm-2-4h-4V8h4v2ZM7 4H4v3H2V2h5v2Zm8 0h2V2h5v5h-2V4h-3v2h-4V2h-2v4H7V4h2V0h6v4Z'/%3E%3C/svg%3E");
+  --px-shuffle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M10 19H2v-2h8v2Zm12 0h-8v-2h8v2Zm-10-2h-2v-6h2v6Zm6-10h2v2h2v2h-2v2h-2v2h-2v-4h-4V9h4V5h2v2ZM8 11H2V9h6v2Z'/%3E %3C/svg%3E");
+  --px-sliders: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M8 14H7v6H5v-6H2v-2h6v2Zm5 6h-2V10h2v10Zm9-2h-3v2h-2v-2h-1v-2h6v2Zm-3-4h-2V4h2v10ZM7 10H5V4h2v6Zm6-4h2v2H9V6h2V4h2v2Z'/%3E%3C/svg%3E");
+  --px-sparkles: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M11 1h2v4h-2zm0 22h2v-4h-2zM9 5h2v4H9zm0 14h2v-4H9zm4-14h2v4h-2zm0 14h2v-4h-2zM5 9h4v2H5zm14 0h-4v2h4zM1 11h4v2H1zm22 0h-4v2h4zM5 13h4v2H5zm14 0h-4v2h4zm0-12h2v6h-2z'/%3E %3Cpath d='M17 3h6v2h-6zM3 17h2v2H3zm-2 2h2v2H1zm2 2h2v2H3zm2-2h2v2H5z'/%3E %3C/svg%3E");
+  --px-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M5 20H8V22H3V16H5V20ZM21 22H16V20H19V16H21V22ZM10 20H8V18H10V20ZM16 20H14V18H16V20ZM14 18H10V16H14V18ZM7 16H5V13H7V16ZM19 16H17V13H19V16ZM5 13H3V11H5V13ZM21 13H19V11H21V13ZM9 9H3V11H1V7H9V9ZM23 11H21V9H15V7H23V11ZM11 7H9V3H11V7ZM15 7H13V3H15V7ZM13 3H11V1H13V3Z'/%3E %3C/svg%3E");
+  --px-star-filled: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'%3E%3Cpath d='M10 2h4v4h-4zM8 6h8v2h-8zM2 8h20v2h-20zM4 10h16v2h-16zM6 12h12v4h-12zM4 16h6v2h-6zM14 16h6v2h-6zM4 18h4v2h-4zM16 18h4v2h-4zM2 20h4v2h-4zM18 20h4v2h-4z'/%3E%3C/svg%3E");
+  --px-sun: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M13 22h-2v-3h2v3Zm-6-3H5v-2h2v2Zm12 0h-2v-2h2v2Zm-4-2H9v-2h6v2Zm-6-2H7V9h2v6Zm8 0h-2V9h2v6ZM5 13H2v-2h3v2Zm17 0h-3v-2h3v2Zm-7-4H9V7h6v2ZM7 7H5V5h2v2Zm12 0h-2V5h2v2Zm-6-2h-2V2h2v3Z'/%3E%3C/svg%3E");
+  --px-test-tube: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M7 2h10v2H7zm1 2h2v16H8zm2 16h4v2h-4zm4-16h2v16h-2z'/%3E %3Cpath d='M8 13h8v2H8z'/%3E %3C/svg%3E");
+  --px-trash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M18 22H6V20H18V22ZM9 6H15V4H17V6H22V8H20V20H18V8H6V20H4V8H2V6H7V4H9V6ZM15 4H9V2H15V4Z'/%3E %3C/svg%3E");
+  --px-trending-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'%3E%3Cpath d='M4 18H2v-2h2v2Zm2-2H4v-2h2v2Zm8 0h-2v-2h2v2Zm-6-2H6v-2h2v2Zm4 0h-2v-2h2v2Zm4 0h-2v-2h2v2Zm6-8v8h-2v-4h-2V8h-4V6h8Zm-12 6H8v-2h2v2Zm8 0h-2v-2h2v2Z'/%3E%3C/svg%3E");
+  --px-trophy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M16 17H13V19H15V21H9V19H11V17H8V15H16V17ZM18 5H22V11H20V7H18V11H20V13H18V15H16V5H8V15H6V13H4V11H6V7H4V11H2V5H6V3H18V5Z'/%3E %3C/svg%3E");
+  --px-upload: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M19 21H5v-2h14v2ZM5 19H3v-4h2v4Zm16 0h-2v-4h2v4ZM13 5h2v2h2v2h-4v8h-2V9H7V7h2V5h2V3h2v2Z'/%3E %3C/svg%3E");
+  --px-warning-diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' viewBox='0 0 24 24'%3E %3Cpath d='M2 10h2v2H2zm0 4h2v-2H2zm20-4h-2v2h2zm0 4h-2v-2h2zM4 8h2v2H4zm0 8h2v-2H4zm16-8h-2v2h2zm0 8h-2v-2h2zM6 6h2v2H6zm0 12h2v-2H6zM18 6h-2v2h2zm0 12h-2v-2h2zM8 4h2v2H8zm0 16h2v-2H8zm8-16h-2v2h2zm0 16h-2v-2h2zM10 2h2v2h-2zm0 20h2v-2h-2zm4-20h-2v2h2zm0 20h-2v-2h2zm-3-5h2v-2h-2zm0-4h2V7h-2z'/%3E %3C/svg%3E");
+}
+
+:root[data-skin="phosphor"] :is(.ui-navsearch-icon, .ui-fa-send-icon, .ui-fa-opacity-icon, .ui-datenav-cal, .ui-iconbtn[aria-label^='Close'] svg, .ui-fa-launcher svg, .ui-fa-hdrbtn[aria-label^='Minimize'] svg, .ui-fa-hdrbtn[aria-label^='Close'] svg, .ui-bell-btn svg) > * { display: none; }
+
+:root[data-skin="phosphor"] .ui-navsearch-icon { background-color: currentColor; -webkit-mask: var(--px-search) center / contain no-repeat; mask: var(--px-search) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-fa-send-icon { background-color: currentColor; -webkit-mask: var(--px-send) center / contain no-repeat; mask: var(--px-send) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-fa-opacity-icon { background-color: currentColor; -webkit-mask: var(--px-invert) center / contain no-repeat; mask: var(--px-invert) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-datenav-cal { background-color: currentColor; -webkit-mask: var(--px-calendar) center / contain no-repeat; mask: var(--px-calendar) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-iconbtn[aria-label^='Close'] svg { background-color: currentColor; -webkit-mask: var(--px-close) center / contain no-repeat; mask: var(--px-close) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-fa-launcher svg { background-color: currentColor; -webkit-mask: var(--px-message) center / contain no-repeat; mask: var(--px-message) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-fa-hdrbtn[aria-label^='Minimize'] svg { background-color: currentColor; -webkit-mask: var(--px-minus) center / contain no-repeat; mask: var(--px-minus) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-fa-hdrbtn[aria-label^='Close'] svg { background-color: currentColor; -webkit-mask: var(--px-close) center / contain no-repeat; mask: var(--px-close) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-bell-btn svg { background-color: currentColor; -webkit-mask: var(--px-bell) center / contain no-repeat; mask: var(--px-bell) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] :is(.ui-nav-burger, .ui-sb-iconbtn--danger, .ui-error-icon, .ui-empty-icon) { font-size: 0 !important; line-height: 0; }
+
+:root[data-skin="phosphor"] .ui-nav-burger::before { content: ""; display: inline-block; width: 22px; height: 22px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-menu) center / contain no-repeat; mask: var(--px-menu) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-sb-iconbtn--danger::before { content: ""; display: inline-block; width: 14px; height: 14px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-close) center / contain no-repeat; mask: var(--px-close) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-error-icon::before { content: ""; display: inline-block; width: 40px; height: 40px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-warning-diamond) center / contain no-repeat; mask: var(--px-warning-diamond) center / contain no-repeat; }
+
+:root[data-skin="phosphor"] .ui-empty-icon::before { content: ""; display: inline-block; width: 40px; height: 40px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-sport) center / contain no-repeat; mask: var(--px-sport) center / contain no-repeat; }
+
+:root .px-icon { display: inline-block; width: 1.15em; height: 1.15em; vertical-align: -0.2em; flex: none; }
+
+
+/* Lucide icons, the same way: by name, and inline line icons by the path
+   they draw or the button they sit in.
+   Team avatars and the icon picker keep their icons — a person chose those. */
+
+
+
+/* Photos sit above the scanlines (z-index 46), which put them above every
+   sticky header too: a headshot scrolled up over the table's own head. Each
+   sticky header, column and bar goes above the photos — corners one higher
+   still, so they keep covering their own row and column. */
+:root[data-skin="phosphor"] :is(.ui-table--sticky .ui-th, .ui-btable thead th, .ui-btable tfoot td, .ui-bell-head, .ui-log-tools) { z-index: 47; }
+
+
+/* ---- corners and room ----------------------------------------------------
+   Square everywhere. The radius tokens were zeroed at the top, but the kit and
+   the pages also write radii as numbers (0.5rem boxes, 999px pills), and those
+   stayed round inside square windows. This outranks a page's own class rule;
+   the buttons' deliberate 9px, set with more weight above, still wins. */
+:root[data-skin="phosphor"] *, :root[data-skin="phosphor"] *::before, :root[data-skin="phosphor"] *::after { border-radius: 0; }
+
+:root[data-skin="phosphor"] :is(.ui-spinner, .ui-spin, [class*="spinner"]) { border-radius: 50%; }
+
+
+/* Boxes inside a window — the odds, the AI pick, an insights box — had 7-8px
+   between their text and a 2px amber frame: legal, and cramped beside the
+   heavier lines. A little more room. */
+:root[data-skin="phosphor"] :is(.ui-odds, .ui-insights-box, .ui-picks-value) { padding: 0.75rem 0.9rem; }
+
+:root[data-skin="phosphor"] .ui-picks-summary { padding-inline: 0.15rem; }
+
+/* Small avatars, as inline in an AI note, take a hairline frame: at 12px a
+   2px one left no face at all. */
+:root[data-skin="phosphor"] .ui-avatar { border-radius: 0; border: 1px solid var(--amber); }
+/* The date picker's arrows, as pixel chevrons. */
+:root[data-skin="phosphor"] :is(.ui-datenav-btn:first-of-type svg, .ui-datenav-btn:last-of-type svg) > * { display: none; }
+:root[data-skin="phosphor"] .ui-datenav-btn:first-of-type svg { background-color: currentColor; -webkit-mask: var(--px-chevron-left) center / contain no-repeat; mask: var(--px-chevron-left) center / contain no-repeat; }
+:root[data-skin="phosphor"] .ui-datenav-btn:last-of-type svg { background-color: currentColor; -webkit-mask: var(--px-chevron-right) center / contain no-repeat; mask: var(--px-chevron-right) center / contain no-repeat; }
