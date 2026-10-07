@@ -5837,3 +5837,23 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   .ui-fprow-caret-mobile { display: none; }
   .ui-fprow-caret-desktop { display: flex; }
 }
+
+/* MetricStrip — labelled numbers side by side (football's and baseball's
+   MetricCells, once). Fixed cells share one width so a list lines up; on a
+   phone the strip takes the row's width and the cells divide it evenly, down
+   to 48px each — below that the strip scrolls rather than squeeze -233.6. */
+.ui-mstrip { display: flex; align-items: stretch; flex-shrink: 0; }
+.ui-mstrip > * + * { border-left: 1px solid color-mix(in srgb, var(--border) 50%, transparent); }
+.ui-mstrip-lead { display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; padding-right: 0.75rem; }
+.ui-mstrip-cell { padding: 0 0.5rem; text-align: right; min-width: 56px; }
+.ui-mstrip--compact .ui-mstrip-cell { min-width: 44px; }
+.ui-mstrip--fixed .ui-mstrip-cell { width: 72px; min-width: 0; flex-shrink: 0; }
+.ui-mstrip--fixed.ui-mstrip--compact .ui-mstrip-cell { width: 60px; }
+.ui-mstrip-val { font-size: calc(14px + var(--fs-bump, 0px)); font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; line-height: 1; color: var(--text); }
+.ui-mstrip--compact .ui-mstrip-val { font-size: calc(12px + var(--fs-bump, 0px)); }
+.ui-mstrip-val--empty { color: var(--muted); font-weight: 400; }
+.ui-mstrip-label { display: flex; align-items: center; justify-content: flex-end; gap: 0.125rem; margin-top: 0.25rem; font-size: calc(9px + var(--fs-bump, 0px)); color: var(--muted); line-height: 1; }
+@media (max-width: 639px) {
+  .ui-mstrip { width: 100%; flex-shrink: 1; }
+  .ui-mstrip--fixed .ui-mstrip-cell { flex: 1 1 0; width: auto; min-width: 48px; }
+}

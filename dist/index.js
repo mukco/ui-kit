@@ -112,3 +112,4 @@ export { NavSessionButtons, NavSessionDrawer } from "./primitives/NavSession";
 export { useSectionSwipe, SwipeBand } from "./primitives/SectionSwipe";
 export { FantasyTeamBar, FantasyLayout } from "./fantasy/FantasyFrame";
 export { FantasyPlayerRow } from "./fantasy/FantasyPlayerRow";
+export { MetricStrip } from "./fantasy/MetricStrip";
