@@ -134,3 +134,5 @@ export { FollowButton } from "./primitives/FollowButton";
 export { AppearanceCard, InstallAppCard } from "./primitives/AppCards";
 export type { SettingsGroupTone } from "./primitives/SettingsGroup";
 export { NavSessionButtons, NavSessionDrawer } from "./primitives/NavSession";
+export { useSectionSwipe, SwipeBand } from "./primitives/SectionSwipe";
+export type { SectionSwipeOptions } from "./primitives/SectionSwipe";
