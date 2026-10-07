@@ -11,6 +11,7 @@ import {
   Chip,
   DataTable,
   DateNav,
+  PeriodNav,
   Drawer,
   DynamicChart,
   EmptyState,
@@ -315,6 +316,7 @@ export function UiDemo() {
   const [team, setTeam] = useState("north")
   const [name, setName] = useState("")
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
+  const [demoPeriod, setDemoPeriod] = useState("0")
   const [deployed, setDeployed] = useState(false)
   const [range, setRange] = useState("6h")
   const [tile] = useState<string | null>("push")
@@ -826,6 +828,14 @@ export function UiDemo() {
         />
         <div className="uidemo-row" style={{ marginTop: "0.75rem", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}>
           <DateNav date={demoDate} onChange={setDemoDate} disableFuture />
+          <PeriodNav
+            periods={["Week 1", "Week 2", "Week 3", "Week 4", "Wild Card"].map((label, i) => ({ id: String(i), label }))}
+            value={demoPeriod}
+            onChange={setDemoPeriod}
+            current="2"
+            currentLabel="This week"
+            noun="week"
+          />
           <span className="uidemo-row">
             <SparklineChart data={[{ v: 3 }, { v: 5 }, { v: 4 }, { v: 7 }, { v: 6 }, { v: 9 }]} valueKey="v" width={70} />
             <SparklineChart data={[{ v: 9 }, { v: 7 }, { v: 8 }, { v: 4 }, { v: 5 }, { v: 2 }]} valueKey="v" color="var(--danger)" width={70} />
