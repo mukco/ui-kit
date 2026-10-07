@@ -25,13 +25,15 @@ export function HeatPill({ children, color }) {
  * click-to-expand rows. Sorting lives inside the component. Wide tables
  * scroll horizontally on phones.
  */
-export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No data available.", error, onRetry, maxHeight, className, }) {
-    const [sort, setSort] = useState(null);
+export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No data available.", error, onRetry, maxHeight, className, sortKey, sortDir, onSort, }) {
+    const [ownSort, setSort] = useState(null);
+    const controlled = !!onSort;
+    const sort = controlled ? (sortKey ? { key: sortKey, dir: sortDir ?? "desc" } : null) : ownSort;
     const [expandedKey, setExpandedKey] = useState(null);
     const rows = useMemo(() => {
         if (!data?.length)
             return [];
-        if (!sort)
+        if (!sort || controlled)
             return data;
         const dir = sort.dir === "asc" ? 1 : -1;
         return [...data].sort((a, b) => {
@@ -41,7 +43,7 @@ export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No d
                 return (av - bv) * dir;
             return String(a[sort.key] ?? "").localeCompare(String(b[sort.key] ?? "")) * dir;
         });
-    }, [data, sort]);
+    }, [data, sort, controlled]);
     // Per-column min/max for heat coloring.
     const ranges = useMemo(() => {
         const map = {};
@@ -58,6 +60,8 @@ export function DataTable({ data, columns, rowKey, renderExpanded, empty = "No d
         return map;
     }, [data, columns]);
     function toggleSort(key) {
+        if (onSort)
+            return onSort(key);
         setSort((s) => s?.key === key ? (s.dir === "asc" ? { key, dir: "desc" } : null) : { key, dir: "asc" });
     }
     // Checked before the empty case: a failed fetch also leaves `data` empty, and

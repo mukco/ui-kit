@@ -29,6 +29,13 @@ interface Props<T extends Record<string, unknown>> {
         a table that should grow with the page (the default). */
     maxHeight?: string;
     className?: string;
+    /** Controlled sorting, for a page that keeps the order itself (a default
+        sort, a saved view): pass the current key and direction and an onSort,
+        and the rows are shown in the order given. Omit all three and the table
+        sorts on its own. */
+    sortKey?: string;
+    sortDir?: "asc" | "desc";
+    onSort?: (key: string) => void;
 }
 /** Value pill colored against its column distribution. */
 export declare function HeatPill({ children, color }: {
@@ -40,5 +47,5 @@ export declare function HeatPill({ children, color }: {
  * click-to-expand rows. Sorting lives inside the component. Wide tables
  * scroll horizontally on phones.
  */
-export declare function DataTable<T extends Record<string, unknown>>({ data, columns, rowKey, renderExpanded, empty, error, onRetry, maxHeight, className, }: Props<T>): import("react").JSX.Element;
+export declare function DataTable<T extends Record<string, unknown>>({ data, columns, rowKey, renderExpanded, empty, error, onRetry, maxHeight, className, sortKey, sortDir, onSort, }: Props<T>): import("react").JSX.Element;
 export {};
