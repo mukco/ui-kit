@@ -5726,18 +5726,21 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
    name share a row; the detail (facts, links, awards) runs full width under
    them on a phone and beside the face from 640px. */
 .ui-profilehero { position: relative; overflow: hidden; padding: 0; gap: 0; }
+.ui-profilehero-art { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.4; pointer-events: none; }
+.ui-profilehero-body, .ui-profilehero-extra, .ui-profilehero-bar { position: relative; z-index: 1; }
 .ui-profilehero-bar { height: 0.25rem; background: linear-gradient(to right, var(--brand), var(--brand-light), transparent); }
 .ui-profilehero-body {
-  display: grid; grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas: "face top" "status status" "actions actions" "detail detail";
-  gap: 0.75rem 1rem; padding: 1rem;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "face top actions" "status status status" "detail detail detail";
+  gap: 0.75rem; padding: 1rem;
 }
 @media (min-width: 640px) {
   .ui-profilehero-body { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "face top actions" "face status status" "face detail detail"; gap: 0.75rem 1.5rem; padding: 1.5rem; }
 }
 .ui-profilehero-face { grid-area: face; width: 4rem; height: 4rem; border-radius: var(--radius-lg); object-fit: cover; background: var(--surface-2); border: 1px solid var(--border); }
 @media (min-width: 640px) { .ui-profilehero-face { width: 6rem; height: 6rem; } }
-.ui-profilehero-face--logo { object-fit: contain; background: none; border: 0; }
+.ui-profilehero-face.ui-profilehero-face--logo { width: 3.5rem; height: 3.5rem; object-fit: contain; background: none; border: 0; }
+@media (min-width: 640px) { .ui-profilehero-face.ui-profilehero-face--logo { width: 4.5rem; height: 4.5rem; } }
 .ui-profilehero-face--initials { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: var(--muted); }
 .ui-profilehero-top { grid-area: top; min-width: 0; }
 .ui-profilehero-name { margin: 0; font-size: calc(1.25rem + var(--fs-bump, 0px)); font-weight: 700; line-height: 1.2; text-wrap: balance; color: var(--text); }
@@ -5745,7 +5748,9 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-profilehero-aside { display: inline-flex; vertical-align: middle; margin-left: 0.5rem; }
 .ui-profilehero-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.5rem; margin-top: 0.25rem; font-size: calc(0.875rem + var(--fs-bump, 0px)); color: var(--text-2); }
 .ui-profilehero-actions { grid-area: actions; display: flex; align-items: center; gap: 0.5rem; align-self: start; }
-.ui-profilehero-body:not(:has(.ui-profilehero-actions)) { grid-template-areas: "face top" "status status" "detail detail"; }
+.ui-profilehero--wideactions .ui-profilehero-body { grid-template-areas: "face top top" "status status status" "actions actions actions" "detail detail detail"; }
+.ui-profilehero-body:not(:has(.ui-profilehero-actions)) { grid-template-areas: "face top top" "status status status" "detail detail detail"; }
+@media (min-width: 640px) { .ui-profilehero--wideactions .ui-profilehero-body { grid-template-areas: "face top actions" "face status status" "face detail detail"; } }
 @media (min-width: 640px) { .ui-profilehero-body:not(:has(.ui-profilehero-actions)) { grid-template-areas: "face top top" "face status status" "face detail detail"; } }
 .ui-profilehero-status { grid-area: status; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-width: 0; }
 .ui-profilehero-status:empty { display: none; }
