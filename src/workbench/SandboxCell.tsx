@@ -48,6 +48,11 @@ interface Props {
   askAssistant?: (prompt: string) => void
   /** Render the first "name"-ish column as a link when a paired id column exists. */
   renderNameLink?: (name: string, id: unknown) => React.ReactNode
+  /** The app's id columns, shown as written rather than as 12,345: its own
+      warehouse's names (gsis_id, espn_id…) on top of the shared ones. */
+  idColumns?: string[]
+  /** Beside each column's name in the result header — a stat help tooltip. */
+  headerExtra?: (col: string) => React.ReactNode
   dragHandleProps?: HTMLAttributes<HTMLButtonElement>
 }
 
@@ -93,11 +98,11 @@ const BASE_EXTENSIONS = [oneDark, BRAND_OVERRIDE]
 
 const ID_COLS = new Set(["player_id", "fg_id", "mlbam_id", "game_pk", "game_id", "team_id", "batter_id", "pitcher_id"])
 
-function fmtCell(v: unknown, col: string): string | null {
+function fmtCell(v: unknown, col: string, ids: Set<string> = ID_COLS): string | null {
   if (v == null) return null
   if (typeof v !== "number") return String(v)
   if (!Number.isFinite(v)) return String(v)
-  if (Number.isInteger(v)) return ID_COLS.has(col) ? String(v) : v.toLocaleString()
+  if (Number.isInteger(v)) return ids.has(col) ? String(v) : v.toLocaleString()
   const abs = Math.abs(v)
   if (abs >= 100) return v.toFixed(1)
   if (abs >= 10) return v.toFixed(2)
@@ -125,8 +130,11 @@ function SandboxCellInner({
   onFocus,
   schema,
   renderNameLink,
+  idColumns,
+  headerExtra,
   dragHandleProps,
 }: Props) {
+  const ids = useMemo(() => new Set([...ID_COLS, ...(idColumns ?? [])]), [idColumns])
   const [viewMode, setViewMode] = useState<"table" | "chart" | "pivot">("table")
   const [showSummary, setShowSummary] = useState(false)
   const [sortKey, setSortKey] = useState<string | null>(null)
@@ -149,8 +157,15 @@ function SandboxCellInner({
     if (cell.id !== prevCellId.current) {
       setLocalSql(cell.sql)
       prevCellId.current = cell.id
+      return
     }
-  }, [cell.id, cell.sql])
+    // Same cell, but its SQL arrived after mount — an opening cell seeded from
+    // the dataset registry once the schema loads. Adopted only while the buffer
+    // is still empty, so it can never overwrite what someone is typing.
+    // (Football's own copy of this cell had it; without it the first cell sat
+    // empty with Run disabled.)
+    if (!localSql && cell.sql) setLocalSql(cell.sql)
+  }, [cell.id, cell.sql, localSql])
 
   const isMd = cell.type === "md"
 
@@ -210,15 +225,17 @@ function SandboxCellInner({
     }
   }
 
-  function defaultRenderCell(value: unknown, col: string): React.ReactNode {
-    const nameIdx = result?.columns?.indexOf("name") ?? -1
+  // Every cell, not only when names link: without it a consumer that passed
+  // no renderNameLink got raw floats (0.6650000000001) and comma-less ids.
+  function defaultRenderCell(value: unknown, col: string, rowIndex: number): React.ReactNode {
     const pidIdx = result?.columns?.indexOf("player_id") ?? -1
     if (col === "name" && pidIdx >= 0 && renderNameLink) {
-      const rowIdx = sortedRows.findIndex((r: unknown[]) => r[nameIdx] === value)
-      const id = rowIdx >= 0 ? sortedRows[rowIdx][pidIdx] : null
+      // The id from this row — it was found by searching for the name, which
+      // linked every "Josh Allen" to whichever came first.
+      const id = (sortedRows[rowIndex] as unknown[] | undefined)?.[pidIdx]
       if (id != null) return renderNameLink(String(value), id)
     }
-    if (typeof value === "number") return <span className="ui-mono">{fmtCell(value, col)}</span>
+    if (typeof value === "number") return <span className="ui-mono">{fmtCell(value, col, ids)}</span>
     return String(value)
   }
 
@@ -246,22 +263,33 @@ function SandboxCellInner({
         )}
 
         <div className="ui-sb-cellactions">
-          <button type="button" title="Drag to reorder" className="ui-sb-iconbtn" {...(dragHandleProps ?? {})}>
-            ⠿
+          {/* Drawn with the kit's .ui-iconbtn: these were bare glyphs
+              (⠿ ✕ ▾) in a class nothing styled, crowded into the corner. */}
+          <button type="button" title="Drag to reorder" aria-label="Drag to reorder" className="ui-sb-draghandle" {...(dragHandleProps ?? {})}>
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="5" cy="4" r="1.2" /><circle cx="11" cy="4" r="1.2" />
+              <circle cx="5" cy="8" r="1.2" /><circle cx="11" cy="8" r="1.2" />
+              <circle cx="5" cy="12" r="1.2" /><circle cx="11" cy="12" r="1.2" />
+            </svg>
           </button>
           {onDelete && (
-            <button type="button" onClick={onDelete} title="Delete cell" className="ui-sb-iconbtn ui-sb-iconbtn--danger">
-              ✕
+            <button type="button" onClick={onDelete} title="Delete cell" aria-label="Delete cell" className="ui-iconbtn ui-iconbtn--danger">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           )}
           <button
             type="button"
             onClick={() => setCollapsed((c) => !c)}
             title={collapsed ? "Expand" : "Collapse"}
-            className="ui-sb-iconbtn"
+            aria-label={collapsed ? "Expand" : "Collapse"}
+            className="ui-iconbtn"
             style={{ transform: collapsed ? "rotate(-90deg)" : undefined }}
           >
-            ▾
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
         </div>
       </div>
@@ -391,7 +419,8 @@ function SandboxCellInner({
                   sortDir={sortDir}
                   onSort={handleSort}
                   showSummary={showSummary}
-                  renderCell={renderNameLink ? defaultRenderCell : undefined}
+                  renderCell={defaultRenderCell}
+                  headerExtra={headerExtra}
                 />
               )}
               {viewMode === "chart" && <SandboxChart key={result.columns.join("|")} columns={result.columns} rows={result.rows} />}
@@ -406,7 +435,7 @@ function SandboxCellInner({
 
 // Sorting is owned by the cell (it drives both header arrows and row order),
 // so this thin wrapper reuses BasicTable's rendering with external sort state.
-function BasicTableInCell({ columns, rows, allRows, sortKey, sortDir, onSort, showSummary, renderCell }: {
+function BasicTableInCell({ columns, rows, allRows, sortKey, sortDir, onSort, showSummary, renderCell, headerExtra }: {
   columns: string[]
   rows: unknown[][]
   allRows: unknown[][]
@@ -415,6 +444,7 @@ function BasicTableInCell({ columns, rows, allRows, sortKey, sortDir, onSort, sh
   onSort: (c: string) => void
   showSummary: boolean
   renderCell?: (value: unknown, col: string, rowIndex: number) => React.ReactNode
+  headerExtra?: (col: string) => React.ReactNode
 }) {
   const summary = useMemo(() => {
     if (!showSummary) return null
@@ -434,7 +464,7 @@ function BasicTableInCell({ columns, rows, allRows, sortKey, sortDir, onSort, sh
           <tr>
             {columns.map((c) => (
               <th key={c} onClick={() => onSort(c)}>
-                <span className="ui-th-inner">{c}{sortKey === c && <span className="ui-sort-arrow">{sortDir === "asc" ? "↑" : "↓"}</span>}</span>
+                <span className="ui-th-inner">{c}{headerExtra?.(c)}{sortKey === c && <span className="ui-sort-arrow">{sortDir === "asc" ? "↑" : "↓"}</span>}</span>
               </th>
             ))}
           </tr>
