@@ -87,6 +87,7 @@ export { PlayerLink } from "./sports/PlayerLink";
 export { TeamIcon } from "./sports/TeamIcon";
 export { TeamLink } from "./sports/TeamLink";
 export { LineScore } from "./sports/LineScore";
+export { ProfileHero } from "./sports/ProfileHero";
 export { PlayFeed, PlayTag } from "./sports/PlayFeed";
 export { BoxScore } from "./sports/BoxScore";
 export { NewsPanel } from "./sports/NewsPanel";
