@@ -505,7 +505,7 @@ export interface FloatingAssistantProps {
   /** Drops text into the composer without submitting it — e.g. a SQL
    *  workbench cell's "Ask assistant" button. The user can still edit before
    *  sending. Consumed once. */
-  prefillPrompt?: string | null
+  prefillPrompt?: string | { text: string } | null
   onPrefillPromptConsumed?: () => void
 }
 
@@ -801,8 +801,13 @@ export function FloatingAssistant({
 
   useEffect(() => {
     if (!prefillPrompt) return
+    // A string, or the { text } that SandboxContext's askAssistant queues —
+    // which is what the apps pass straight through, and which as an object
+    // filled the composer with "[object Object]".
+    const text = typeof prefillPrompt === "string" ? prefillPrompt : prefillPrompt.text
+    if (!text) return
     setMinimized(false)
-    setComposerPrefill(prefillPrompt)
+    setComposerPrefill(text)
     onPrefillPromptConsumed?.()
   }, [prefillPrompt]) // eslint-disable-line react-hooks/exhaustive-deps
 

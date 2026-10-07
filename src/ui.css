@@ -1947,6 +1947,9 @@ button.ui-matchup--link {
   flex-shrink: 0;
 }
 
+.ui-sb-draghandle { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--muted); cursor: grab; touch-action: none; }
+.ui-sb-draghandle:hover { color: var(--text); }
+.ui-sb-draghandle:active { cursor: grabbing; }
 .ui-iconbtn {
   display: inline-flex;
   align-items: center;
