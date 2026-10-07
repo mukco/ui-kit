@@ -1,6 +1,7 @@
 interface Props {
     /** Return the remote build id; polled periodically and on tab focus. */
-    getRemoteBuild: () => Promise<string | null | undefined>;
+    /** Defaults to versionJsonBuild: /version.json, written next to the build. */
+    getRemoteBuild?: () => Promise<string | null | undefined>;
     localBuild: string | undefined;
     appName?: string;
     intervalMs?: number;
@@ -26,4 +27,10 @@ interface Props {
  *  `activated`, at which point a plain reload is genuinely enough.
  */
 export declare function UpdateToast({ getRemoteBuild, localBuild, appName, intervalMs, readyTimeoutMs, }: Props): import("react").JSX.Element | null;
+/**
+ * The build id the server is serving now: /version.json, which every app's
+ * build writes next to its assets, read past every cache. Null when it can't
+ * be read (offline, mid-deploy) — the toast just waits for the next check.
+ */
+export declare function versionJsonBuild(): Promise<string | null>;
 export {};

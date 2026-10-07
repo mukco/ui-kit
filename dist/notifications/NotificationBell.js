@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "../cn";
 /** Bell with unread badge opening a dropdown list. Items and dismissal are
     the app's business; the kit draws the affordance. */
-export function NotificationBell({ items, onItemClick, onDismissAll, empty = "You're all caught up.", className }) {
+export function NotificationBell({ items, onItemClick, onDismissAll, onDismiss, action, empty = "You're all caught up.", className }) {
     const [open, setOpen] = useState(false);
     const rootRef = useRef(null);
     useEffect(() => {
@@ -15,5 +15,13 @@ export function NotificationBell({ items, onItemClick, onDismissAll, empty = "Yo
         document.addEventListener("mousedown", onDown);
         return () => document.removeEventListener("mousedown", onDown);
     }, []);
-    return (_jsxs("div", { ref: rootRef, className: cn("ui-bell", className), children: [_jsxs("button", { type: "button", className: "ui-bell-btn", "aria-label": "Notifications", "aria-expanded": open, onClick: () => setOpen((v) => !v), children: [_jsx(IconBell, { className: "ui-bell-icon", size: 18 }), items.length > 0 && _jsx("span", { className: "ui-bell-badge", children: items.length > 9 ? "9+" : items.length })] }), open && (_jsxs("div", { className: "ui-bell-panel", children: [_jsxs("div", { className: "ui-bell-head", children: [_jsx("p", { className: "ui-bell-head-title", children: "Notifications" }), onDismissAll && items.length > 0 && (_jsx("button", { type: "button", className: "ui-bell-clear", onClick: onDismissAll, children: "Clear all" }))] }), items.length === 0 ? (_jsx("p", { className: "ui-bell-empty", children: empty })) : (items.map((n) => (_jsxs("button", { type: "button", className: "ui-bell-item", onClick: () => onItemClick?.(n), children: [_jsx("span", { className: cn(items.length > 0 && "ui-bell-dot"), style: { background: undefined }, "aria-hidden": "true" }), n.icon && _jsx("span", { className: "ui-bell-item-icon", children: n.icon }), _jsxs("span", { className: "ui-bell-item-body", children: [_jsx("span", { className: "ui-bell-item-title", children: n.title }), n.body && _jsx("span", { className: "ui-bell-item-body-text", children: n.body }), n.time && _jsx("span", { className: "ui-bell-item-time", children: n.time })] })] }, n.id))))] }))] }));
+    return (_jsxs("div", { ref: rootRef, className: cn("ui-bell", className), children: [_jsxs("button", { type: "button", className: "ui-bell-btn", "aria-label": "Notifications", "aria-expanded": open, onClick: () => setOpen((v) => !v), children: [_jsx(IconBell, { className: "ui-bell-icon", size: 18 }), items.length > 0 && _jsx("span", { className: "ui-bell-badge", children: items.length > 9 ? "9+" : items.length })] }), open && (_jsxs("div", { className: "ui-bell-panel", children: [_jsxs("div", { className: "ui-bell-head", children: [_jsx("p", { className: "ui-bell-head-title", children: "Notifications" }), onDismissAll && items.length > 0 && (_jsx("button", { type: "button", className: "ui-bell-clear", onClick: onDismissAll, children: "Clear all" }))] }), items.length === 0 ? (_jsx("p", { className: "ui-bell-empty", children: empty })) : (items.map((n) => {
+                        const meta = n.source != null || n.time != null;
+                        const item = (_jsxs("button", { type: "button", className: "ui-bell-item", onClick: () => onItemClick?.(n), children: [_jsx("span", { className: cn(items.length > 0 && "ui-bell-dot"), style: { background: undefined }, "aria-hidden": "true" }), n.icon && _jsx("span", { className: "ui-bell-item-icon", children: n.icon }), _jsxs("span", { className: "ui-bell-item-body", children: [_jsx("span", { className: "ui-bell-item-title", children: n.title }), n.body && _jsx("span", { className: "ui-bell-item-body-text", children: n.body }), meta && (_jsxs("span", { className: "ui-bell-item-time", children: [n.source != null && _jsx("span", { className: "ui-bell-item-source", children: n.source }), n.source != null && n.time != null && " · ", n.time] }))] })] }, n.id));
+                        if (!onDismiss && !action)
+                            return item;
+                        // A row with its own controls: the item stays one button, and the
+                        // dismiss and the action sit beside it rather than inside it.
+                        return (_jsxs("div", { className: "ui-bell-row", children: [item, onDismiss && (_jsx("button", { type: "button", className: "ui-bell-dismiss", "aria-label": "Dismiss", onClick: () => onDismiss(n), children: "\u00D7" })), action && (_jsx("button", { type: "button", className: "ui-bell-action", onClick: () => { action.onClick(n); setOpen(false); }, children: action.label }))] }, n.id));
+                    }))] }))] }));
 }

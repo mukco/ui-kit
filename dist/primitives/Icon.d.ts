@@ -22,4 +22,11 @@ export declare const IconSearch: (p: IconProps) => import("react").JSX.Element;
 export declare const IconRefresh: (p: IconProps) => import("react").JSX.Element;
 export declare const IconClose: (p: IconProps) => import("react").JSX.Element;
 export declare const IconBell: (p: IconProps) => import("react").JSX.Element;
+export declare const IconBellOff: (p: IconProps) => import("react").JSX.Element;
+export declare const IconMonitor: (p: IconProps) => import("react").JSX.Element;
+export declare const IconStar: (p: IconProps) => import("react").JSX.Element;
+export declare const IconDownload: (p: IconProps) => import("react").JSX.Element;
+export declare const IconTrophy: (p: IconProps) => import("react").JSX.Element;
+/** A CRT screen: the look button's hint that the next look is Phosphor. */
+export declare const IconCrt: (p: IconProps) => import("react").JSX.Element;
 export {};

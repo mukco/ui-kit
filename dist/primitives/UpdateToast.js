@@ -21,7 +21,7 @@ const DEFAULT_READY_TIMEOUT = 5_000;
  *  the registration and only offers the button once a new worker has reached
  *  `activated`, at which point a plain reload is genuinely enough.
  */
-export function UpdateToast({ getRemoteBuild, localBuild, appName = "the app", intervalMs = DEFAULT_INTERVAL, readyTimeoutMs = DEFAULT_READY_TIMEOUT, }) {
+export function UpdateToast({ getRemoteBuild = versionJsonBuild, localBuild, appName = "the app", intervalMs = DEFAULT_INTERVAL, readyTimeoutMs = DEFAULT_READY_TIMEOUT, }) {
     const [available, setAvailable] = useState(false);
     const [busy, setBusy] = useState(false);
     useEffect(() => {
@@ -61,4 +61,18 @@ export function UpdateToast({ getRemoteBuild, localBuild, appName = "the app", i
     if (!available)
         return null;
     return (_jsx("div", { className: "ui-updatetoast", children: _jsxs("div", { className: "ui-card ui-updatetoast-card", children: [_jsx("span", { className: "ui-updatetoast-icon", "aria-hidden": "true", children: "\uD83D\uDD04" }), _jsxs("div", { className: "ui-updatetoast-text", children: [_jsx("div", { className: "ui-updatetoast-title", children: "Update available" }), _jsxs("div", { className: "ui-updatetoast-sub", children: ["A new version of ", appName, " has been deployed."] })] }), _jsx("button", { type: "button", className: "ui-updatetoast-refresh", onClick: refresh, disabled: busy, "aria-busy": busy, children: busy ? "Updating…" : "Refresh" })] }) }));
+}
+/**
+ * The build id the server is serving now: /version.json, which every app's
+ * build writes next to its assets, read past every cache. Null when it can't
+ * be read (offline, mid-deploy) — the toast just waits for the next check.
+ */
+export async function versionJsonBuild() {
+    try {
+        const res = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" });
+        return res.ok ? (await res.json()).build ?? null : null;
+    }
+    catch {
+        return null;
+    }
 }
