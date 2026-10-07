@@ -46,9 +46,16 @@ export interface ProfileHeroProps {
   status?: ReactNode
   /** Top right: a season picker, a follow star. */
   actions?: ReactNode
+  /** The actions are wide (a season picker): on a phone they take a row of
+      their own rather than squeezing the name's column. */
+  wideActions?: boolean
   facts?: ProfileFact[]
   links?: ProfileLink[]
   awards?: ProfileAward[]
+  /** A photograph behind the card (the team's arena), under a scrim. */
+  art?: string | null
+  /** The top bar's colour — a team's own; the brand gradient otherwise. */
+  accent?: string | null
   /** Under the detail, inside the card — a team's record and lineup. */
   children?: ReactNode
   className?: string
@@ -85,12 +92,18 @@ function Awards({ awards }: { awards: ProfileAward[] }) {
   )
 }
 
-export function ProfileHero({ name, image, imageKind = "photo", initials, nameAside, line, status, actions, facts, links, awards, children, className }: ProfileHeroProps) {
+export function ProfileHero({ name, image, imageKind = "photo", initials, nameAside, line, status, actions, wideActions, facts, links, awards, art, accent, children, className }: ProfileHeroProps) {
   const shownFacts = (facts ?? []).filter((f) => f.value != null && f.value !== "")
   const detail = shownFacts.length > 0 || (links?.length ?? 0) > 0 || (awards?.length ?? 0) > 0
   return (
-    <div className={cn("ui-card ui-profilehero", className)}>
-      <div className="ui-profilehero-bar" aria-hidden="true" />
+    <div className={cn("ui-card ui-profilehero", wideActions && "ui-profilehero--wideactions", className)}>
+      {art && (
+        <>
+          <div aria-hidden="true" className="ui-profilehero-art" style={{ backgroundImage: `url(${art})` }} />
+          <div aria-hidden="true" className="ui-matchup-scrim" />
+        </>
+      )}
+      <div className="ui-profilehero-bar" aria-hidden="true" style={accent ? { background: accent } : undefined} />
       <div className="ui-profilehero-body">
         <Face image={image} imageKind={imageKind} initials={initials} />
         <div className="ui-profilehero-top">
