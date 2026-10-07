@@ -5809,3 +5809,31 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   .ui-flayout--single { grid-template-columns: minmax(0, 1fr); }
   .ui-flayout-side { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; overscroll-behavior: contain; }
 }
+
+/* FantasyPlayerRow — football's PlayerRow and baseball's PlayerCard, once.
+   Phone: identity, then actions, then a sideways metric strip. From 640px
+   the wrappers dissolve and the row is one aligned line. */
+.ui-fprow { min-width: 0; border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent); }
+.ui-fprow:last-child { border-bottom: 0; }
+.ui-fprow--open { background: color-mix(in srgb, var(--surface-2) 20%, transparent); }
+.ui-fprow-head { padding: 0.75rem 0.25rem; border-radius: var(--radius-sm); transition: background-color 0.15s ease; }
+.ui-fprow-head--clickable { cursor: pointer; }
+.ui-fprow-head:hover { background: color-mix(in srgb, var(--surface-2) 30%, transparent); }
+.ui-fprow-id { display: flex; align-items: center; gap: 0.75rem; }
+.ui-fprow-lead { flex-shrink: 0; }
+.ui-fprow-who { flex: 1; min-width: 0; }
+.ui-fprow-trailing { flex-shrink: 0; }
+.ui-fprow-actions { margin-top: 0.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; }
+.ui-fprow-metrics { margin: 0.5rem -0.25rem 0; padding: 0 0.25rem; overflow-x: auto; scrollbar-width: none; }
+.ui-fprow-metrics-inner { min-width: max-content; display: flex; align-items: center; }
+.ui-fprow-caret { font-size: calc(9px + var(--fs-bump, 0px)); color: var(--muted); }
+.ui-fprow-caret-mobile { flex-shrink: 0; }
+.ui-fprow-caret-desktop { display: none; padding-left: 0.5rem; align-items: center; }
+.ui-fprow-body { padding: 0.75rem 0.75rem 1rem; border-top: 1px solid color-mix(in srgb, var(--border) 40%, transparent); display: flex; flex-direction: column; gap: 0.75rem; }
+@media (min-width: 640px) {
+  .ui-fprow-head { display: flex; align-items: center; gap: 0.75rem; }
+  .ui-fprow-id, .ui-fprow-metrics, .ui-fprow-metrics-inner { display: contents; }
+  .ui-fprow-actions { margin-top: 0; display: contents; }
+  .ui-fprow-caret-mobile { display: none; }
+  .ui-fprow-caret-desktop { display: flex; }
+}
