@@ -1,6 +1,7 @@
 import { useState } from "react"
 import type { ReactNode } from "react"
 import { cn } from "../cn"
+import { sportsIdentity } from "../sports/config"
 
 export interface MatchupSide {
   name: string
@@ -9,6 +10,9 @@ export interface MatchupSide {
   score?: ReactNode
   /** e.g. "63-71". Rendered under the name. */
   record?: ReactNode
+  /** Links the side to its team page (configureSports' teamHref) on a card
+      that is not itself a link — the game page's header. */
+  teamId?: string | number | null
 }
 
 interface Props {
@@ -43,16 +47,22 @@ interface Props {
   highlighted?: boolean
   onClick?: () => void
   className?: string
+  /** "hero": the game page's header — the card you tapped, larger. */
+  size?: "card" | "hero"
+  /** Under the foot, inside the card: the hero's line score. */
+  children?: ReactNode
 }
 
-function Side({ side }: { side: MatchupSide }) {
+function Side({ side, linked }: { side: MatchupSide; linked: boolean }) {
   // A logo URL that 404s has to fall back to initials, not to an empty circle.
   // Hiding the <img> on error is not enough — there is nothing behind it.
   const [broken, setBroken] = useState(false)
   const showImage = !!side.logoUrl && !broken
 
-  return (
-    <div className="ui-matchup-side">
+  const identity = sportsIdentity()
+  const href = linked && side.teamId != null ? identity.teamHref?.(side.teamId) : undefined
+  const body = (
+    <>
       <span className="ui-matchup-logo" aria-hidden="true">
         {showImage ? (
           <img src={side.logoUrl!} alt="" onError={() => setBroken(true)} />
@@ -62,8 +72,11 @@ function Side({ side }: { side: MatchupSide }) {
       </span>
       <span className="ui-matchup-name">{side.name}</span>
       {side.record != null && <span className="ui-matchup-record">{side.record}</span>}
-    </div>
+    </>
   )
+  if (!href) return <div className="ui-matchup-side">{body}</div>
+  const cls = "ui-matchup-side ui-matchup-side--link"
+  return identity.link ? identity.link({ href, className: cls, children: body }) : <a className={cls} href={href}>{body}</a>
 }
 
 /**
@@ -91,6 +104,8 @@ export function MatchupCard({
   highlighted,
   onClick,
   className,
+  size = "card",
+  children,
 }: Props) {
   // Dim the side that is behind, once there is a result to be behind in.
   //
@@ -124,7 +139,7 @@ export function MatchupCard({
       )}
 
       <div className="ui-matchup-body">
-        <Side side={away} />
+        <Side side={away} linked={!onClick} />
         <div className="ui-matchup-mid">
           {middle ?? (
             <span className="ui-matchup-score">
@@ -134,7 +149,7 @@ export function MatchupCard({
             </span>
           )}
         </div>
-        <Side side={home} />
+        <Side side={home} linked={!onClick} />
       </div>
 
       {(foot || detail) && (
@@ -142,10 +157,12 @@ export function MatchupCard({
           {foot ?? <p className="ui-matchup-detail">{detail}</p>}
         </div>
       )}
+
+      {children != null && <div className="ui-matchup-extra">{children}</div>}
     </>
   )
 
-  const classes = cn("ui-card", "ui-matchup", onClick && "ui-matchup--link", highlighted && "ui-matchup--on", dim && "ui-matchup--dim", className)
+  const classes = cn("ui-card", "ui-matchup", size === "hero" && "ui-matchup--hero", onClick && "ui-matchup--link", highlighted && "ui-matchup--on", dim && "ui-matchup--dim", className)
 
   // A button element cannot legally contain the interactive controls apps put
   // in `foot` (baseball's lineup toggle, a watch link), so a clickable card is

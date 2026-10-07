@@ -435,6 +435,26 @@ export function UiDemo() {
             detail="Top 8th"
           />
         </div>
+        <div style={{ marginTop: "1rem", maxWidth: "40rem" }}>
+          <MatchupCard
+            size="hero"
+            away={{ name: "Riverton", logoUrl: demoLogo("RIV"), record: "8-5", score: 24 }}
+            home={{ name: "Eastgate", logoUrl: demoLogo("EAS"), record: "9-4", score: 27 }}
+            status="Final"
+            tone="final"
+            meta="Eastgate Field · 41°F, clear"
+            detail="EAS -2.5 · O/U 38.5"
+          >
+            <LineScore
+              away={{ name: "RIV" }}
+              home={{ name: "EAS" }}
+              periods={["Q1", "Q2", "Q3", "Q4"].map((label, i) => ({ label, away: [7, 3, 0, 14][i], home: [0, 21, 0, 6][i] }))}
+              totals={[{ label: "T", away: 24, home: 27, strong: true }]}
+              dimLoser
+              compact
+            />
+          </MatchupCard>
+        </div>
       </section>
 
       <section className="uidemo-section">
