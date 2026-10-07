@@ -5607,3 +5607,26 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 @media (prefers-reduced-motion: reduce) {
   :root[data-swipe-arrive] [data-swipe-content] { animation: none; }
 }
+
+/* LineScore — a game's score by period. Periods are quiet; a period in which
+   a side scored, and the score itself, are what the eye should land on. */
+.ui-linescore { width: 100%; min-width: max-content; border-collapse: separate; border-spacing: 0; }
+.ui-linescore .ui-th { padding: 0.5rem 0.25rem; text-align: center; }
+.ui-linescore .ui-th.ui-linescore-teamhead { text-align: left; padding-right: 0.75rem; }
+.ui-linescore td { border-top: 1px solid var(--border); }
+.ui-linescore-team { padding: 0.5rem 0.75rem 0.5rem 0; text-align: left; white-space: nowrap; font-weight: 600; color: var(--text); }
+.ui-linescore-teamcell { display: inline-flex; align-items: center; gap: 0.5rem; }
+.ui-linescore-cell,
+.ui-linescore-total { padding: 0.5rem 0.25rem; text-align: center; font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.ui-linescore-cell--scored { color: var(--text); font-weight: 600; }
+.ui-linescore-cell--current { background: color-mix(in srgb, var(--brand) 12%, transparent); border-radius: 0.25rem; }
+.ui-linescore-head--current { color: var(--brand); }
+.ui-linescore-gap { width: 0.5rem; padding: 0 0.25rem; }
+.ui-linescore-total--strong { color: var(--text); font-weight: 700; }
+.ui-linescore-total--lost { color: var(--muted); }
+.ui-linescore--compact { width: auto; margin: 0 auto; }
+.ui-linescore--compact td { border-top: 0; }
+.ui-linescore--compact .ui-linescore-team { padding: 0.125rem 0.75rem 0.125rem 0; }
+.ui-linescore--compact .ui-linescore-cell,
+.ui-linescore--compact .ui-linescore-total { padding: 0.125rem 0.5rem; }
+.ui-linescore--compact .ui-th { padding: 0.125rem 0.5rem; }
