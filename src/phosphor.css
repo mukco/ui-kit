@@ -401,11 +401,15 @@
 /* Numbers in VT323, the hub's own mono. Pixelify's 5 is an S and its 8 a B
    ("28.S pts", "$S8"); VT323 keeps them apart, at the size "Phosphor
    Mono" gives it above. */
-:root[data-skin="phosphor"] :is(.ui-td-num, .ui-heatpill, .ui-insights-num, .ui-mono, .ui-stat-value, .ui-metriccard-value, .ui-inline-stat-value, .ui-chip-value, .ui-summarychip-value, .ui-gauge-value, .ui-picks-value, .ui-matchup-score) {
+:root[data-skin="phosphor"] :is(.ui-td-num, .ui-boxscore-num, .ui-linescore-cell, .ui-linescore-total, .ui-heatpill, .ui-insights-num, .ui-mono, .ui-stat-value, .ui-metriccard-value, .ui-inline-stat-value, .ui-chip-value, .ui-summarychip-value, .ui-gauge-value, .ui-picks-value, .ui-matchup-score) {
   font-family: var(--font-mono); letter-spacing: 0.02em;
 }
 
 :root[data-skin="phosphor"] .ui-heatpill { font-weight: 400; }
+
+/* VT323 sets small; a table of game numbers is read at a glance, so its
+   digits go up a step — the size the apps' own tables gave them. */
+:root[data-skin="phosphor"] :is(.ui-boxscore-num, .ui-linescore-cell, .ui-linescore-total, .ui-playfeed-score) { font-size: 1.15em; }
 
 
 /* Average on the heat ramp was dim amber on a dim tint: unreadable. Still
