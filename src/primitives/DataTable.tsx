@@ -37,6 +37,13 @@ interface Props<T extends Record<string, unknown>> {
       a table that should grow with the page (the default). */
   maxHeight?: string
   className?: string
+  /** Controlled sorting, for a page that keeps the order itself (a default
+      sort, a saved view): pass the current key and direction and an onSort,
+      and the rows are shown in the order given. Omit all three and the table
+      sorts on its own. */
+  sortKey?: string
+  sortDir?: "asc" | "desc"
+  onSort?: (key: string) => void
 }
 
 function ramp(pct: number): string {
@@ -72,13 +79,18 @@ export function DataTable<T extends Record<string, unknown>>({
   onRetry,
   maxHeight,
   className,
+  sortKey,
+  sortDir,
+  onSort,
 }: Props<T>) {
-  const [sort, setSort] = useState<{ key: string; dir: "asc" | "desc" } | null>(null)
+  const [ownSort, setSort] = useState<{ key: string; dir: "asc" | "desc" } | null>(null)
+  const controlled = !!onSort
+  const sort = controlled ? (sortKey ? { key: sortKey, dir: sortDir ?? "desc" } : null) : ownSort
   const [expandedKey, setExpandedKey] = useState<string | null>(null)
 
   const rows = useMemo(() => {
     if (!data?.length) return []
-    if (!sort) return data
+    if (!sort || controlled) return data
     const dir = sort.dir === "asc" ? 1 : -1
     return [...data].sort((a, b) => {
       const av = Number(a[sort.key])
@@ -86,7 +98,7 @@ export function DataTable<T extends Record<string, unknown>>({
       if (Number.isFinite(av) && Number.isFinite(bv)) return (av - bv) * dir
       return String(a[sort.key] ?? "").localeCompare(String(b[sort.key] ?? "")) * dir
     })
-  }, [data, sort])
+  }, [data, sort, controlled])
 
   // Per-column min/max for heat coloring.
   const ranges = useMemo(() => {
@@ -102,6 +114,7 @@ export function DataTable<T extends Record<string, unknown>>({
   }, [data, columns])
 
   function toggleSort(key: string) {
+    if (onSort) return onSort(key)
     setSort((s) =>
       s?.key === key ? (s.dir === "asc" ? { key, dir: "desc" } : null) : { key, dir: "asc" },
     )
