@@ -13,6 +13,7 @@ export { Card } from "./primitives/Card";
 export { CardStrip } from "./primitives/CardStrip";
 export { DataTable, HeatPill } from "./primitives/DataTable";
 export { DateNav } from "./primitives/DateNav";
+export { PeriodNav } from "./primitives/PeriodNav";
 export { Drawer } from "./primitives/Drawer";
 export { EmptyState } from "./primitives/EmptyState";
 export { ErrorState } from "./primitives/ErrorState";

@@ -5715,3 +5715,9 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-boxscore-row--dim { opacity: 0.55; }
 .ui-boxscore-totals .ui-td { font-weight: 600; color: var(--text); border-top: 1px solid var(--border-strong); }
 .ui-boxscore-foot { font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); }
+
+/* PeriodNav — DateNav's control for weeks and rounds. Its picker is a
+   <select> laid invisibly over the label; unlike DateNav's date input, a
+   select opens on a click to itself, so it takes the tap. */
+.ui-periodnav-picker { position: absolute; inset: 0; margin: 0; padding: 0; border: 0; background: transparent; opacity: 0; cursor: pointer; appearance: none; }
+.ui-datenav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
