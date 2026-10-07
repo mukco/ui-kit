@@ -35,8 +35,13 @@ interface Props {
     askAssistant?: (prompt: string) => void;
     /** Render the first "name"-ish column as a link when a paired id column exists. */
     renderNameLink?: (name: string, id: unknown) => React.ReactNode;
+    /** The app's id columns, shown as written rather than as 12,345: its own
+        warehouse's names (gsis_id, espn_id…) on top of the shared ones. */
+    idColumns?: string[];
+    /** Beside each column's name in the result header — a stat help tooltip. */
+    headerExtra?: (col: string) => React.ReactNode;
     dragHandleProps?: HTMLAttributes<HTMLButtonElement>;
 }
-declare function SandboxCellInner({ cell, index, onRun, tables, onError, askAssistant, onUpdateSql, onUpdateTitle, onDelete, onFocus, schema, renderNameLink, dragHandleProps, }: Props): import("react").JSX.Element;
+declare function SandboxCellInner({ cell, index, onRun, tables, onError, askAssistant, onUpdateSql, onUpdateTitle, onDelete, onFocus, schema, renderNameLink, idColumns, headerExtra, dragHandleProps, }: Props): import("react").JSX.Element;
 export declare const SandboxCell: import("react").MemoExoticComponent<typeof SandboxCellInner>;
 export {};

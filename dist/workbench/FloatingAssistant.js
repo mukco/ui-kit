@@ -605,8 +605,14 @@ export function FloatingAssistant({ pathname, deriveContext, onAsk, title = "Ass
     useEffect(() => {
         if (!prefillPrompt)
             return;
+        // A string, or the { text } that SandboxContext's askAssistant queues —
+        // which is what the apps pass straight through, and which as an object
+        // filled the composer with "[object Object]".
+        const text = typeof prefillPrompt === "string" ? prefillPrompt : prefillPrompt.text;
+        if (!text)
+            return;
         setMinimized(false);
-        setComposerPrefill(prefillPrompt);
+        setComposerPrefill(text);
         onPrefillPromptConsumed?.();
     }, [prefillPrompt]); // eslint-disable-line react-hooks/exhaustive-deps
     function startResizing(e, axis = { w: true, h: false }) {

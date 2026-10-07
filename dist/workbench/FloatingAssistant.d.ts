@@ -67,7 +67,9 @@ export interface FloatingAssistantProps {
     /** Drops text into the composer without submitting it — e.g. a SQL
      *  workbench cell's "Ask assistant" button. The user can still edit before
      *  sending. Consumed once. */
-    prefillPrompt?: string | null;
+    prefillPrompt?: string | {
+        text: string;
+    } | null;
     onPrefillPromptConsumed?: () => void;
 }
 export declare function FloatingAssistant({ pathname, deriveContext, onAsk, title, welcome, storagePrefix, mentionSearch, renderMarkdown, renderChart, messageActions, onOpenSandbox, open, autoAsk, onAutoAskConsumed, pendingPrompt, onPendingPromptConsumed, prefillPrompt, onPrefillPromptConsumed, }: FloatingAssistantProps): import("react").JSX.Element;
