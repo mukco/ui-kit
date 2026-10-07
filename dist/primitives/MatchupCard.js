@@ -1,12 +1,19 @@
-import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from "react";
 import { cn } from "../cn";
-function Side({ side }) {
+import { sportsIdentity } from "../sports/config";
+function Side({ side, linked }) {
     // A logo URL that 404s has to fall back to initials, not to an empty circle.
     // Hiding the <img> on error is not enough — there is nothing behind it.
     const [broken, setBroken] = useState(false);
     const showImage = !!side.logoUrl && !broken;
-    return (_jsxs("div", { className: "ui-matchup-side", children: [_jsx("span", { className: "ui-matchup-logo", "aria-hidden": "true", children: showImage ? (_jsx("img", { src: side.logoUrl, alt: "", onError: () => setBroken(true) })) : (side.name.slice(0, 2).toUpperCase()) }), _jsx("span", { className: "ui-matchup-name", children: side.name }), side.record != null && _jsx("span", { className: "ui-matchup-record", children: side.record })] }));
+    const identity = sportsIdentity();
+    const href = linked && side.teamId != null ? identity.teamHref?.(side.teamId) : undefined;
+    const body = (_jsxs(_Fragment, { children: [_jsx("span", { className: "ui-matchup-logo", "aria-hidden": "true", children: showImage ? (_jsx("img", { src: side.logoUrl, alt: "", onError: () => setBroken(true) })) : (side.name.slice(0, 2).toUpperCase()) }), _jsx("span", { className: "ui-matchup-name", children: side.name }), side.record != null && _jsx("span", { className: "ui-matchup-record", children: side.record })] }));
+    if (!href)
+        return _jsx("div", { className: "ui-matchup-side", children: body });
+    const cls = "ui-matchup-side ui-matchup-side--link";
+    return identity.link ? identity.link({ href, className: cls, children: body }) : _jsx("a", { className: cls, href: href, children: body });
 }
 /**
  * Two sides, a state chip, an optional photograph behind it, and a slot for
@@ -18,7 +25,7 @@ function Side({ side }) {
  * laid out live here, so the two cannot drift apart. Two apps hand-rolling
  * this and copying each other's measurements is exactly what it replaces.
  */
-export function MatchupCard({ away, home, status, tone = "upcoming", dim = false, badges, meta, art, middle, foot, detail, highlighted, onClick, className, }) {
+export function MatchupCard({ away, home, status, tone = "upcoming", dim = false, badges, meta, art, middle, foot, detail, highlighted, onClick, className, size = "card", children, }) {
     // Dim the side that is behind, once there is a result to be behind in.
     //
     // This used to compute `homeWins` and then dim away-when-homeWins,
@@ -32,8 +39,8 @@ export function MatchupCard({ away, home, status, tone = "upcoming", dim = false
         Number(home.score) !== Number(away.score);
     const awayBehind = decided && Number(away.score) < Number(home.score);
     const homeBehind = decided && Number(home.score) < Number(away.score);
-    const body = (_jsxs(_Fragment, { children: [art && (_jsx("div", { "aria-hidden": "true", className: "ui-matchup-art", style: { backgroundImage: `url(${art})` }, children: _jsx("div", { className: "ui-matchup-scrim" }) })), (status != null || badges || meta) && (_jsxs("div", { className: "ui-matchup-head", children: [status != null && _jsx("span", { className: `ui-matchup-status ui-matchup-status--${tone}`, children: status }), badges, meta && _jsx("span", { className: "ui-matchup-meta", children: meta })] })), _jsxs("div", { className: "ui-matchup-body", children: [_jsx(Side, { side: away }), _jsx("div", { className: "ui-matchup-mid", children: middle ?? (_jsxs("span", { className: "ui-matchup-score", children: [_jsx("span", { className: cn(awayBehind && "ui-matchup-loser"), children: away.score ?? "–" }), _jsx("span", { className: "ui-matchup-sep", children: "\u2013" }), _jsx("span", { className: cn(homeBehind && "ui-matchup-loser"), children: home.score ?? "–" })] })) }), _jsx(Side, { side: home })] }), (foot || detail) && (_jsx("div", { className: "ui-matchup-foot", children: foot ?? _jsx("p", { className: "ui-matchup-detail", children: detail }) }))] }));
-    const classes = cn("ui-card", "ui-matchup", onClick && "ui-matchup--link", highlighted && "ui-matchup--on", dim && "ui-matchup--dim", className);
+    const body = (_jsxs(_Fragment, { children: [art && (_jsx("div", { "aria-hidden": "true", className: "ui-matchup-art", style: { backgroundImage: `url(${art})` }, children: _jsx("div", { className: "ui-matchup-scrim" }) })), (status != null || badges || meta) && (_jsxs("div", { className: "ui-matchup-head", children: [status != null && _jsx("span", { className: `ui-matchup-status ui-matchup-status--${tone}`, children: status }), badges, meta && _jsx("span", { className: "ui-matchup-meta", children: meta })] })), _jsxs("div", { className: "ui-matchup-body", children: [_jsx(Side, { side: away, linked: !onClick }), _jsx("div", { className: "ui-matchup-mid", children: middle ?? (_jsxs("span", { className: "ui-matchup-score", children: [_jsx("span", { className: cn(awayBehind && "ui-matchup-loser"), children: away.score ?? "–" }), _jsx("span", { className: "ui-matchup-sep", children: "\u2013" }), _jsx("span", { className: cn(homeBehind && "ui-matchup-loser"), children: home.score ?? "–" })] })) }), _jsx(Side, { side: home, linked: !onClick })] }), (foot || detail) && (_jsx("div", { className: "ui-matchup-foot", children: foot ?? _jsx("p", { className: "ui-matchup-detail", children: detail }) })), children != null && _jsx("div", { className: "ui-matchup-extra", children: children })] }));
+    const classes = cn("ui-card", "ui-matchup", size === "hero" && "ui-matchup--hero", onClick && "ui-matchup--link", highlighted && "ui-matchup--on", dim && "ui-matchup--dim", className);
     // A button element cannot legally contain the interactive controls apps put
     // in `foot` (baseball's lineup toggle, a watch link), so a clickable card is
     // a div with a button role rather than a real <button>.

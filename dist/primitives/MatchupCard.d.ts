@@ -6,6 +6,9 @@ export interface MatchupSide {
     score?: ReactNode;
     /** e.g. "63-71". Rendered under the name. */
     record?: ReactNode;
+    /** Links the side to its team page (configureSports' teamHref) on a card
+        that is not itself a link — the game page's header. */
+    teamId?: string | number | null;
 }
 interface Props {
     away: MatchupSide;
@@ -39,6 +42,10 @@ interface Props {
     highlighted?: boolean;
     onClick?: () => void;
     className?: string;
+    /** "hero": the game page's header — the card you tapped, larger. */
+    size?: "card" | "hero";
+    /** Under the foot, inside the card: the hero's line score. */
+    children?: ReactNode;
 }
 /**
  * Two sides, a state chip, an optional photograph behind it, and a slot for
@@ -50,5 +57,5 @@ interface Props {
  * laid out live here, so the two cannot drift apart. Two apps hand-rolling
  * this and copying each other's measurements is exactly what it replaces.
  */
-export declare function MatchupCard({ away, home, status, tone, dim, badges, meta, art, middle, foot, detail, highlighted, onClick, className, }: Props): import("react").JSX.Element;
+export declare function MatchupCard({ away, home, status, tone, dim, badges, meta, art, middle, foot, detail, highlighted, onClick, className, size, children, }: Props): import("react").JSX.Element;
 export {};
