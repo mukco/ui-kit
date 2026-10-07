@@ -5565,6 +5565,9 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   will-change: transform;
   display: grid;
   place-items: center;
+  /* Clipped: at rest the icon ring sits on the band's edge, and unclipped
+     half of it showed at the side of the screen. */
+  overflow: hidden;
   background: color-mix(in srgb, var(--brand) 10%, var(--bg));
   pointer-events: none;
 }
