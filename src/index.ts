@@ -103,6 +103,7 @@ export { SparklineChart } from "./charts/SparklineChart"
 
 // SQL workbench
 export { FloatingAssistant, isMobileViewport, panelGeometry, clampPosition, MOBILE_BREAKPOINT } from "./workbench/FloatingAssistant"
+export { assistantMarkdown } from "./workbench/assistantMarkdown"
 export type { FloatingAssistantProps } from "./workbench/FloatingAssistant"
 export { SandboxCell } from "./workbench/SandboxCell"
 export type { CellRecord, QueryResult } from "./workbench/SandboxCell"
