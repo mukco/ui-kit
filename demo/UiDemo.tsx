@@ -54,6 +54,7 @@ import {
   TeamLink,
   LineScore,
   PlayFeed,
+  BoxScore,
   PlayTag,
   TextField,
   Toggle,
@@ -656,6 +657,33 @@ export function UiDemo() {
               { id: 2, period: 1, when: "2:59", teamId: TEAMS[0][0], teamName: "AWY", head: <><PlayTag tone="score">TD +6</PlayTag>Passing Touchdown</>, text: "12 yard pass to the corner of the end zone.", score: { away: 7, home: 0 }, scoring: true },
               { id: 3, period: 2, when: "8:40", teamId: TEAMS[1][0], teamName: "HOM", text: "Pass intercepted at midfield.", flags: <PlayTag tone="bad">TO</PlayTag> },
               { id: 4, period: 2, when: "0:03", teamId: TEAMS[1][0], teamName: "HOM", head: <><PlayTag tone="score">FG +3</PlayTag>Field Goal</>, text: "44 yard field goal is good.", score: { away: 7, home: 3 }, scoring: true },
+            ]}
+          />
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>BoxScore</h2>
+        <Card>
+          <BoxScore
+            teams={[
+              {
+                key: "away", label: "AWY",
+                sections: [{
+                  title: "Players",
+                  columns: [{ key: "min", label: "MIN", muted: true }, { key: "pts", label: "PTS", strong: true }, { key: "reb", label: "REB" }, { key: "ast", label: "AST" }, { key: "fg", label: "FG", muted: true }],
+                  groups: [
+                    { label: "Starters", rows: [
+                      { id: 1, player: "Ava Martinez", note: "G", cells: { min: 34, pts: 28, reb: 5, ast: 9, fg: "10-17" } },
+                      { id: 2, player: "Ben Okafor", note: "F", cells: { min: 31, pts: 17, reb: 11, ast: 2, fg: "7-12" } },
+                    ] },
+                    { label: "Bench", rows: [{ id: 3, player: "Cleo Nguyen", note: "G", cells: { min: 18, pts: 9, reb: 2, ast: 3, fg: "3-8" } }] },
+                  ],
+                  totals: { pts: 54, reb: 18, ast: 14, fg: "20-37" },
+                }],
+                footnote: "Did not play: Dev Patel (rest)",
+              },
+              { key: "home", label: "HOM", sections: [{ title: "Batters", columns: [{ key: "ab", label: "AB" }, { key: "h", label: "H", strong: true }, { key: "rbi", label: "RBI" }], rows: [{ id: 4, player: "Eli Brooks", note: "★", cells: { ab: 4, h: 3, rbi: 2 } }] }] },
             ]}
           />
         </Card>

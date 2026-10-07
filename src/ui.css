@@ -5695,3 +5695,23 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 }
 .ui-playtag--score { background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand-text); }
 .ui-playtag--bad { background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); }
+
+/* BoxScore — a team tab, then that team's tables. The player column stays
+   put while the numbers scroll sideways on a phone. */
+.ui-boxscore { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+/* Separate borders on the cells: with collapsed borders the sticky player
+   cell's background painted over its row's rule. */
+.ui-boxscore-table { font-size: calc(0.875rem + var(--fs-bump, 0px)); border-collapse: separate; border-spacing: 0; }
+.ui-boxscore-table .ui-tr { border-bottom: 0; }
+.ui-boxscore-table .ui-th { cursor: default; padding: 0.5rem; }
+.ui-boxscore-table .ui-td { padding: 0.25rem 0.5rem; font-size: inherit; border-bottom: 1px solid var(--border); }
+.ui-boxscore-table tbody + tbody tr:first-child th { padding-top: 1rem; }
+.ui-boxscore-player { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; }
+.ui-boxscore-who { display: inline-flex; align-items: center; gap: 0.5rem; }
+.ui-boxscore-note { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); }
+.ui-boxscore-num { text-align: right; font-variant-numeric: tabular-nums; }
+.ui-boxscore-num--strong { color: var(--text); font-weight: 700; }
+.ui-boxscore-num--muted { color: var(--muted); }
+.ui-boxscore-row--dim { opacity: 0.55; }
+.ui-boxscore-totals .ui-td { font-weight: 600; color: var(--text); border-top: 1px solid var(--border-strong); }
+.ui-boxscore-foot { font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); }
