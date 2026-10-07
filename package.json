@@ -22,7 +22,9 @@
     "check": "tsc -p tsconfig.json && npm run check:conventions",
     "check:conventions": "node scripts/check-conventions.mjs",
     "dev": "vite",
-    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs"
+    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs",
+    "visual": "node scripts/visual.mjs",
+    "visual:update": "node scripts/visual.mjs --update"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -50,6 +52,9 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-pivottable": "^0.11.6",
     "@vitejs/plugin-react": "^6.0.4",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.64.0",
+    "pngjs": "^7.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "typescript": "~6.0.2",

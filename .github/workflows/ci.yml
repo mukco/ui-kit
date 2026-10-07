@@ -20,6 +20,18 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
+      # Every shared component, screenshotted and compared with the baselines
+      # CI made. A difference fails the build and uploads the new shots and
+      # their diffs; to accept a change on purpose, run "Update visual
+      # baselines" on the branch.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run visual
+      - name: Upload visual differences
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-differences
+          path: test/visual/out
       # Consumers install from this repo as a git dependency, so dist/ must
       # exist in the tree. CI commits it on main; [skip ci] prevents a loop.
       # (dist stays gitignored locally so local builds never pollute.)
