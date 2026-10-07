@@ -52,6 +52,7 @@ import {
   StatusGrid,
   TeamIcon,
   TeamLink,
+  LineScore,
   TextField,
   Toggle,
   UpdateToast,
@@ -586,6 +587,40 @@ export function UiDemo() {
             ))}
             <span className="uidemo-note">photos/logos come from configureSports(), not the kit</span>
           </div>
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>LineScore</h2>
+        <Card title="Innings, R / H / E, live">
+          <LineScore
+            away={{ teamId: TEAMS[0][0], name: "AWY" }}
+            home={{ teamId: TEAMS[1][0], name: "HOM" }}
+            periods={[0, 2, 0, 0, 1, 0, 0].map((a, i) => ({ label: String(i + 1), away: a, home: [1, 0, 0, 3, 0, 0, null][i], current: i === 6 }))}
+            minPeriods={9}
+            totals={[{ label: "R", away: 3, home: 4, strong: true }, { label: "H", away: 7, home: 9 }, { label: "E", away: 1, home: 0 }]}
+            highlightScoring
+          />
+        </Card>
+        <Card title="Quarters and overtime, with crests">
+          <LineScore
+            away={{ teamId: TEAMS[0][0], name: "AWY" }}
+            home={{ teamId: TEAMS[1][0], name: "HOM" }}
+            periods={["Q1", "Q2", "Q3", "Q4", "OT"].map((label, i) => ({ label, away: [7, 3, 7, 7, 0][i], home: [0, 10, 7, 7, 3][i] }))}
+            totals={[{ label: "T", away: 24, home: 27, strong: true }]}
+            dimLoser
+            logos
+          />
+        </Card>
+        <Card title="Compact, for a game header">
+          <LineScore
+            away={{ name: "AWY" }}
+            home={{ name: "HOM" }}
+            periods={["1", "2", "3", "4"].map((label, i) => ({ label, away: [28, 25, null, null][i], home: [22, 30, null, null][i] }))}
+            totals={[{ label: "T", away: 53, home: 52, strong: true }]}
+            dimLoser
+            compact
+          />
         </Card>
       </section>
 
