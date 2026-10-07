@@ -56,6 +56,7 @@ import {
   LineScore,
   FantasyTeamBar,
   FantasyLayout,
+  FantasyPlayerRow,
   ProfileHero,
   PlayFeed,
   BoxScore,
@@ -724,6 +725,24 @@ export function UiDemo() {
           />
           <Card><p className="uidemo-note">Tabs and the tab's content go here.</p></Card>
         </FantasyLayout>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>FantasyPlayerRow</h2>
+        <Card>
+          {[["QB", "Ava Martinez", "21.7"], ["RB", "Ben Okafor", "19.2"]].map(([slot, name, pts]) => (
+            <FantasyPlayerRow
+              key={name}
+              lead={<span className="uidemo-note">{slot}</span>}
+              identity={<PlayerLink player={{ id: name, name }} />}
+              trailing={<button type="button" className="ui-btn ui-btn--sm">Move</button>}
+              metrics={<span className="ui-mono">{pts} pts</span>}
+              expandable
+            >
+              <p className="uidemo-note">The expanded body: game log, news, analysis.</p>
+            </FantasyPlayerRow>
+          ))}
+        </Card>
       </section>
 
       <section className="uidemo-section">
