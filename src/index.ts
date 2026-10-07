@@ -158,7 +158,7 @@ export type { SkinTheme, SkinThemeOptions } from "./primitives/skinTheme"
 export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage } from "./primitives/Pixel"
 export type { PixelIcon } from "./primitives/Pixel"
 export { TabBar } from "./primitives/TabBar"
-export type { TabBarTab, TabBarProps } from "./primitives/TabBar"
+export type { TabBarTab, TabBarProps, TabBarMoreItem } from "./primitives/TabBar"
 export { Basketball, Football, Baseball } from "./sports/pixelBalls"
 
 // Device notifications: the push client every app shares, its settings card,
