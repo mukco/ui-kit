@@ -5786,3 +5786,26 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-profilehero-awards-toggle { padding: 0.125rem 0.5rem; border: 1px solid var(--border); border-radius: 9999px; background: none; font: inherit; font-size: calc(11px + var(--fs-bump, 0px)); color: var(--text-2); cursor: pointer; }
 .ui-profilehero-extra { padding: 0 1rem 1rem; }
 @media (min-width: 640px) { .ui-profilehero-extra { padding: 0 1.5rem 1.5rem; } }
+
+/* Fantasy frame — FantasyTeamBar and FantasyLayout. The bar is baseball's
+   team bar, the layout its sticky sidebar; under 1024px the sidebar follows
+   the main column instead of vanishing. */
+.ui-fteambar { padding: 1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; font-size: calc(13px + var(--fs-bump, 0px)); }
+.ui-fteambar-id { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.ui-fteambar-name { color: var(--text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-fteambar-rec { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text-2); }
+.ui-fteambar-item { color: var(--text); }
+.ui-fteambar-item strong { font-weight: 600; color: var(--text-2); }
+.ui-fteambar-item--muted { color: var(--muted); }
+.ui-fteambar-item--bad { color: var(--danger); font-weight: 600; }
+.ui-fteambar-item--good { color: var(--ok); font-weight: 600; }
+.ui-fteambar-item--warn { color: var(--warn); font-weight: 600; }
+.ui-fteambar-note { margin-left: auto; font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); }
+.ui-flayout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: start; }
+.ui-flayout-main { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.ui-flayout-side { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+@media (min-width: 1024px) {
+  .ui-flayout { grid-template-columns: minmax(0, 1fr) 22rem; }
+  .ui-flayout--single { grid-template-columns: minmax(0, 1fr); }
+  .ui-flayout-side { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; overscroll-behavior: contain; }
+}
