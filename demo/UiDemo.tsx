@@ -53,6 +53,8 @@ import {
   TeamIcon,
   TeamLink,
   LineScore,
+  PlayFeed,
+  PlayTag,
   TextField,
   Toggle,
   UpdateToast,
@@ -640,6 +642,21 @@ export function UiDemo() {
             totals={[{ label: "T", away: 53, home: 52, strong: true }]}
             dimLoser
             compact
+          />
+        </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>PlayFeed</h2>
+        <Card>
+          <PlayFeed
+            periods={[1, 2, 3, 4].map((n) => ({ key: n, label: `Q${n}` }))}
+            plays={[
+              { id: 1, period: 1, when: "14:21", teamId: TEAMS[0][0], teamName: "AWY", text: "Kickoff returned to the 25." },
+              { id: 2, period: 1, when: "2:59", teamId: TEAMS[0][0], teamName: "AWY", head: <><PlayTag tone="score">TD +6</PlayTag>Passing Touchdown</>, text: "12 yard pass to the corner of the end zone.", score: { away: 7, home: 0 }, scoring: true },
+              { id: 3, period: 2, when: "8:40", teamId: TEAMS[1][0], teamName: "HOM", text: "Pass intercepted at midfield.", flags: <PlayTag tone="bad">TO</PlayTag> },
+              { id: 4, period: 2, when: "0:03", teamId: TEAMS[1][0], teamName: "HOM", head: <><PlayTag tone="score">FG +3</PlayTag>Field Goal</>, text: "44 yard field goal is good.", score: { away: 7, home: 3 }, scoring: true },
+            ]}
           />
         </Card>
       </section>
