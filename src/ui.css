@@ -3881,12 +3881,13 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 @media (max-width: 639px) {
   /* Nothing that carries meaning goes under 12px. These are the labels on
      figures — the word that says what the number is — so they are exactly the
-     text you cannot afford to lose. */
+     text you cannot afford to lose. Table cells are not in the list: pinned at
+     12px here they ignored the phone text bump and set names smaller on a
+     phone than on a desktop; they take the table's size instead. */
   .ui-inline-stat-label,
   .ui-stat-sub,
   .ui-stat-label,
   .ui-th,
-  .ui-td,
   .ui-facts dt,
   .ui-row-meta {
     font-size: max(0.75rem, 12px);
