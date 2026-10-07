@@ -178,6 +178,13 @@
   --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
+/* Phone text bump. Every fixed font size in the kit and the apps is written
+   calc(N + var(--fs-bump)): on a phone that is 2px more — 10px labels read at
+   12, 12px table text at 14 — which is where Family Hub's text sits; on wider
+   screens it is 0 and nothing moves. Body text stays at 16px, Family Hub's. */
+:root { --fs-bump: 0px; }
+@media (max-width: 640px) { :root { --fs-bump: 2px; } }
+
 /* Base type — the kit owns this so every app reads the same. Sans for UI,
    mono for numbers, both resolved from locally installed fonts. */
 html {
@@ -238,14 +245,14 @@ body {
 
 .ui-card-title {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem + var(--fs-bump, 0px));
   color: var(--text);
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
 
-.ui-card-subtitle { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--muted); }
+.ui-card-subtitle { margin: 0.25rem 0 0; font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); }
 
 .ui-card-actions { min-width: 0; }
 
@@ -279,7 +286,7 @@ body {
   align-items: center;
   gap: 0.25rem;
   min-width: 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -289,7 +296,7 @@ body {
 
 .ui-stat-pill {
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 600;
   border-radius: 999px;
   padding: 0.125rem 0.375rem;
@@ -317,7 +324,7 @@ body {
  */
 .ui-stat-value {
   flex-shrink: 0;
-  font-size: 28px;
+  font-size: calc(28px + var(--fs-bump, 0px));
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1;
@@ -331,7 +338,7 @@ body {
   flex: 1 1 auto;
   min-width: 0;
   /* 11px was under the legibility floor this kit sets for itself. */
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -357,7 +364,7 @@ body {
 .ui-stat-foot-row {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--muted);
   margin-bottom: 0.25rem;
 }
@@ -379,14 +386,14 @@ body {
 }
 
 .ui-inline-stat-label {
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .ui-inline-stat-value {
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 600;
   font-family: var(--font-mono);
   color: var(--text);
@@ -404,16 +411,16 @@ body {
 .ui-metriccell--flex-sm { min-width: 44px; }
 .ui-metriccell--fixed-sm { width: 60px; flex-shrink: 0; }
 .ui-metriccell--dense { flex: 1; min-width: 0; padding: 0 var(--space-1); text-align: center; }
-.ui-metricval { font-family: var(--font-mono); font-weight: 700; font-size: 14px; line-height: 1; font-variant-numeric: tabular-nums; }
-.ui-metricval--sm { font-size: 12px; }
-.ui-metricval--dense { font-size: 11px; }
+.ui-metricval { font-family: var(--font-mono); font-weight: 700; font-size: calc(14px + var(--fs-bump, 0px)); line-height: 1; font-variant-numeric: tabular-nums; }
+.ui-metricval--sm { font-size: calc(12px + var(--fs-bump, 0px)); }
+.ui-metricval--dense { font-size: calc(11px + var(--fs-bump, 0px)); }
 .ui-metricval--muted { color: var(--muted); }
-.ui-metriclabel { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-1); font-size: 9px; color: var(--muted); line-height: 1; margin-top: var(--space-1); }
-.ui-metricsub { font-size: 9px; color: color-mix(in srgb, var(--muted) 60%, transparent); line-height: 1; margin-top: var(--space-1); }
+.ui-metriclabel { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-1); font-size: calc(9px + var(--fs-bump, 0px)); color: var(--muted); line-height: 1; margin-top: var(--space-1); }
+.ui-metricsub { font-size: calc(9px + var(--fs-bump, 0px)); color: color-mix(in srgb, var(--muted) 60%, transparent); line-height: 1; margin-top: var(--space-1); }
 .ui-metricsalary { display: flex; align-items: center; }
 .ui-metricsalary--row { padding-right: var(--space-3); }
 .ui-metricsalary--align { justify-content: flex-end; flex-shrink: 0; padding-right: var(--space-3); width: 40px; }
-.ui-salarybadge { display: inline-flex; align-items: center; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--brand); border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent); font-family: var(--font-mono); font-size: 10px; font-weight: 700; }
+.ui-salarybadge { display: inline-flex; align-items: center; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--brand); border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent); font-family: var(--font-mono); font-size: calc(10px + var(--fs-bump, 0px)); font-weight: 700; }
 .ui-metric-bar { height: 2px; width: 2rem; margin-left: auto; border-radius: 999px; background: var(--border); overflow: hidden; margin-top: var(--space-1); }
 .ui-metric-bar-fill { height: 100%; border-radius: 999px; }
 .ui-metric-bar--hi { background: var(--ok); }
@@ -452,7 +459,7 @@ body {
   gap: 0.5rem;
   padding: 2.5rem 1rem;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-spinner {
@@ -478,11 +485,11 @@ body {
   padding: 2.5rem 1rem;
   text-align: center;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-empty-icon {
-  font-size: 1.5rem;
+  font-size: calc(1.5rem + var(--fs-bump, 0px));
   line-height: 1;
 }
 
@@ -508,7 +515,7 @@ body {
   border: 1px solid var(--border-strong);
   background: transparent;
   color: var(--muted);
-  font-size: 9px;
+  font-size: calc(9px + var(--fs-bump, 0px));
   font-weight: 700;
   line-height: 1;
   cursor: help;
@@ -529,7 +536,7 @@ body {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: 0.5rem 0.625rem;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   line-height: 1.45;
   text-align: left;
   white-space: normal;
@@ -552,7 +559,7 @@ body {
 
 .ui-chart-title {
   margin: 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--muted);
   text-transform: uppercase;
@@ -565,7 +572,7 @@ body {
   justify-content: center;
   height: 10rem;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-tooltip {
@@ -575,7 +582,7 @@ body {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: 0.5rem 0.75rem;
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
 }
 
 .ui-tooltip-title {
@@ -609,7 +616,7 @@ body {
   background: transparent;
   border-radius: var(--radius-sm);
   padding: 0.125rem 0.375rem;
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--muted);
   cursor: pointer;
 }
@@ -623,7 +630,7 @@ body {
   display: inline-flex;
   align-items: baseline;
   gap: 0.375rem;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-family: var(--font-mono);
 }
 
@@ -651,7 +658,7 @@ a.ui-player:hover .ui-player-name {
 }
 
 .ui-player-name {
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   /* Inherit, so a name inside a link is the link's colour. .ui-player already
      sets `color: inherit` for exactly that reason; hard-coding --text here
      undid it, and a player link rendered as body text. */
@@ -673,7 +680,7 @@ a.ui-player:hover .ui-player-name {
   align-items: center;
   gap: 0.375rem;
   color: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 a.ui-team-link:hover {
@@ -699,7 +706,7 @@ a.ui-team-link:hover {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 500;
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -720,7 +727,7 @@ a.ui-team-link:hover {
 }
 
 .ui-sectionlabel-text {
-  font-size: 0.6875rem;
+  font-size: calc(0.6875rem + var(--fs-bump, 0px));
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -744,7 +751,7 @@ a.ui-team-link:hover {
   border-radius: 0.25rem;
   background: transparent;
   color: var(--muted);
-  font-size: 0.625rem;
+  font-size: calc(0.625rem + var(--fs-bump, 0px));
   font-weight: 600;
   cursor: pointer;
 }
@@ -774,7 +781,7 @@ a.ui-team-link:hover {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
   cursor: pointer;
 }
 
@@ -785,7 +792,7 @@ a.ui-team-link:hover {
 
 .ui-pagehead-title {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: calc(1.15rem + var(--fs-bump, 0px));
   font-weight: 700;
   line-height: 1.2;
   color: var(--text);
@@ -793,7 +800,7 @@ a.ui-team-link:hover {
 
 .ui-pagehead-sub {
   margin: 0.125rem 0 0;
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -847,7 +854,7 @@ a.ui-team-link:hover {
 .ui-insights-titlerow { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
 .ui-insights-title {
   margin: 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -856,7 +863,7 @@ a.ui-team-link:hover {
 /* Says a model wrote what follows. Brand-tinted rather than solid: it is a
    provenance marker, not a call to action. */
 .ui-insights-badge {
-  font-size: var(--fs9, 9px);
+  font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px));
   font-weight: 600;
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
@@ -888,11 +895,11 @@ a.ui-team-link:hover {
   gap: 0.5rem;
 }
 
-.ui-insights-desc { font-size: 0.75rem; color: var(--muted); margin: 0 0 0.5rem; }
-.ui-insights-note { font-size: 0.75rem; color: var(--muted); font-style: italic; }
+.ui-insights-desc { font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); margin: 0 0 0.5rem; }
+.ui-insights-note { font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); font-style: italic; }
 
 .ui-insights-cached {
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--muted);
   white-space: nowrap;
 }
@@ -901,7 +908,7 @@ a.ui-team-link:hover {
   border: 0;
   background: transparent;
   padding: 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--brand-light);
   text-decoration: underline;
   cursor: pointer;
@@ -915,7 +922,7 @@ a.ui-team-link:hover {
 
 .ui-insights-heading {
   margin: 0 0 0.25rem;
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text-2);
 }
@@ -926,14 +933,14 @@ a.ui-team-link:hover {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   line-height: 1.5;
   color: var(--text-2);
 }
 
 .ui-insights-empty {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -952,7 +959,7 @@ a.ui-team-link:hover {
   border-radius: 0.375rem;
   background: color-mix(in srgb, var(--brand) 10%, transparent);
   color: var(--brand-text);
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -960,7 +967,7 @@ a.ui-team-link:hover {
   flex-shrink: 0;
   margin-top: 0.125rem;
 }
-.ui-insights-item-text { font-size: 0.85rem; color: var(--text-2); line-height: 1.375; margin: 0; }
+.ui-insights-item-text { font-size: calc(0.85rem + var(--fs-bump, 0px)); color: var(--text-2); line-height: 1.375; margin: 0; }
 
 /* Round, for an avatar or crest placeholder. Without this both apps drew a bar
    where a circle was about to appear, so rows visibly re-flowed as images
@@ -1007,7 +1014,7 @@ a.ui-team-link:hover {
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
   width: 11rem;
 }
 
@@ -1047,7 +1054,7 @@ a.ui-team-link:hover {
   border-radius: var(--radius-sm);
   padding: 0.45rem 0.5rem;
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
   color: var(--text);
   text-align: left;
   cursor: pointer;
@@ -1071,13 +1078,13 @@ a.ui-team-link:hover {
 
 .ui-search-note {
   padding: 0.45rem 0.5rem;
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
 .ui-search-chip-label,
 .ui-search-option-label {
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--text);
   overflow: hidden;
@@ -1086,7 +1093,7 @@ a.ui-team-link:hover {
 }
 
 .ui-search-hint {
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -1094,7 +1101,7 @@ a.ui-team-link:hover {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
   line-height: 1;
   cursor: pointer;
 }
@@ -1113,12 +1120,12 @@ a.ui-team-link:hover {
 }
 
 .ui-award-icon {
-  font-size: 1.75rem;
+  font-size: calc(1.75rem + var(--fs-bump, 0px));
   line-height: 1;
 }
 
 .ui-award-label {
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1126,13 +1133,13 @@ a.ui-team-link:hover {
 }
 
 .ui-award-winner {
-  font-size: 0.95rem;
+  font-size: calc(0.95rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text);
 }
 
 .ui-award-detail {
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--text-2);
 }
 
@@ -1171,7 +1178,7 @@ button.ui-matchup--link {
   border: 1px solid var(--border-strong);
   background: var(--brand);
   color: #fff;
-  font-size: 1.35rem;
+  font-size: calc(1.35rem + var(--fs-bump, 0px));
   box-shadow: var(--shadow-md);
   cursor: pointer;
   display: inline-flex;
@@ -1197,7 +1204,7 @@ button.ui-matchup--link {
   justify-content: space-between;
   padding: 0.625rem 0.875rem;
   border-bottom: 1px solid var(--border);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text);
 }
@@ -1206,7 +1213,7 @@ button.ui-matchup--link {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 1.1rem;
+  font-size: calc(1.1rem + var(--fs-bump, 0px));
   line-height: 1;
   cursor: pointer;
 }
@@ -1223,14 +1230,14 @@ button.ui-matchup--link {
 .ui-assistant-empty {
   margin: auto;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
 }
 
 .ui-msg {
   max-width: 85%;
   padding: 0.45rem 0.7rem;
   border-radius: var(--radius-md);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   line-height: 1.45;
 }
 
@@ -1261,7 +1268,7 @@ button.ui-matchup--link {
   background: var(--surface-2);
   color: var(--text);
   font: inherit;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   padding: 0.5rem 0.625rem;
 }
 
@@ -1271,7 +1278,7 @@ button.ui-matchup--link {
   background: var(--brand);
   color: #fff;
   font: inherit;
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   padding: 0 0.875rem;
   min-height: 44px;
   cursor: pointer;
@@ -1297,7 +1304,7 @@ button.ui-matchup--link {
 .ui-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   min-width: max-content;
 }
 
@@ -1305,7 +1312,7 @@ button.ui-matchup--link {
   text-align: left;
   padding: 0.75rem;
   border-bottom: 1px solid var(--border);
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1360,7 +1367,7 @@ button.ui-matchup--link {
 }
 
 .ui-td-num {
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--muted);
   width: 2rem;
 }
@@ -1371,7 +1378,7 @@ button.ui-matchup--link {
   padding: 0.125rem 0.5rem;
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: calc(13px + var(--fs-bump, 0px));
   font-weight: 600;
 }
 
@@ -1412,12 +1419,12 @@ button.ui-matchup--link {
 
 .ui-expandable-title {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem + var(--fs-bump, 0px));
   color: var(--text);
 }
 
 .ui-expandable-sub {
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -1448,10 +1455,10 @@ button.ui-matchup--link {
 
 /* ---------- Text ---------- */
 .ui-text { margin: 0; line-height: 1.5; }
-.ui-text--sm { font-size: 0.75rem; }
-.ui-text--md { font-size: 0.875rem; }
-.ui-text--lg { font-size: 1rem; }
-.ui-text--xl { font-size: 1.25rem; }
+.ui-text--sm { font-size: calc(0.75rem + var(--fs-bump, 0px)); }
+.ui-text--md { font-size: calc(0.875rem + var(--fs-bump, 0px)); }
+.ui-text--lg { font-size: calc(1rem + var(--fs-bump, 0px)); }
+.ui-text--xl { font-size: calc(1.25rem + var(--fs-bump, 0px)); }
 .ui-text--default { color: var(--text); }
 .ui-text--muted { color: var(--muted); }
 .ui-text--brand { color: var(--brand-text); }
@@ -1585,7 +1592,7 @@ button.ui-matchup--link {
   background: transparent;
   padding: 0 0.65rem;
   border-radius: var(--radius-sm);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--text-2);
   cursor: pointer;
@@ -1635,7 +1642,7 @@ button.ui-matchup--link {
   text-align: left;
   padding: 0.45rem 0.625rem;
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   color: var(--text);
   text-decoration: none;
   cursor: pointer;
@@ -1661,7 +1668,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text);
-  font-size: 1.15rem;
+  font-size: calc(1.15rem + var(--fs-bump, 0px));
   cursor: pointer;
   flex-shrink: 0;
 }
@@ -1680,7 +1687,7 @@ button.ui-matchup--link {
 
 .ui-nav-brand--mobile {
   padding: 0.25rem 0.5rem 0.75rem;
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
 }
 
 .ui-nav-mobile-link,
@@ -1692,7 +1699,7 @@ button.ui-matchup--link {
   text-align: left;
   padding: 0.6rem 0.625rem;
   border-radius: var(--radius-sm);
-  font-size: 0.9rem;
+  font-size: calc(0.9rem + var(--fs-bump, 0px));
   color: var(--text);
   text-decoration: none;
   cursor: pointer;
@@ -1730,13 +1737,13 @@ button.ui-matchup--link {
 }
 
 .ui-settingrow-label {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--text);
 }
 
 .ui-settingrow-hint {
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -1780,7 +1787,7 @@ button.ui-matchup--link {
   background: var(--surface-2);
   color: var(--text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   padding: 0.5rem 0.625rem;
   min-height: 44px;
 }
@@ -1797,7 +1804,7 @@ button.ui-matchup--link {
   border-radius: 999px;
   /* 11px was under this kit's own legibility floor, on text that is often a
      count or a status word — the two things worth reading at a glance. */
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
   font-weight: 600;
   /* Text darkened away from the tint it sits on. The two used to be the same
      value, which is how a chip ended up at 3.6:1. */
@@ -1848,14 +1855,14 @@ button.ui-matchup--link {
     white-space: nowrap;
   }
 
-  .ui-stat-label { font-size: 12px; }
-  .ui-stat-pill { font-size: 12px; }
-  .ui-chart-title { font-size: 12px; }
-  .ui-insights-title { font-size: 12px; }
-  .ui-insights-cached { font-size: 12px; }
-  .ui-inline-stat-label { font-size: 11px; }
-  .ui-award-label { font-size: 11px; }
-  .ui-chip { font-size: 12px; }
+  .ui-stat-label { font-size: calc(12px + var(--fs-bump, 0px)); }
+  .ui-stat-pill { font-size: calc(12px + var(--fs-bump, 0px)); }
+  .ui-chart-title { font-size: calc(12px + var(--fs-bump, 0px)); }
+  .ui-insights-title { font-size: calc(12px + var(--fs-bump, 0px)); }
+  .ui-insights-cached { font-size: calc(12px + var(--fs-bump, 0px)); }
+  .ui-inline-stat-label { font-size: calc(11px + var(--fs-bump, 0px)); }
+  .ui-award-label { font-size: calc(11px + var(--fs-bump, 0px)); }
+  .ui-chip { font-size: calc(12px + var(--fs-bump, 0px)); }
 }
 
 /* ---------- Workbench (SQL sandbox) ---------- */
@@ -1876,12 +1883,12 @@ button.ui-matchup--link {
 
 .ui-sb-cellindex {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
 .ui-sb-celltype {
-  font-size: 9px;
+  font-size: calc(9px + var(--fs-bump, 0px));
   font-weight: 600;
   padding: 0.125rem 0.375rem;
   border-radius: var(--radius-sm);
@@ -1895,7 +1902,7 @@ button.ui-matchup--link {
   flex: 1;
   min-width: 0;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--text);
   border: 0;
@@ -1921,7 +1928,7 @@ button.ui-matchup--link {
   border: 0;
   background: transparent;
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 500;
 }
 
@@ -1943,7 +1950,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   cursor: pointer;
 }
 
@@ -1961,7 +1968,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: border-color 0.15s;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-sb-editor:focus-within { border-color: var(--brand); }
@@ -1971,7 +1978,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: var(--brand);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 500;
   padding: 0.375rem 0.75rem;
   cursor: pointer;
@@ -1995,7 +2002,7 @@ button.ui-matchup--link {
   color: var(--danger);
   border-radius: var(--radius-md);
   padding: 0.75rem;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
 }
 
 .ui-sb-results {
@@ -2012,7 +2019,7 @@ button.ui-matchup--link {
 }
 
 .ui-sb-meta {
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -2033,7 +2040,7 @@ button.ui-matchup--link {
   background: transparent;
   border-radius: calc(var(--radius-md) - 3px);
   padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--muted);
   cursor: pointer;
@@ -2051,7 +2058,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   padding: 0.25rem 0.625rem;
   cursor: pointer;
 }
@@ -2066,7 +2073,7 @@ button.ui-matchup--link {
 .ui-btable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
 }
 
 .ui-btable thead th {
@@ -2077,7 +2084,7 @@ button.ui-matchup--link {
   border-bottom: 1px solid var(--border);
   text-align: left;
   padding: 0.5rem 0.75rem;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
@@ -2109,19 +2116,19 @@ button.ui-matchup--link {
   display: flex;
   flex-direction: column;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: calc(9px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
 .ui-btable-sumstat span:first-child {
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--brand-light);
 }
 
 .ui-btable-count {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -2144,7 +2151,7 @@ button.ui-matchup--link {
 .ui-sb-config {
   align-items: flex-end;
   gap: 1rem;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
 }
 
 .ui-sb-typebtn {
@@ -2152,7 +2159,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 500;
   padding: 0.375rem 0.75rem;
   cursor: pointer;
@@ -2169,7 +2176,7 @@ button.ui-matchup--link {
 .ui-sb-label {
   display: block;
   margin-bottom: 0.25rem;
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -2191,7 +2198,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   padding: 0.25rem 0.5rem;
   cursor: pointer;
 }
@@ -2204,13 +2211,13 @@ button.ui-matchup--link {
 
 .ui-sb-note {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
 .ui-sb-warn {
   margin: 0.25rem 0 0;
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--warn);
 }
 
@@ -2228,7 +2235,7 @@ button.ui-matchup--link {
 }
 
 .ui-sb-tipslabel {
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -2237,7 +2244,7 @@ button.ui-matchup--link {
 }
 
 .ui-sb-tip {
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -2294,7 +2301,7 @@ button.ui-matchup--link {
   padding: 0.125rem 0.5rem;
   background: var(--surface-2);
   border-radius: var(--radius-sm);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--text-2);
 }
 
@@ -2320,11 +2327,11 @@ button.ui-matchup--link {
   margin-bottom: 0.125rem;
 }
 
-.ui-metriccard-label p { margin: 0; font-size: 0.75rem; color: var(--muted); }
+.ui-metriccard-label p { margin: 0; font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); }
 
 .ui-metriccard-value {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: calc(1.25rem + var(--fs-bump, 0px));
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--text);
@@ -2332,7 +2339,7 @@ button.ui-matchup--link {
 
 .ui-confmatrix {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   border-collapse: collapse;
 }
 
@@ -2362,7 +2369,7 @@ button.ui-matchup--link {
 .ui-comparetable th {
   padding: 0.25rem 0.5rem 0.5rem;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 600;
 }
 
@@ -2372,7 +2379,7 @@ button.ui-matchup--link {
 .ui-comparetable td {
   padding: 0.375rem 0.5rem;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-family: var(--font-mono);
   color: var(--text);
   border-top: 1px solid var(--border);
@@ -2407,7 +2414,7 @@ button.ui-matchup--link {
 
 .ui-runcard-label {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--text);
   white-space: nowrap;
@@ -2444,7 +2451,7 @@ button.ui-matchup--link {
 .ui-layer-name {
   width: 3.5rem;
   flex-shrink: 0;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -2462,7 +2469,7 @@ button.ui-matchup--link {
   border: 0;
   background: transparent;
   color: var(--brand);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   cursor: pointer;
   padding: 0;
 }
@@ -2488,18 +2495,18 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   padding: 0.375rem 0.5rem;
   min-width: 48px;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   line-height: 1.2;
 }
 
 .ui-archnode span { font-weight: 700; font-family: var(--font-mono); color: var(--text); }
-.ui-archnode small { font-size: 10px; color: var(--muted); }
+.ui-archnode small { font-size: calc(10px + var(--fs-bump, 0px)); color: var(--muted); }
 
 .ui-archnode--dim { background: var(--raised); }
 .ui-archnode--brand { background: color-mix(in srgb, var(--brand) 20%, transparent); border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent); }
 .ui-archnode--warn { background: color-mix(in srgb, var(--warn) 18%, transparent); border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent); }
 
-.ui-archarrow { color: var(--muted); font-size: 0.75rem; flex-shrink: 0; }
+.ui-archarrow { color: var(--muted); font-size: calc(0.75rem + var(--fs-bump, 0px)); flex-shrink: 0; }
 
 /* ML hint portal bubble */
 
@@ -2513,7 +2520,7 @@ button.ui-matchup--link {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 700;
   line-height: 1;
   cursor: help;
@@ -2542,13 +2549,13 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--surface-2);
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text-2);
 }
 
-.ui-tip-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text); }
-.ui-tip-def { display: block; margin-top: 4px; font-size: 0.75rem; color: var(--text-2); }
+.ui-tip-label { display: block; font-size: calc(0.75rem + var(--fs-bump, 0px)); font-weight: 600; color: var(--text); }
+.ui-tip-def { display: block; margin-top: 4px; font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--text-2); }
 
 .ui-tip-formula {
   display: block;
@@ -2558,11 +2565,11 @@ button.ui-matchup--link {
   background: var(--surface-2);
   border-radius: var(--radius-sm);
   padding: 0.25rem 0.5rem;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--text-2);
 }
 
-.ui-tip-interp { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); }
+.ui-tip-interp { display: block; margin-top: 6px; font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); }
 
 /* NN explainer */
 
@@ -2577,14 +2584,14 @@ button.ui-matchup--link {
 
 .ui-nntitle {
   margin: 0 0 0.375rem;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--brand);
 }
 
 .ui-nncontent {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   line-height: 1.6;
   color: var(--text-2);
   white-space: pre-line;
@@ -2611,7 +2618,7 @@ button.ui-matchup--link {
 .ui-gauge-headrow { align-items: end; }
 
 .ui-gauge-label {
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
@@ -2619,7 +2626,7 @@ button.ui-matchup--link {
 }
 
 .ui-gauge-value {
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text-2);
   text-align: right;
@@ -2671,7 +2678,7 @@ button.ui-matchup--link {
 }
 
 .ui-gauge-bubble span {
-  font-size: 9px;
+  font-size: calc(9px + var(--fs-bump, 0px));
   font-weight: 700;
   line-height: 1;
   color: var(--bg);
@@ -2682,12 +2689,12 @@ button.ui-matchup--link {
 .ui-gauge-scale span {
   position: absolute;
   transform: translateX(-50%);
-  font-size: 9px;
+  font-size: calc(9px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
 .ui-gauge-cat {
-  font-size: 9px;
+  font-size: calc(9px + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -2726,7 +2733,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--text);
-  font-size: 1.1rem;
+  font-size: calc(1.1rem + var(--fs-bump, 0px));
   cursor: pointer;
 }
 
@@ -2786,7 +2793,7 @@ button.ui-matchup--link {
 .ui-datenav-datebtn:hover .ui-datenav-cal { color: var(--text-2); }
 
 .ui-datenav-date {
-  font-size: 1.05rem;
+  font-size: calc(1.05rem + var(--fs-bump, 0px));
   font-weight: 700;
   color: var(--text);
   text-decoration: underline dotted color-mix(in srgb, var(--muted) 60%, transparent);
@@ -2823,7 +2830,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--text-2);
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 500;
   cursor: pointer;
 }
@@ -2848,7 +2855,7 @@ button.ui-matchup--link {
   border-radius: 50%;
   background: transparent;
   color: var(--text-2);
-  font-size: 1.05rem;
+  font-size: calc(1.05rem + var(--fs-bump, 0px));
   cursor: pointer;
 }
 
@@ -2869,7 +2876,7 @@ button.ui-matchup--link {
   color: #fff;
   /* 9px was below the point where a digit is reliably a digit — at that size
      "3" and "8" are the same smudge on a phone. The badge grows with it. */
-  font-size: 10.5px;
+  font-size: calc(10.5px + var(--fs-bump, 0px));
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -2915,7 +2922,7 @@ button.ui-matchup--link {
 
 .ui-bell-head-title {
   margin: 0;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -2926,7 +2933,7 @@ button.ui-matchup--link {
   border: 0;
   background: transparent;
   color: var(--brand-light);
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   cursor: pointer;
   text-decoration: underline;
   padding: 0;
@@ -2957,20 +2964,20 @@ button.ui-matchup--link {
 .ui-bell-dismiss {
   position: absolute; top: var(--space-2); right: var(--space-2);
   width: 24px; height: 24px; border: 0; border-radius: var(--radius-sm);
-  background: none; color: var(--muted); font-size: 1rem; line-height: 1; cursor: pointer;
+  background: none; color: var(--muted); font-size: calc(1rem + var(--fs-bump, 0px)); line-height: 1; cursor: pointer;
 }
 .ui-bell-dismiss:hover { color: var(--text); background: var(--surface-2); }
 .ui-bell-action {
   position: absolute; right: var(--space-4); bottom: var(--space-2);
   border: 0; background: none; padding: 0; cursor: pointer;
-  font-size: 10px; font-weight: 600; color: var(--brand); white-space: nowrap;
+  font-size: calc(10px + var(--fs-bump, 0px)); font-weight: 600; color: var(--brand); white-space: nowrap;
 }
 .ui-bell-item-source { color: var(--brand); font-weight: 500; }
 .ui-bell-item:hover { background: var(--surface-2); }
 
 .ui-bell-item-icon {
   flex-shrink: 0;
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
   line-height: 1.3;
 }
 
@@ -2978,21 +2985,21 @@ button.ui-matchup--link {
 
 .ui-bell-item-title {
   display: block;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text);
 }
 
 .ui-bell-item-body-text {
   display: block;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   color: var(--text-2);
   margin-top: 0.125rem;
 }
 
 .ui-bell-item-time {
   display: block;
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   color: var(--muted);
   margin-top: 0.25rem;
 }
@@ -3000,7 +3007,7 @@ button.ui-matchup--link {
 .ui-bell-empty {
   padding: 1.5rem 1rem;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -3040,18 +3047,18 @@ button.ui-matchup--link {
   border-color: color-mix(in srgb, var(--brand) 40%, transparent);
 }
 
-.ui-updatetoast-icon { font-size: 1.25rem; }
+.ui-updatetoast-icon { font-size: calc(1.25rem + var(--fs-bump, 0px)); }
 
 .ui-updatetoast-text { flex: 1; min-width: 0; }
 
 .ui-updatetoast-title {
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text);
 }
 
 .ui-updatetoast-sub {
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -3063,7 +3070,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-sm);
   background: var(--brand);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 600;
   cursor: pointer;
 }
@@ -3081,14 +3088,14 @@ button.ui-matchup--link {
 
 .ui-settingsgroup-head h2 {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: calc(0.9rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text);
 }
 
 .ui-settingsgroup-head p {
   margin: 0.25rem 0 0;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -3100,7 +3107,7 @@ button.ui-matchup--link {
   gap: var(--space-3);
 }
 
-.ui-settingsgroup-headtext { min-width: 0; flex: 1; }
+.ui-settingsgroup-headtext { min-width: 0; flex: 1; overflow-wrap: anywhere; }
 
 .ui-settingsgroup-aside { flex-shrink: 0; margin-left: auto; }
 
@@ -3124,8 +3131,8 @@ button.ui-matchup--link {
 /* A settings group's stacked contents: rows, notes and sub-groups. */
 .ui-settings-stack { display: flex; flex-direction: column; gap: var(--space-3); }
 .ui-settings-sub { display: flex; flex-direction: column; gap: var(--space-2); }
-.ui-settings-note { margin: 0; font-size: 0.875rem; color: var(--muted); }
-.ui-settings-error { margin: 0; font-size: 0.75rem; color: var(--danger); }
+.ui-settings-note { margin: 0; font-size: calc(0.875rem + var(--fs-bump, 0px)); color: var(--muted); }
+.ui-settings-error { margin: 0; font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--danger); }
 
 /* ---------- SortedList (drag-to-reorder) ---------- */
 
@@ -3175,7 +3182,7 @@ button.ui-matchup--link {
   background: var(--surface-2);
   color: var(--text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-log-toggle {
@@ -3186,7 +3193,7 @@ button.ui-matchup--link {
   background: var(--surface-2);
   color: var(--text-2);
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
   white-space: nowrap;
   cursor: pointer;
 }
@@ -3210,7 +3217,7 @@ button.ui-matchup--link {
   border-radius: var(--radius-md);
   background: var(--surface-2);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   line-height: 1.5;
 }
 
@@ -3300,7 +3307,7 @@ button.ui-matchup--link {
 .ui-log-foot {
   margin: 0;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
 }
 
 @media (max-width: 639px) {
@@ -3311,7 +3318,7 @@ button.ui-matchup--link {
        is answered by overscroll-behavior above, which stops the scroll at the
        box's end instead of chaining it to the page. */
     max-height: 60vh;
-    font-size: 0.8125rem; /* 13px floor — this is the smallest text on the page */
+    font-size: calc(0.8125rem + var(--fs-bump, 0px)); /* 13px floor — this is the smallest text on the page */
   }
 
   /* Meta above the message, so the message gets the whole width. */
@@ -3362,7 +3369,7 @@ button.ui-matchup--link {
   background: none;
   color: var(--text-2);
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -3384,7 +3391,7 @@ button.ui-matchup--link {
   min-width: 40px;
   padding: 0;
   justify-content: center;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem + var(--fs-bump, 0px));
 }
 
 @media (max-width: 639px) {
@@ -3482,7 +3489,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-statustile-name {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   /* Wraps rather than ellipsising. A truncated service name is worse than a
      two-line one: "Workshop a…" and "Workshop agent" are the same width on a
      phone, and only one of them can be read. min-width:0 on the flex parent
@@ -3492,13 +3499,13 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-statustile-metric {
   font-family: var(--font-mono);
-  font-size: 1.05rem;
+  font-size: calc(1.05rem + var(--fs-bump, 0px));
   font-variant-numeric: tabular-nums;
 }
 
 .ui-statustile-detail {
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   /* Held to two lines so one long error cannot make its tile twice the height
      of its neighbours — a grid of tiles that disagree about how tall a tile is
      reads as broken before it reads as informative. The full string stays in
@@ -3550,12 +3557,12 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   min-width: 0;
 }
 
-.ui-triage-title { font-size: 0.9rem; font-weight: 600; overflow-wrap: anywhere; }
-.ui-triage-detail { color: var(--text-2); font-size: 0.8rem; overflow-wrap: anywhere; }
+.ui-triage-title { font-size: calc(0.9rem + var(--fs-bump, 0px)); font-weight: 600; overflow-wrap: anywhere; }
+.ui-triage-detail { color: var(--text-2); font-size: calc(0.8rem + var(--fs-bump, 0px)); overflow-wrap: anywhere; }
 
 .ui-triage-age {
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -3573,7 +3580,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--text-2);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 /* ---------- TimeRangePicker ---------- */
@@ -3595,7 +3602,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: none;
   color: var(--text-2);
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 }
@@ -3650,7 +3657,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   grid-template-columns: max-content 1fr;
   gap: 0.25rem 0.75rem;
   margin: 0.5rem 0 0;
-  font-size: 0.82rem;
+  font-size: calc(0.82rem + var(--fs-bump, 0px));
 }
 
 .ui-facts-row {
@@ -3677,7 +3684,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 @media (max-width: 639px) {
   /* The label column is a third of a phone. The label goes above its value. */
   .ui-facts { grid-template-columns: 1fr; gap: 0; }
-  .ui-facts dt { margin-top: 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .ui-facts dt { margin-top: 0.5rem; font-size: calc(0.72rem + var(--fs-bump, 0px)); text-transform: uppercase; letter-spacing: 0.03em; }
 }
 
 /* ---------- ListRow ---------- */
@@ -3733,17 +3740,17 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   min-width: 0;
 }
 
-.ui-row-title { font-size: 0.86rem; font-weight: 600; overflow-wrap: anywhere; }
-.ui-row-meta { color: var(--muted); font-size: 0.76rem; }
+.ui-row-title { font-size: calc(0.86rem + var(--fs-bump, 0px)); font-weight: 600; overflow-wrap: anywhere; }
+.ui-row-meta { color: var(--muted); font-size: calc(0.76rem + var(--fs-bump, 0px)); }
 
 .ui-row-detail {
   color: var(--text-2);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   overflow-wrap: anywhere;
   min-width: 0;
 }
 
-.ui-row-detail--mono { font-family: var(--font-mono); font-size: 0.76rem; }
+.ui-row-detail--mono { font-family: var(--font-mono); font-size: calc(0.76rem + var(--fs-bump, 0px)); }
 
 /* Clamped rather than scrolled sideways: a row that runs off the screen takes
    the page with it, and a backtrace is not a paragraph. */
@@ -3790,7 +3797,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: var(--surface-2);
   color: var(--text);
   font: inherit;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
@@ -3847,7 +3854,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-btn--sm {
   min-height: 32px;
   padding: 0 0.6rem;
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
 }
 
 @media (max-width: 639px) {
@@ -3912,7 +3919,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   padding: 0;
   border-color: transparent;
   background: transparent;
-  font-size: 1.05rem;
+  font-size: calc(1.05rem + var(--fs-bump, 0px));
 }
 
 .ui-btn--icon:hover {
@@ -3934,7 +3941,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 1.05rem;
+  font-size: calc(1.05rem + var(--fs-bump, 0px));
   cursor: pointer;
 }
 
@@ -3969,7 +3976,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-triage-chevron {
   align-self: center;
   color: var(--muted);
-  font-size: 1.3rem;
+  font-size: calc(1.3rem + var(--fs-bump, 0px));
   line-height: 1;
 }
 
@@ -4030,11 +4037,11 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   padding: 2.5rem 1rem;
   text-align: center;
   color: var(--text-2);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-error-icon {
-  font-size: 1.5rem;
+  font-size: calc(1.5rem + var(--fs-bump, 0px));
   line-height: 1;
   color: var(--sev-error);
 }
@@ -4049,7 +4056,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: var(--surface-2);
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   overflow-wrap: anywhere;
 }
 
@@ -4061,7 +4068,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 550;
   cursor: pointer;
 }
@@ -4105,13 +4112,13 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-confirm-title {
   margin: 0;
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
   font-weight: 650;
 }
 
 .ui-confirm-body {
   color: var(--text-2);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   line-height: 1.5;
   max-width: 60ch;
 }
@@ -4129,7 +4136,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   padding: 0 var(--space-4);
   border-radius: var(--radius-sm);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 550;
   cursor: pointer;
 }
@@ -4227,7 +4234,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   gap: var(--space-1);
   margin: var(--space-1) 0 0;
   color: var(--sev-error);
-  font-size: 0.8rem;
+  font-size: calc(0.8rem + var(--fs-bump, 0px));
   line-height: 1.4;
   max-width: 60ch;
 }
@@ -4256,7 +4263,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   border-radius: 50%;
   background: transparent;
   color: var(--text-2);
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
   cursor: pointer;
 }
 
@@ -4337,7 +4344,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   margin: var(--space-4) 0 var(--space-1);
   padding: 0 var(--space-2);
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: calc(0.68rem + var(--fs-bump, 0px));
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4451,7 +4458,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
 
 .ui-navsearch-input::placeholder { color: var(--muted); }
@@ -4479,7 +4486,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   background: var(--surface-2);
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   line-height: 1;
 }
 
@@ -4512,14 +4519,14 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-optionrow-name {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: calc(0.85rem + var(--fs-bump, 0px));
   overflow-wrap: anywhere;
 }
 
 .ui-optionrow-meta {
   grid-column: 1;
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: calc(0.76rem + var(--fs-bump, 0px));
 }
 
 /* Prices right-aligned so the digits form a column the eye can run down —
@@ -4530,7 +4537,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   text-align: right;
   color: var(--text-2);
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: calc(0.74rem + var(--fs-bump, 0px));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -4633,7 +4640,7 @@ samp,
   background: transparent;
   color: var(--text);
   font: inherit;
-  font-size: 1rem; /* 16px: anything smaller and iOS zooms the page on focus. */
+  font-size: calc(1rem + var(--fs-bump, 0px)); /* 16px: anything smaller and iOS zooms the page on focus. */
 }
 
 .ui-picker-sheet-input::placeholder { color: var(--muted); }
@@ -4693,7 +4700,7 @@ samp,
   input:not([type='range']):not([type='checkbox']):not([type='radio']),
   select,
   textarea {
-    font-size: 16px !important;
+    font-size: calc(16px + var(--fs-bump, 0px)) !important;
   }
 }
 
@@ -4754,7 +4761,7 @@ samp,
   gap: 0.375rem;
   padding: 0.125rem 0.5rem;
   border-radius: 9999px;
-  font-size: 10px;
+  font-size: calc(10px + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -4766,7 +4773,7 @@ samp,
 
 .ui-matchup-meta {
   margin-left: auto;
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4804,7 +4811,7 @@ samp,
   height: 2.5rem;
   background: transparent;
   color: var(--text-2);
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -4814,7 +4821,7 @@ samp,
 }
 .ui-matchup-logo img { width: 100%; height: 100%; object-fit: contain; }
 .ui-matchup-name {
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text);
   overflow: hidden;
@@ -4823,7 +4830,7 @@ samp,
   max-width: 100%;
 }
 .ui-matchup-record {
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
@@ -4849,7 +4856,7 @@ samp,
 /* Before first pitch/kickoff there is no score to show. */
 .ui-matchup-vs {
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: calc(0.875rem + var(--fs-bump, 0px));
   font-weight: 500;
 }
 .ui-matchup-score {
@@ -4857,12 +4864,12 @@ samp,
   align-items: center;
   gap: 0.75rem;
   font-variant-numeric: tabular-nums;
-  font-size: 30px;
+  font-size: calc(30px + var(--fs-bump, 0px));
   line-height: 1;
   color: var(--text);
   font-weight: 700;
 }
-.ui-matchup-sep { color: var(--muted); font-size: 1rem; font-weight: 400; }
+.ui-matchup-sep { color: var(--muted); font-size: calc(1rem + var(--fs-bump, 0px)); font-weight: 400; }
 .ui-matchup-loser { color: var(--muted); font-weight: 600; }
 
 .ui-matchup-foot {
@@ -4874,7 +4881,7 @@ samp,
   margin: 0;
   padding-top: 0.625rem;
   border-top: 1px solid var(--border);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem + var(--fs-bump, 0px));
   color: var(--muted);
 }
 
@@ -4893,7 +4900,7 @@ samp,
   border-bottom: 1px solid var(--border);
 }
 .ui-card-head--bar .ui-card-title {
-  font-size: 0.75rem;
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 600;
   color: var(--text-2);
 }
@@ -4985,10 +4992,10 @@ samp,
 .ui-fa-header-row--drag { cursor: grab; touch-action: none; }
 .ui-fa-header-row--drag:active { cursor: grabbing; }
 .ui-fa-title-wrap { min-width: 0; }
-.ui-fa-title { font-size: 14px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ui-fa-context { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.ui-fa-title { font-size: calc(14px + var(--fs-bump, 0px)); font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-fa-context { font-size: calc(11px + var(--fs-bump, 0px)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .ui-fa-header-actions { display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0; }
-.ui-fa-hdrbtn { font-size: 11px; color: var(--muted); padding: 0.25rem 0.5rem; border-radius: 0.25rem; transition: color 0.15s ease, background 0.15s ease; }
+.ui-fa-hdrbtn { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); padding: 0.25rem 0.5rem; border-radius: 0.25rem; transition: color 0.15s ease, background 0.15s ease; }
 .ui-fa-hdrbtn:hover { color: var(--text); background: var(--border); }
 
 .ui-fa-opacity-row { padding: 0 0.75rem 0.5rem; display: flex; align-items: center; gap: 0.625rem; }
@@ -5043,46 +5050,46 @@ samp,
 .ui-fa-session-row:not(.ui-fa-session-row--active):hover { background: color-mix(in srgb, var(--border) 40%, transparent); }
 .ui-fa-session-row--active { background: color-mix(in srgb, var(--brand) 10%, transparent); color: var(--text); }
 .ui-fa-session-info { flex: 1; min-width: 0; }
-.ui-fa-session-title { font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ui-fa-session-date { font-size: 12px; color: var(--muted); }
-.ui-fa-session-del { color: var(--muted); font-size: 12px; padding: 0.125rem 0.375rem; border-radius: 0.25rem; opacity: 0; transition: color 0.15s ease, background 0.15s ease, opacity 0.15s ease; }
+.ui-fa-session-title { font-size: calc(12px + var(--fs-bump, 0px)); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-fa-session-date { font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); }
+.ui-fa-session-del { color: var(--muted); font-size: calc(12px + var(--fs-bump, 0px)); padding: 0.125rem 0.375rem; border-radius: 0.25rem; opacity: 0; transition: color 0.15s ease, background 0.15s ease, opacity 0.15s ease; }
 .ui-fa-session-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .ui-fa-session-row:hover .ui-fa-session-del { opacity: 1; }
 .ui-fa-session-footer { border-top: 1px solid var(--border); padding: 0.375rem 0.75rem; }
-.ui-fa-session-delall { font-size: 12px; color: color-mix(in srgb, var(--danger) 70%, transparent); transition: color 0.15s ease; }
+.ui-fa-session-delall { font-size: calc(12px + var(--fs-bump, 0px)); color: color-mix(in srgb, var(--danger) 70%, transparent); transition: color 0.15s ease; }
 .ui-fa-session-delall:hover { color: var(--danger); }
 
 .ui-fa-messages { flex: 1; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 1rem; }
 .ui-fa-msg-row--user { text-align: right; }
 .ui-fa-msg-row--assistant { text-align: left; }
-.ui-fa-bubble-user { display: inline-block; text-align: left; border-radius: 1rem; border-bottom-right-radius: var(--radius-sm); padding: 0.625rem 0.875rem; font-size: 14px; line-height: 1.625; background: color-mix(in srgb, var(--brand) 12%, transparent); color: var(--text); border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent); max-width: 88%; }
-.ui-fa-bubble-assistant { display: inline-block; border-radius: 1rem; border-bottom-left-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 14px; line-height: 1.625; background: color-mix(in srgb, var(--surface-2) 60%, transparent); backdrop-filter: blur(4px); color: var(--text); border: 1px solid color-mix(in srgb, var(--border) 70%, transparent); max-width: 92%; }
-.ui-fa-bubble-tools { display: inline-block; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 14px; background: color-mix(in srgb, var(--surface-2) 60%, transparent); backdrop-filter: blur(4px); color: var(--muted); border: 1px solid color-mix(in srgb, var(--border) 50%, transparent); max-width: 92%; font-style: italic; }
-.ui-fa-plaintext { white-space: pre-wrap; font-size: 14px; line-height: 1.625; color: var(--text); }
+.ui-fa-bubble-user { display: inline-block; text-align: left; border-radius: 1rem; border-bottom-right-radius: var(--radius-sm); padding: 0.625rem 0.875rem; font-size: calc(14px + var(--fs-bump, 0px)); line-height: 1.625; background: color-mix(in srgb, var(--brand) 12%, transparent); color: var(--text); border: 1px solid color-mix(in srgb, var(--brand) 20%, transparent); max-width: 88%; }
+.ui-fa-bubble-assistant { display: inline-block; border-radius: 1rem; border-bottom-left-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: calc(14px + var(--fs-bump, 0px)); line-height: 1.625; background: color-mix(in srgb, var(--surface-2) 60%, transparent); backdrop-filter: blur(4px); color: var(--text); border: 1px solid color-mix(in srgb, var(--border) 70%, transparent); max-width: 92%; }
+.ui-fa-bubble-tools { display: inline-block; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: calc(14px + var(--fs-bump, 0px)); background: color-mix(in srgb, var(--surface-2) 60%, transparent); backdrop-filter: blur(4px); color: var(--muted); border: 1px solid color-mix(in srgb, var(--border) 50%, transparent); max-width: 92%; font-style: italic; }
+.ui-fa-plaintext { white-space: pre-wrap; font-size: calc(14px + var(--fs-bump, 0px)); line-height: 1.625; color: var(--text); }
 .ui-fa-msg-actions { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
-.ui-fa-loadsql-btn { font-size: 11px; color: var(--brand-light); border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent); border-radius: 0.25rem; padding: 0.125rem 0.5rem; background: color-mix(in srgb, var(--brand) 5%, transparent); transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+.ui-fa-loadsql-btn { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--brand-light); border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent); border-radius: 0.25rem; padding: 0.125rem 0.5rem; background: color-mix(in srgb, var(--brand) 5%, transparent); transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
 .ui-fa-loadsql-btn:hover { color: var(--text); border-color: color-mix(in srgb, var(--brand) 60%, transparent); background: color-mix(in srgb, var(--brand) 10%, transparent); }
 /* Not wired up by the kit's own JSX — messageActions is opaque to it — but
    kept here so an app's messageActions renderer (baseball's "Save to
    Obsidian" button, say) can reuse the same visual language instead of
    inventing its own. --pc lets a consumer retint per-action via inline style. */
-.ui-fa-obsidian-btn { --pc: var(--chart-5); display: inline-flex; align-items: center; gap: 0.25rem; font-size: 11px; border: 1px solid var(--border); border-radius: 0.25rem; padding: 0.125rem 0.5rem; color: var(--muted); transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+.ui-fa-obsidian-btn { --pc: var(--chart-5); display: inline-flex; align-items: center; gap: 0.25rem; font-size: calc(11px + var(--fs-bump, 0px)); border: 1px solid var(--border); border-radius: 0.25rem; padding: 0.125rem 0.5rem; color: var(--muted); transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
 .ui-fa-obsidian-btn:hover { color: var(--pc); border-color: color-mix(in srgb, var(--pc) 40%, transparent); background: color-mix(in srgb, var(--pc) 5%, transparent); }
 .ui-fa-obsidian-btn--saved,
 .ui-fa-obsidian-btn--saved:hover { color: var(--pc); border-color: color-mix(in srgb, var(--pc) 40%, transparent); background: color-mix(in srgb, var(--pc) 10%, transparent); }
 .ui-fa-charts { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .ui-fa-chart-card { border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface-2); padding: 0.75rem; }
 .ui-fa-tools { margin-top: 0.25rem; text-align: left; }
-.ui-fa-tools-summary { font-size: 11px; color: var(--muted); cursor: pointer; user-select: none; }
+.ui-fa-tools-summary { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); cursor: pointer; user-select: none; }
 .ui-fa-tools-list { margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.25rem; }
-.ui-fa-tool-row { font-size: 11px; color: var(--muted); border-radius: 0.25rem; border: 1px solid var(--border); padding: 0.25rem 0.5rem; background: var(--bg); }
+.ui-fa-tool-row { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); border-radius: 0.25rem; border: 1px solid var(--border); padding: 0.25rem 0.5rem; background: var(--bg); }
 
-.ui-fa-thinking { font-size: 12px; color: var(--muted); }
+.ui-fa-thinking { font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); }
 
 .ui-fa-composer { position: relative; padding: 0.5rem; border-top: 1px solid var(--border); background: var(--surface-2); display: flex; gap: 0.5rem; align-items: flex-end; flex-shrink: 0; }
 .ui-fa-composer-fieldwrap { flex: 1; position: relative; }
 .ui-fa-mention-panel { position: absolute; bottom: 100%; left: 0.5rem; right: 0.5rem; margin-bottom: 0.25rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: var(--shadow-lg); overflow: hidden; z-index: 50; }
-.ui-fa-mention-item { width: 100%; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; text-align: left; font-size: 12px; transition: background 0.15s ease; }
+.ui-fa-mention-item { width: 100%; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; text-align: left; font-size: calc(12px + var(--fs-bump, 0px)); transition: background 0.15s ease; }
 .ui-fa-mention-item:not(.ui-fa-mention-item--active):hover { background: color-mix(in srgb, var(--border) 40%, transparent); }
 .ui-fa-mention-item--active { background: color-mix(in srgb, var(--border) 60%, transparent); }
 .ui-fa-mention-name { color: var(--text); font-weight: 500; }
@@ -5090,7 +5097,7 @@ samp,
 .ui-fa-mention-glyph { --mg: var(--muted); font-weight: 600; flex-shrink: 0; color: var(--mg); }
 .ui-fa-mention-glyph--player { --mg: var(--brand); }
 .ui-fa-mention-glyph--team { --mg: var(--chart-3); }
-.ui-fa-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 0.875rem; font-size: 15px; color: var(--text); outline: none; resize: none; overflow: hidden; line-height: 1.625; font-size: 16px; transition: box-shadow 0.15s ease, border-color 0.15s ease; }
+.ui-fa-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 0.875rem; font-size: calc(15px + var(--fs-bump, 0px)); color: var(--text); outline: none; resize: none; overflow: hidden; line-height: 1.625; font-size: calc(16px + var(--fs-bump, 0px)); transition: box-shadow 0.15s ease, border-color 0.15s ease; }
 .ui-fa-textarea::placeholder { color: var(--muted); }
 .ui-fa-textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 20%, transparent); }
 .ui-fa-send-btn { flex-shrink: 0; align-self: flex-end; height: 3rem; width: 3rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: var(--on-brand); background: linear-gradient(to bottom right, var(--brand), var(--brand-light)); box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--brand) 30%, transparent), 0 4px 6px -4px color-mix(in srgb, var(--brand) 30%, transparent); transition: box-shadow 0.15s ease, filter 0.15s ease, transform 0.15s ease; cursor: pointer; }
@@ -5109,14 +5116,14 @@ samp,
 .ui-fa-md-p { margin: 0.5rem 0; line-height: 1.625; }
 .ui-fa-md-p:first-child { margin-top: 0; }
 .ui-fa-md-p:last-child { margin-bottom: 0; }
-.ui-fa-md-h1 { font-size: 15px; font-weight: 600; color: var(--text); margin: 1rem 0 0.5rem; }
+.ui-fa-md-h1 { font-size: calc(15px + var(--fs-bump, 0px)); font-weight: 600; color: var(--text); margin: 1rem 0 0.5rem; }
 .ui-fa-md-h1:first-child { margin-top: 0; }
-.ui-fa-md-h2 { font-size: 14px; font-weight: 600; color: var(--text); margin: 1rem 0 0.5rem; }
+.ui-fa-md-h2 { font-size: calc(14px + var(--fs-bump, 0px)); font-weight: 600; color: var(--text); margin: 1rem 0 0.5rem; }
 .ui-fa-md-h2:first-child { margin-top: 0; }
-.ui-fa-md-h3 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0.875rem 0 0.375rem; }
+.ui-fa-md-h3 { font-size: calc(11px + var(--fs-bump, 0px)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0.875rem 0 0.375rem; }
 .ui-fa-md-h3:first-child { margin-top: 0; }
-.ui-fa-md-code { background: color-mix(in srgb, var(--border) 70%, transparent); color: var(--text); border-radius: 0.25rem; padding: 0.125rem 0.375rem; font-size: 12px; font-family: var(--font-mono); }
-.ui-fa-md-codeblock { display: block; overflow-x: auto; border-radius: 0.5rem; padding: 0.75rem; font-size: 12px; font-family: var(--font-mono); line-height: 1.625; }
+.ui-fa-md-code { background: color-mix(in srgb, var(--border) 70%, transparent); color: var(--text); border-radius: 0.25rem; padding: 0.125rem 0.375rem; font-size: calc(12px + var(--fs-bump, 0px)); font-family: var(--font-mono); }
+.ui-fa-md-codeblock { display: block; overflow-x: auto; border-radius: 0.5rem; padding: 0.75rem; font-size: calc(12px + var(--fs-bump, 0px)); font-family: var(--font-mono); line-height: 1.625; }
 .ui-fa-md-pre { margin: 0.625rem 0; overflow-x: auto; }
 .ui-fa-md-ul { list-style: disc; padding-left: 1.25rem; margin: 0.625rem 0; }
 .ui-fa-md-ul > * + * { margin-top: 0.375rem; }
@@ -5139,14 +5146,14 @@ samp,
 .ui-errorstate--compact {
   padding: 0.5rem;
   gap: 0.25rem;
-  font-size: 0.8125rem;
+  font-size: calc(0.8125rem + var(--fs-bump, 0px));
 }
 /* .ui-error-icon, not .ui-errorstate-icon: ErrorState's block is .ui-error and
    its icon .ui-error-icon. A selector aimed at a class that does not exist is
    silent — it type-checks, builds and tests clean and simply never applies. */
 .ui-empty--compact .ui-empty-icon,
 .ui-errorstate--compact .ui-error-icon {
-  font-size: 1rem;
+  font-size: calc(1rem + var(--fs-bump, 0px));
 }
 
 /* Which model wrote this. Monospaced and quiet — it is provenance, not content,
@@ -5156,7 +5163,7 @@ samp,
    off from it. */
 .ui-insights-model {
   font-family: var(--font-mono);
-  font-size: var(--fs9, 9px);
+  font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px));
   color: var(--muted);
   white-space: nowrap;
   padding: 0.125rem 0.25rem;
@@ -5172,7 +5179,7 @@ samp,
 
 .ui-news-panel { padding: 0.75rem; display: flex; flex-direction: column; }
 .ui-news-scroll { flex: 1; min-height: 0; overflow-y: auto; }
-.ui-news-empty { font-size: var(--fs10, 10px); color: var(--muted); font-style: italic; }
+.ui-news-empty { font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px)); color: var(--muted); font-style: italic; }
 
 .ui-news-item {
   position: relative;
@@ -5188,7 +5195,7 @@ samp,
   margin-bottom: 0.25rem;
   flex-wrap: wrap;
 }
-.ui-news-time { font-size: var(--fs10, 10px); color: var(--muted); }
+.ui-news-time { font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px)); color: var(--muted); }
 .ui-news-src { display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; }
 .ui-news-dot {
   width: 0.375rem;
@@ -5198,7 +5205,7 @@ samp,
   background: var(--ui-news-src, var(--muted));
 }
 .ui-news-srcname {
-  font-size: var(--fs10, 10px);
+  font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -5210,7 +5217,7 @@ samp,
    itself positioned — that would shrink the target back to the title's own box. */
 .ui-news-link::after { content: ""; position: absolute; inset: 0; }
 .ui-news-title {
-  font-size: 14px;
+  font-size: calc(14px + var(--fs-bump, 0px));
   font-weight: 500;
   color: var(--text);
   line-height: 1.375;
@@ -5222,7 +5229,7 @@ samp,
 }
 .ui-news-item:hover .ui-news-title { color: var(--brand); }
 .ui-news-sum {
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
   color: var(--muted);
   line-height: 1.625;
   margin-top: 0.125rem;
@@ -5252,7 +5259,7 @@ samp,
   border-radius: 9999px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  font-size: var(--fs10, 10px);
+  font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px));
   color: var(--text-2);
   text-decoration: none;
   transition: color 0.15s ease, border-color 0.15s ease;
@@ -5284,7 +5291,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 
 .ui-panel { padding: 0.75rem; display: flex; flex-direction: column; }
 .ui-panel-scroll { flex: 1; min-height: 0; overflow-y: auto; }
-.ui-panel-empty { font-size: var(--fs10, 10px); color: var(--muted); font-style: italic; }
+.ui-panel-empty { font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px)); color: var(--muted); font-style: italic; }
 
 .ui-panelrow {
   display: flex;
@@ -5293,7 +5300,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   padding: 0.25rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
   min-width: 0;
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
 }
 .ui-panelrow:last-child { border-bottom: 0; }
 .ui-panelrow--stack { flex-direction: column; align-items: stretch; }
@@ -5341,7 +5348,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: var(--fs9, 9px);
+  font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -5351,16 +5358,16 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-leaders-icon { font-style: normal; }
 .ui-leaders-plink { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.25rem; }
 .ui-leaders-name {
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   line-height: 1.25;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.ui-leaders-meta { font-size: var(--fs9, 9px); color: var(--muted); flex-shrink: 0; }
+.ui-leaders-meta { font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px)); color: var(--muted); flex-shrink: 0; }
 .ui-leaders-val {
-  font-size: 11px;
+  font-size: calc(11px + var(--fs-bump, 0px));
   font-family: var(--font-mono);
   font-weight: 600;
   flex-shrink: 0;
@@ -5386,17 +5393,17 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
    is the pick itself, the confidence chip and the props grid. */
 
 .ui-picks-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-.ui-picks-val { font-size: 1rem; font-weight: 600; color: var(--text); }
-.ui-picks-prop { font-size: 12px; color: var(--text-2); font-family: var(--font-mono); }
-.ui-picks-player { font-size: 12px; font-weight: 500; min-width: 0; }
-.ui-picks-reason { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.ui-picks-val { font-size: calc(1rem + var(--fs-bump, 0px)); font-weight: 600; color: var(--text); }
+.ui-picks-prop { font-size: calc(12px + var(--fs-bump, 0px)); color: var(--text-2); font-family: var(--font-mono); }
+.ui-picks-player { font-size: calc(12px + var(--fs-bump, 0px)); font-weight: 500; min-width: 0; }
+.ui-picks-reason { margin: 0; font-size: calc(12px + var(--fs-bump, 0px)); line-height: 1.5; color: var(--muted); }
 .ui-picks-factors {
   margin: 0;
   padding-left: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
   color: var(--text-2);
 }
 .ui-picks-props { margin-top: 0.75rem; }
@@ -5404,7 +5411,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 @media (min-width: 640px) { .ui-picks-propgrid { grid-template-columns: repeat(2, 1fr); } }
 .ui-picks-summary {
   margin: 0.75rem 0 0;
-  font-size: 13px;
+  font-size: calc(13px + var(--fs-bump, 0px));
   line-height: 1.5;
   color: var(--text);
   border-top: 1px solid var(--border);
@@ -5414,7 +5421,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 /* Confidence reads as a temperature, not a brand accent: a low-confidence pick
    should not look like a call to action. */
 .ui-conf {
-  font-size: var(--fs9, 9px);
+  font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -5451,25 +5458,25 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   min-width: 0;
 }
 .ui-odds-label {
-  font-size: var(--fs9, 9px);
+  font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px));
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
 }
-.ui-odds-row { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 12px; font-family: var(--font-mono); }
+.ui-odds-row { display: flex; justify-content: space-between; gap: 0.5rem; font-size: calc(12px + var(--fs-bump, 0px)); font-family: var(--font-mono); }
 .ui-odds-team { display: flex; align-items: center; gap: 0.25rem; min-width: 0; }
 .ui-odds-val { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
-.ui-odds-total { font-size: 18px; font-weight: 700; font-family: var(--font-mono); color: var(--text); text-align: center; }
+.ui-odds-total { font-size: calc(18px + var(--fs-bump, 0px)); font-weight: 700; font-family: var(--font-mono); color: var(--text); text-align: center; }
 .ui-odds-ou {
   display: flex;
   justify-content: space-between;
-  font-size: var(--fs10, 10px);
+  font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px));
   font-family: var(--font-mono);
   color: var(--muted);
   margin-top: 0.25rem;
 }
-.ui-odds-prov { font-size: var(--fs9, 9px); color: var(--muted); margin-top: 0.25rem; }
+.ui-odds-prov { font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px)); color: var(--muted); margin-top: 0.25rem; }
 
 /* The value read — where the market is soft, if anywhere. Its own callout
    because it is a verdict about the block above, not another pick. */
@@ -5477,7 +5484,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   margin: 0.75rem 0 0;
   display: flex;
   gap: 0.5rem;
-  font-size: 12px;
+  font-size: calc(12px + var(--fs-bump, 0px));
   line-height: 1.5;
   color: var(--text-2);
   background: color-mix(in srgb, var(--brand) 6%, transparent);
@@ -5486,7 +5493,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   padding: 0.5rem;
 }
 .ui-picks-value-label {
-  font-size: var(--fs9, 9px);
+  font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -5501,7 +5508,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
    is a flex item but not itself a flex container) it collapses to 0 and the
    chart renders blank. */
 .ui-race-body { flex: 1; min-height: 0; }
-.ui-race-none { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--muted); }
+.ui-race-none { flex: 1; display: flex; align-items: center; justify-content: center; font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); }
 /* Recharts writes fill as an attribute; the stylesheet wins, so ticks follow the theme. */
 .ui-race-body .recharts-cartesian-axis-tick text { fill: var(--muted); }
 
@@ -5510,7 +5517,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   border: 1px solid var(--border);
   border-radius: 0.375rem;
   padding: 0.5rem;
-  font-size: var(--fs10, 10px);
+  font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px));
   box-shadow: var(--shadow-md);
   min-width: 140px;
 }
@@ -5528,7 +5535,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   flex-shrink: 0;
 }
 .ui-race-legend-item { display: flex; align-items: center; gap: 0.25rem; }
-.ui-race-legend-abbr { font-size: var(--fs9, 9px); font-weight: 500; }
+.ui-race-legend-abbr { font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px)); font-weight: 500; }
 
 /* ---------- Follow button and settings actions ---------- */
 .ui-follow { white-space: nowrap; }
@@ -5541,3 +5548,59 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-navsession { display: none; }
 @media (min-width: 640px) { .ui-navsession { display: inline-flex; } }
 .ui-navsession-px { width: 1rem; height: 1rem; }
+
+/* ---------- Section swipe (useSectionSwipe / SwipeBand) ---------- */
+/* The strip a sideways swipe uncovers: a whole screen wide, slid in behind
+   the page by exactly as far as the page has moved, the destination's icon
+   in a ring that fills toward the point where letting go will act. Tinted
+   while pulling, solid once it will go. Family Hub's band, in kit tokens. */
+.ui-swipeband {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 100vw;
+  transform: translateX(100vw);
+  will-change: transform;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--brand) 10%, var(--bg));
+  pointer-events: none;
+}
+.ui-swipeband[data-ready="true"] { background: var(--brand); }
+.ui-swipeband-ring {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  will-change: transform;
+  background: conic-gradient(var(--brand) calc(var(--p, 0) * 1turn), color-mix(in srgb, var(--brand) 22%, var(--bg)) 0);
+}
+.ui-swipeband-face {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--brand);
+}
+.ui-swipeband[data-ready="true"] .ui-swipeband-ring { background: var(--bg); }
+.ui-swipeband[data-ready="true"] .ui-swipeband-face { background: var(--brand); color: var(--on-brand); }
+.ui-swipeband.is-pop .ui-swipeband-ring { animation: ui-swipe-pop 0.18s ease-out; }
+.ui-swipeband-icon { display: none; grid-area: 1 / 1; }
+.ui-swipeband-icon[data-on] { display: grid; }
+.ui-swipeband-icon .px-icon { width: 24px; height: 24px; }
+@keyframes ui-swipe-pop { 50% { scale: 1.2; } }
+
+/* The page arriving after a swipe slides in from the side the thumb pushed
+   toward; the hook marks the root for the length of one arrival. */
+@keyframes ui-swipe-in-right { from { transform: translateX(100%); opacity: 0.4; } to { transform: none; opacity: 1; } }
+@keyframes ui-swipe-in-left { from { transform: translateX(-100%); opacity: 0.4; } to { transform: none; opacity: 1; } }
+:root[data-swipe-arrive="fwd"] [data-swipe-content] { animation: ui-swipe-in-right 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
+:root[data-swipe-arrive="back"] [data-swipe-content] { animation: ui-swipe-in-left 0.26s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (prefers-reduced-motion: reduce) {
+  :root[data-swipe-arrive] [data-swipe-content] { animation: none; }
+}

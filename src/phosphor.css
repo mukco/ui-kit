@@ -157,9 +157,9 @@
   margin: 0 auto; padding: 0 0.6rem; background: var(--surface); text-align: center; min-width: 0;
 }
 
-:root[data-skin="phosphor"] .ui-card-title { justify-content: center; font-size: 1rem; font-weight: 700; }
+:root[data-skin="phosphor"] .ui-card-title { justify-content: center; font-size: calc(1rem + var(--fs-bump, 0px)); font-weight: 700; }
 
-:root[data-skin="phosphor"] .ui-card-subtitle { margin-top: 0; font-size: 0.7rem; }
+:root[data-skin="phosphor"] .ui-card-subtitle { margin-top: 0; font-size: calc(0.7rem + var(--fs-bump, 0px)); }
 
 :root[data-skin="phosphor"] .ui-card-actions { background: var(--surface); padding: 0 0.25rem; }
 
@@ -189,7 +189,7 @@
 
 :root[data-skin="phosphor"] .ui-segmented { border: 2px solid var(--amber); padding: 0; gap: 0; background: var(--surface); }
 
-:root[data-skin="phosphor"] .ui-segmented-btn { font-family: var(--px-chrome); font-size: 0.72rem; border-radius: 0; padding: 0.15rem 0.6rem; color: var(--text-2); }
+:root[data-skin="phosphor"] .ui-segmented-btn { font-family: var(--px-chrome); font-size: calc(0.72rem + var(--fs-bump, 0px)); border-radius: 0; padding: 0.15rem 0.6rem; color: var(--text-2); }
 
 :root[data-skin="phosphor"] .ui-segmented-btn--active { background: var(--amber); color: var(--paper); box-shadow: none; }
 
@@ -287,10 +287,10 @@
   flex: 0 0 auto; box-sizing: border-box; width: max(3.9rem, calc((100vw - 1rem) / 5.5 - 0.25rem)); min-height: 3.25rem;
   display: grid; place-items: center; align-content: center; gap: 0.2rem; padding: 0.35rem 0.15rem;
   border: 2px solid transparent; background: none; color: var(--amber); cursor: pointer;
-  font-family: var(--px-chrome); font-size: 1.35rem; line-height: 1; text-shadow: 0 0 6px rgba(255, 176, 0, 0.35);
+  font-family: var(--px-chrome); font-size: calc(1.35rem + var(--fs-bump, 0px)); line-height: 1; text-shadow: 0 0 6px rgba(255, 176, 0, 0.35);
 }
 
-.ph-tab span { font-size: 0.7rem; }
+.ph-tab span { font-size: calc(0.7rem + var(--fs-bump, 0px)); }
 
 .ph-tab-icon { width: 1.6rem; height: 1.6rem; filter: drop-shadow(0 0 4px rgba(255, 176, 0, 0.35)); }
 
@@ -316,7 +316,7 @@
 :root[data-skin="phosphor"] .ui-settingsgroup-headtext { display: contents; }
 :root[data-skin="phosphor"] .ui-settingsgroup-head h2 {
   grid-area: 1 / 2; justify-self: center; position: relative; z-index: 1; margin: 0 0 2px; padding: 0 0.6rem;
-  background: var(--surface); font-size: 1rem; font-weight: 700; line-height: 1.85rem;
+  background: var(--surface); font-size: calc(1rem + var(--fs-bump, 0px)); font-weight: 700; line-height: 1.85rem;
 }
 :root[data-skin="phosphor"] .ui-settingsgroup-head p { grid-row: 2; grid-column: 1 / -1; margin: 0 1.5rem; position: relative; z-index: 1; }
 :root[data-skin="phosphor"] .ui-settingsgroup-icon,
@@ -416,7 +416,7 @@
 /* Table heads: Pixelify runs wider than Inter, so headings were colliding
    with the sort and help marks beside them. Tighter, and those marks drawn
    in paper so they show on the amber at all. */
-:root[data-skin="phosphor"] :is(.ui-table th, .ui-th) { font-size: 0.68rem; letter-spacing: 0.03em; }
+:root[data-skin="phosphor"] :is(.ui-table th, .ui-th) { font-size: calc(0.68rem + var(--fs-bump, 0px)); letter-spacing: 0.03em; }
 
 :root[data-skin="phosphor"] :is(.ui-table th, .ui-th) :is(.ui-tip-btn, .ui-helptip-btn) { color: var(--paper); border-color: var(--paper); background: transparent; }
 
