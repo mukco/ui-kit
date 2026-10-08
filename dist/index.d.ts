@@ -153,4 +153,6 @@ export type { FantasyTeamBarProps, FantasyTeamBarItem, FantasyLayoutProps } from
 export { FantasyPlayerRow } from "./fantasy/FantasyPlayerRow";
 export type { FantasyPlayerRowProps } from "./fantasy/FantasyPlayerRow";
 export { MetricStrip } from "./fantasy/MetricStrip";
+export { PlayerListButton, WatchButton, WatchList } from "./fantasy/PlayerListButton";
+export type { PlayerList, PlayerListButtonProps, WatchListRow } from "./fantasy/PlayerListButton";
 export type { MetricStripProps, MetricStripCell } from "./fantasy/MetricStrip";

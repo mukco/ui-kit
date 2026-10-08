@@ -114,3 +114,4 @@ export { useSectionSwipe, SwipeBand, useScrollToTop } from "./primitives/Section
 export { FantasyTeamBar, FantasyLayout } from "./fantasy/FantasyFrame";
 export { FantasyPlayerRow } from "./fantasy/FantasyPlayerRow";
 export { MetricStrip } from "./fantasy/MetricStrip";
+export { PlayerListButton, WatchButton, WatchList } from "./fantasy/PlayerListButton";
