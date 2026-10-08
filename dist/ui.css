@@ -6063,3 +6063,25 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   text-underline-offset: 0.2em;
 }
 .ui-tip-label:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ---------- SortMenu ---------- */
+.ui-sortmenu { position: relative; display: inline-flex; }
+.ui-sortmenu-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 40px; padding: 0 0.75rem;
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text);
+  font: inherit; font-size: calc(0.875rem + var(--fs-bump, 0px)); cursor: pointer;
+}
+.ui-sortmenu-btn:hover { background: var(--surface-2); }
+.ui-sortmenu-label { color: var(--muted); }
+.ui-sortmenu-value { font-weight: 600; }
+.ui-sortmenu-list {
+  position: absolute; top: calc(100% + 4px); left: 0; z-index: 40; min-width: 11rem; max-height: min(60vh, 22rem); overflow-y: auto;
+  margin: 0; padding: 0.25rem; list-style: none; background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+}
+.ui-sortmenu-opt {
+  display: flex; align-items: center; width: 100%; min-height: 44px; padding: 0 0.75rem; border: 0; border-radius: var(--radius-sm);
+  background: transparent; color: var(--text); font: inherit; font-size: calc(0.9375rem + var(--fs-bump, 0px)); text-align: left; cursor: pointer;
+}
+.ui-sortmenu-opt:hover { background: var(--surface-2); }
+.ui-sortmenu-opt.is-on { font-weight: 700; color: var(--brand); }

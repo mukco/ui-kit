@@ -41,6 +41,7 @@ export { PageHeader } from "./primitives/PageHeader";
 export { SearchSelect } from "./primitives/SearchSelect";
 export { SectionLabel } from "./primitives/SectionLabel";
 export { SegmentedControl } from "./primitives/SegmentedControl";
+export { SortMenu } from "./primitives/SortMenu";
 export { NotificationBell } from "./notifications/NotificationBell";
 export { Chip, SelectField, SettingRow, TextField, Toggle } from "./primitives/Settings";
 export { SettingsGroup } from "./primitives/SettingsGroup";
