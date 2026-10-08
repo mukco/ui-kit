@@ -610,7 +610,9 @@
 /* PlayerListButton / WatchList: amber, square. */
 :root[data-skin="phosphor"] .ui-listbtn { border-radius: 0; color: color-mix(in srgb, var(--amber) 55%, transparent); }
 :root[data-skin="phosphor"] .ui-listbtn--on { color: var(--paper); background: var(--amber); }
-:root[data-skin="phosphor"] .ui-listbtn--labelled { border: 2px solid var(--amber); font-family: var(--px-chrome); color: var(--amber); }
+:root[data-skin="phosphor"] .ui-listbtn--labelled { border: 1px solid var(--amber); font-family: var(--px-chrome); color: var(--amber); }
+:root[data-skin="phosphor"] .ui-listbtn--md.ui-listbtn--labelled { border-width: 2px; }
+:root[data-skin="phosphor"] .ui-listbtn--labelled .px-icon { width: 0.875rem; height: 0.875rem; }
 :root[data-skin="phosphor"] .ui-listbtn--labelled.ui-listbtn--on { color: var(--paper); }
 :root[data-skin="phosphor"] .ui-listbtn .px-icon { width: 1.1rem; height: 1.1rem; }
 :root[data-skin="phosphor"] .ui-watchlist-row { border-bottom-color: color-mix(in srgb, var(--amber) 35%, transparent); }

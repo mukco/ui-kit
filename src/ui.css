@@ -6018,7 +6018,15 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-listbtn svg { width: 1rem; height: 1rem; }
 .ui-listbtn--md { width: 2.25rem; height: 2.25rem; color: var(--text-2); }
 .ui-listbtn--md svg { width: 1.25rem; height: 1.25rem; }
-.ui-listbtn--labelled { width: auto; padding: 0 0.75rem; border: 1px solid var(--border); font: inherit; font-size: calc(0.8125rem + var(--fs-bump, 0px)); font-weight: 600; color: var(--text-2); }
+/* Labelled, it is a chip — the size of the pills it sits among (an IL tag, an
+   owner), as baseball's list buttons always were; md is the header's size. */
+.ui-listbtn--labelled {
+  width: auto; height: auto; min-height: 1.5rem; padding: 0.125rem 0.5rem; border: 1px solid var(--border);
+  font: inherit; font-size: calc(0.75rem + var(--fs-bump, 0px)); font-weight: 500; color: var(--muted);
+}
+.ui-listbtn--labelled svg { width: 0.875rem; height: 0.875rem; }
+.ui-listbtn--md.ui-listbtn--labelled { min-height: 2.25rem; padding: 0 0.75rem; font-size: calc(0.8125rem + var(--fs-bump, 0px)); font-weight: 600; }
+.ui-listbtn--md.ui-listbtn--labelled svg { width: 1rem; height: 1rem; }
 .ui-listbtn:hover:not(:disabled) { color: var(--cat); }
 .ui-listbtn--on { color: var(--cat); background: color-mix(in srgb, var(--cat) 12%, transparent); }
 .ui-listbtn--labelled.ui-listbtn--on { border-color: color-mix(in srgb, var(--cat) 45%, transparent); }
