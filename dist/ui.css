@@ -4465,6 +4465,10 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 .ui-navsearch-input {
   flex: 1 1 auto;
   min-width: 0;
+  /* A set width, not the input's own: that is 20 characters of whatever font
+     it inherits, so Hoops (Inter) drew a wider search than football and
+     baseball (the system face) from the same component (2026-10-07). */
+  width: 11.25rem;
   border: 0;
   background: transparent;
   color: var(--text);
