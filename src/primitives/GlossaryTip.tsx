@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import { cn } from "../cn"
 import type { GlossaryEntry } from "../models/glossary"
@@ -24,11 +24,16 @@ interface Props {
   /** Widen the bubble for content that needs more room (a rendered formula). */
   maxWidth?: number
   className?: string
+  /** The trigger: a stat's own label, dotted-underlined, instead of the "i"
+      button. A help on every row of a list then costs nothing — the "i" once
+      per column was a box that knocked the first row out of line, and none
+      on the others left them unexplained (football's waivers, 2026-10-08). */
+  children?: ReactNode
 }
 
 /** Portal-positioned "i" tooltip for glossary concepts — survives scroll and
     overflow:hidden contexts that defeat ordinary CSS bubbles. */
-export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }: Props) {
+export function GlossaryTip({ hint, tone, note, maxWidth = 300, className, children }: Props) {
   const [open, setOpen] = useState(false)
   const [position, setPosition] = useState<{ top: number; left: number; maxWidth: number } | null>(null)
   const id = useId()
@@ -81,7 +86,7 @@ export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }: Pro
     }
   }, [open])
 
-  if (!hint) return null
+  if (!hint) return <>{children}</>
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const keepOpen = (target: any) => Boolean(rootRef.current?.contains(target) || tooltipRef.current?.contains(target))
@@ -107,15 +112,15 @@ export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }: Pro
         aria-label={`Explain ${hint.label}`}
         aria-expanded={open}
         aria-describedby={open ? id : undefined}
-        className="ui-tip-btn"
-        style={toneVar ? { color: toneVar, borderColor: toneVar } : undefined}
+        className={children != null ? "ui-tip-label" : "ui-tip-btn"}
+        style={toneVar ? (children != null ? { textDecorationColor: toneVar } : { color: toneVar, borderColor: toneVar }) : undefined}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => {
           e.stopPropagation()
           setOpen((v) => !v)
         }}
       >
-        i
+        {children ?? "i"}
       </button>
 
       {open &&

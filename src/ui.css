@@ -6050,3 +6050,11 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 }
 .ui-watchlist-remove:hover { color: var(--text); background: var(--surface-2); }
 .ui-watchlist-empty { margin: 0; padding: 1rem 0; color: var(--muted); font-size: calc(0.875rem + var(--fs-bump, 0px)); }
+
+/* GlossaryTip with a label for its trigger: the stat's own name, dotted. */
+.ui-tip-label {
+  border: 0; padding: 0; margin: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit;
+  text-transform: inherit; cursor: help; text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 0.2em;
+}
+.ui-tip-label:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
