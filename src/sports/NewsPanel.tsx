@@ -1,9 +1,10 @@
-import type { ReactNode } from "react"
+import type { MouseEvent, ReactNode } from "react"
 import { cn } from "../cn"
 import { age } from "../lib/age"
 import { SectionLabel } from "../primitives/SectionLabel"
 import { PlayerLink } from "./PlayerLink"
 import { TeamLink } from "./TeamLink"
+import { opensOutside } from "./ArticleReader"
 import type { PlayerId } from "./config"
 
 export interface NewsPlayerMention {
@@ -55,6 +56,10 @@ export interface NewsPanelProps {
   /** Fixed panel height; the list scrolls inside it. Absent → grows to fit. */
   height?: string | number
   empty?: string
+  /** Open a story in the app's own reader (ArticleReader) rather than a new
+      tab. A ⌘-click still opens the original, and a video or a post always
+      does — it has no text to read here. */
+  onOpen?: (item: NewsItem) => void
   className?: string
 }
 
@@ -96,8 +101,14 @@ export function NewsPanel({
   renderBadge,
   height,
   empty = "No news available",
+  onOpen,
   className,
 }: NewsPanelProps) {
+  const open = (item: NewsItem) => (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!onOpen || !item.url || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || opensOutside(item.url)) return
+    e.preventDefault()
+    onOpen(item)
+  }
   const rows = (items ?? []).slice(0, limit ?? undefined)
 
   return (
@@ -123,7 +134,7 @@ export function NewsPanel({
               {/* The ::after on this link covers the whole article, so the row
                   is one click target. The chips sit above it on z-index — they
                   are links of their own and must win. */}
-              <a href={item.url ?? undefined} target="_blank" rel="noopener noreferrer" className="ui-news-link">
+              <a href={item.url ?? undefined} target="_blank" rel="noopener noreferrer" className="ui-news-link" onClick={open(item)}>
                 <h3 className="ui-news-title">{item.title}</h3>
               </a>
               {item.summary && <p className="ui-news-sum">{item.summary}</p>}
