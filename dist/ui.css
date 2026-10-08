@@ -4459,6 +4459,9 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 .ui-navsearch:focus-within { border-color: var(--brand); }
+/* On a phone the box would take whatever the brand leaves, so a short name
+   ("Hoops") drew a wider search than "Football" or "Baseball". One size. */
+@media (max-width: 639px) { .ui-navsearch { max-width: 10.75rem; } }
 
 .ui-navsearch-icon { flex-shrink: 0; color: var(--muted); }
 
@@ -4469,6 +4472,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
      it inherits, so Hoops (Inter) drew a wider search than football and
      baseball (the system face) from the same component (2026-10-07). */
   width: 11.25rem;
+  text-overflow: ellipsis;
   border: 0;
   background: transparent;
   color: var(--text);
