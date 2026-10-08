@@ -6005,3 +6005,40 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-notif-empty { display: grid; justify-items: center; gap: 0.75rem; padding: 2rem 1.5rem; text-align: center; }
 .ui-notif-empty-icon { color: var(--muted); }
 .ui-notif-empty-title { margin: 0; font-weight: 700; font-size: calc(1rem + var(--fs-bump, 0px)); }
+
+/* ---------- PlayerListButton / WatchList ----------
+   Baseball's list buttons, shared: an eye for the watchlist (scissors for
+   cuts, arrows for trades), quiet until it is on, in the list's colour. */
+.ui-listbtn {
+  --cat: var(--muted);
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; flex-shrink: 0;
+  width: 1.75rem; height: 1.75rem; border: 0; border-radius: var(--radius-sm); background: transparent; cursor: pointer;
+  color: color-mix(in srgb, var(--muted) 70%, transparent); transition: color 0.15s ease, background 0.15s ease;
+}
+.ui-listbtn svg { width: 1rem; height: 1rem; }
+.ui-listbtn--md { width: 2.25rem; height: 2.25rem; color: var(--text-2); }
+.ui-listbtn--md svg { width: 1.25rem; height: 1.25rem; }
+.ui-listbtn--labelled { width: auto; padding: 0 0.75rem; border: 1px solid var(--border); font: inherit; font-size: calc(0.8125rem + var(--fs-bump, 0px)); font-weight: 600; color: var(--text-2); }
+.ui-listbtn:hover:not(:disabled) { color: var(--cat); }
+.ui-listbtn--on { color: var(--cat); background: color-mix(in srgb, var(--cat) 12%, transparent); }
+.ui-listbtn--labelled.ui-listbtn--on { border-color: color-mix(in srgb, var(--cat) 45%, transparent); }
+.ui-listbtn--failed { color: var(--warn, #d97706); }
+.ui-listbtn--pending { opacity: 0.6; }
+.ui-listbtn:disabled { color: color-mix(in srgb, var(--muted) 25%, transparent); cursor: not-allowed; }
+.ui-listbtn--watch { --cat: var(--chart-6, var(--brand)); }
+.ui-listbtn--cut { --cat: var(--danger, #dc2626); }
+.ui-listbtn--trade { --cat: var(--warn, #d97706); }
+
+.ui-watchlist { list-style: none; margin: 0; padding: 0; }
+.ui-watchlist-row { display: flex; align-items: center; gap: 0.75rem; min-height: 52px; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.ui-watchlist-row:last-child { border-bottom: 0; }
+.ui-watchlist-who { flex: 1 1 auto; min-width: 0; display: grid; gap: 0.125rem; }
+.ui-watchlist-player { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-watchlist-meta { font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-watchlist-aside { flex-shrink: 0; font-size: calc(0.8125rem + var(--fs-bump, 0px)); color: var(--text-2); font-variant-numeric: tabular-nums; text-align: right; }
+.ui-watchlist-remove {
+  flex-shrink: 0; display: grid; place-items: center; width: 2rem; height: 2rem; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.ui-watchlist-remove:hover { color: var(--text); background: var(--surface-2); }
+.ui-watchlist-empty { margin: 0; padding: 1rem 0; color: var(--muted); font-size: calc(0.875rem + var(--fs-bump, 0px)); }
