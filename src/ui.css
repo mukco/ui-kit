@@ -5946,9 +5946,14 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 }
 @media (max-width: 639px) {
   .ui-notif-scrim { display: none; }
+  /* The whole screen, from the top. Hung under the bar, the page showed in
+     the strip above it: locking the page's scroll lets iOS carry the sticky
+     bar off with the page (baseball, 2026-10-08). The sheet has its own
+     close key, so the bell need not stay visible. */
   .ui-notif-sheet {
-    top: var(--ui-notif-top, 3.5rem); right: 0; bottom: 0; left: 0; width: auto; max-height: none;
-    border: 0; border-radius: 0; box-shadow: none; padding-bottom: env(safe-area-inset-bottom);
+    top: 0; right: 0; bottom: 0; left: 0; width: auto; max-height: none;
+    border: 0; border-radius: 0; box-shadow: none;
+    padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
   }
 }
 .ui-notif-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem 0.5rem 1rem; border-bottom: 1px solid var(--border); }
