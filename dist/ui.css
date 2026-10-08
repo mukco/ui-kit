@@ -850,17 +850,23 @@ a.ui-team-link:hover {
 
 /* ---------- InsightsCard ---------- */
 
+/* Wraps: on a phone the title, badge, a caller's extra, the stamp and the
+   model would not fit one line, and without wrapping they were drawn over
+   each other (baseball's game insights, 2026-10-07). The provenance drops to
+   its own line instead. */
 .ui-insights-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
-.ui-insights-titlerow { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.ui-insights-titlerow { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-width: 0; }
 .ui-insights-title {
   margin: 0;
+  white-space: nowrap;
   font-size: calc(11px + var(--fs-bump, 0px));
   font-weight: 700;
   text-transform: uppercase;
@@ -898,8 +904,10 @@ a.ui-team-link:hover {
 
 .ui-insights-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .ui-insights-desc { font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); margin: 0 0 0.5rem; }
