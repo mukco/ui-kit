@@ -250,3 +250,20 @@ export function useSectionSwipe({ sections, pathname, onNavigate, onBack, enable
 export function SwipeBand({ sections }) {
     return (_jsx("div", { className: "ui-swipeband", "aria-hidden": "true", "data-ready": "false", children: _jsx("span", { className: "ui-swipeband-ring", children: _jsxs("span", { className: "ui-swipeband-face", children: [_jsx("span", { className: "ui-swipeband-icon", "data-to": "__back", children: _jsx(ArrowLeft, { className: "px-icon" }) }), sections.map((t) => (_jsx("span", { className: "ui-swipeband-icon", "data-to": t.to, children: _jsx(t.Icon, { className: "px-icon" }) }, t.to)))] }) }) }));
 }
+/**
+ * A new page opens at its top. Without this a single-page app keeps the
+ * window's scroll position across navigations, so a game opened from far
+ * down Today landed halfway down the game page, on whatever sat at that
+ * height (the shot chart). Back is left alone (`isBack`): returning to a
+ * list should find the reader where they were, which the browser restores.
+ *
+ *   const { pathname } = useLocation(); const type = useNavigationType()
+ *   useScrollToTop(pathname, type === "POP")
+ */
+export function useScrollToTop(pathname, isBack = false) {
+    useEffect(() => {
+        if (isBack || typeof window === "undefined")
+            return;
+        window.scrollTo(0, 0);
+    }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+}

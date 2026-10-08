@@ -5588,6 +5588,17 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
    the page by exactly as far as the page has moved, the destination's icon
    in a ring that fills toward the point where letting go will act. Tinted
    while pulling, solid once it will go. Family Hub's band, in kit tokens. */
+/* While a section swipe drags the page sideways, the moved content reaches
+   past the screen's edge. Unclipped, that made the document wider than the
+   screen and iOS scrolled the whole page with the finger — the sticky nav
+   slid off and snapped back — and, once it started scrolling, it cancelled
+   the touch, so the swipe sprang back without going anywhere and had to be
+   made again. clip (not hidden) so no scroll container is made and sticky
+   headers keep working. */
+@supports (overflow: clip) {
+  html, body { overflow-x: clip; }
+}
+
 .ui-swipeband {
   position: fixed;
   top: 0;

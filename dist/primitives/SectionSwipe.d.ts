@@ -17,3 +17,14 @@ export declare function useSectionSwipe({ sections, pathname, onNavigate, onBack
 export declare function SwipeBand({ sections }: {
     sections: TabBarTab[];
 }): import("react").JSX.Element;
+/**
+ * A new page opens at its top. Without this a single-page app keeps the
+ * window's scroll position across navigations, so a game opened from far
+ * down Today landed halfway down the game page, on whatever sat at that
+ * height (the shot chart). Back is left alone (`isBack`): returning to a
+ * list should find the reader where they were, which the browser restores.
+ *
+ *   const { pathname } = useLocation(); const type = useNavigationType()
+ *   useScrollToTop(pathname, type === "POP")
+ */
+export declare function useScrollToTop(pathname: string, isBack?: boolean): void;
