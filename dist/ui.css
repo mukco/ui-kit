@@ -5733,7 +5733,17 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-boxscore-table tbody + tbody tr:first-child th { padding-top: 1rem; }
 .ui-boxscore-player { position: sticky; left: 0; z-index: 1; background: var(--surface); text-align: left; }
 .ui-boxscore-who { display: inline-flex; align-items: center; gap: 0.5rem; }
-.ui-boxscore-note { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); }
+.ui-boxscore-note { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); flex-shrink: 0; }
+/* On a phone the player column is the frozen part of a table whose numbers
+   scroll beside it: a long name (S. Gilgeous-Alexander) left the numbers a
+   sliver. It is capped there and the name ends in "…" — the headshot, the
+   position and the ★ stay, and a tap still opens the player. */
+@media (max-width: 639px) {
+  .ui-boxscore-player .ui-boxscore-who { max-width: 9rem; min-width: 0; vertical-align: middle; }
+  .ui-boxscore-who > :first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ui-boxscore-who .ui-player { display: inline-flex; min-width: 0; max-width: 100%; }
+  .ui-boxscore-who .ui-player-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
 .ui-boxscore-num { text-align: right; font-variant-numeric: tabular-nums; }
 .ui-boxscore-num--strong { color: var(--text); font-weight: 700; }
 .ui-boxscore-num--muted { color: var(--muted); }
