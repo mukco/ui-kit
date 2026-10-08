@@ -593,3 +593,16 @@
 :root[data-skin="phosphor"] .ui-article-original--main { background: var(--amber); color: var(--paper); filter: none; }
 :root[data-skin="phosphor"] .ui-article-title { font-family: var(--px-chrome); color: var(--amber); }
 :root[data-skin="phosphor"] .ui-article-body blockquote { border-left-color: var(--amber); }
+
+/* NotificationBell sheet: framed the Phosphor way — square, amber, the
+   chrome face for its heads, the bell's pixel icons. */
+:root[data-skin="phosphor"] .ui-notif-sheet { background: var(--paper); border: 2px solid var(--amber); border-radius: 0; box-shadow: none; }
+@media (max-width: 639px) { :root[data-skin="phosphor"] .ui-notif-sheet { border: 0; } }
+:root[data-skin="phosphor"] :is(.ui-notif-head, .ui-notif-tools) { border-bottom: 2px solid var(--amber); }
+:root[data-skin="phosphor"] :is(.ui-notif-heading, .ui-notif-group-head, .ui-notif-count, .ui-notif-title, .ui-notif-under) { font-family: var(--px-chrome); }
+:root[data-skin="phosphor"] .ui-notif-heading { color: var(--amber); }
+:root[data-skin="phosphor"] .ui-notif-group-head { background: var(--paper); color: var(--amber); border-bottom-color: var(--amber); }
+:root[data-skin="phosphor"] :is(.ui-notif-face, .ui-notif-close) { background: var(--paper); }
+:root[data-skin="phosphor"] :is(.ui-notif-close, .ui-notif-icon, .ui-notif-action) { border: 2px solid var(--amber); border-radius: 0; color: var(--amber); }
+:root[data-skin="phosphor"] .ui-notif-row.is-unread .ui-notif-dot { background: var(--amber); border-radius: 0; }
+:root[data-skin="phosphor"] .ui-notif-under { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--amber) 22%, var(--paper)) 0 4px, var(--paper) 4px 10px); color: var(--amber); }
