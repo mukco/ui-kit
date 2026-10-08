@@ -618,3 +618,9 @@
 :root[data-skin="phosphor"] .ui-watchlist-row { border-bottom-color: color-mix(in srgb, var(--amber) 35%, transparent); }
 :root[data-skin="phosphor"] .ui-watchlist-remove { border: 2px solid var(--amber); border-radius: 0; background: transparent; color: var(--amber); }
 :root[data-skin="phosphor"] .ui-watchlist-meta { font-family: var(--px-chrome); }
+
+/* SortMenu: an amber key and an amber list. */
+:root[data-skin="phosphor"] :is(.ui-sortmenu-btn, .ui-sortmenu-list) { border: 2px solid var(--amber); border-radius: 0; background: var(--paper); box-shadow: none; }
+:root[data-skin="phosphor"] .ui-sortmenu-btn { font-family: var(--px-chrome); color: var(--amber); }
+:root[data-skin="phosphor"] .ui-sortmenu-opt { border-radius: 0; font-family: var(--px-chrome); color: var(--amber); }
+:root[data-skin="phosphor"] .ui-sortmenu-opt.is-on { background: var(--amber); color: var(--paper); }
