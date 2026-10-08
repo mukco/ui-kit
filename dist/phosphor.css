@@ -583,3 +583,13 @@
 :root[data-skin="phosphor"] :is(.ui-datenav-btn:first-of-type svg, .ui-datenav-btn:last-of-type svg) > * { display: none; }
 :root[data-skin="phosphor"] .ui-datenav-btn:first-of-type svg { background-color: currentColor; -webkit-mask: var(--px-chevron-left) center / contain no-repeat; mask: var(--px-chevron-left) center / contain no-repeat; }
 :root[data-skin="phosphor"] .ui-datenav-btn:last-of-type svg { background-color: currentColor; -webkit-mask: var(--px-chevron-right) center / contain no-repeat; mask: var(--px-chevron-right) center / contain no-repeat; }
+
+/* ArticleReader: framed like the rest of Phosphor — square, amber, the keys
+   in the chrome face and the story in the reading one. */
+:root[data-skin="phosphor"] :is(.ui-article-back, .ui-article-original, .ui-article-art) { border: 2px solid var(--amber); border-radius: 0; }
+:root[data-skin="phosphor"] :is(.ui-article-back, .ui-article-original, .ui-article-source, .ui-article-meta) { font-family: var(--px-chrome); }
+:root[data-skin="phosphor"] .ui-article-back { background: transparent; color: var(--amber); }
+:root[data-skin="phosphor"] .ui-article-original { background: transparent; color: var(--amber); }
+:root[data-skin="phosphor"] .ui-article-original--main { background: var(--amber); color: var(--paper); filter: none; }
+:root[data-skin="phosphor"] .ui-article-title { font-family: var(--px-chrome); color: var(--amber); }
+:root[data-skin="phosphor"] .ui-article-body blockquote { border-left-color: var(--amber); }

@@ -92,6 +92,7 @@ export { ProfileHero } from "./sports/ProfileHero";
 export { PlayFeed, PlayTag } from "./sports/PlayFeed";
 export { BoxScore } from "./sports/BoxScore";
 export { NewsPanel } from "./sports/NewsPanel";
+export { ArticleReader, opensOutside } from "./sports/ArticleReader";
 export { PlayerLeaders } from "./sports/PlayerLeaders";
 export { DivisionRaceChart } from "./sports/DivisionRaceChart";
 export { Panel, PanelRow, PanelSplit, PanelEmpty, PANEL_HEIGHT } from "./panels/Panel";

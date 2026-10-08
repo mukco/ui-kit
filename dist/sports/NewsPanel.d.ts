@@ -45,6 +45,10 @@ export interface NewsPanelProps {
     /** Fixed panel height; the list scrolls inside it. Absent → grows to fit. */
     height?: string | number;
     empty?: string;
+    /** Open a story in the app's own reader (ArticleReader) rather than a new
+        tab. A ⌘-click still opens the original, and a video or a post always
+        does — it has no text to read here. */
+    onOpen?: (item: NewsItem) => void;
     className?: string;
 }
 /**
@@ -62,4 +66,4 @@ export interface NewsPanelProps {
  * own `link` and gets the crest/headshot fallbacks for free instead of the raw
  * <img onError> each app had.
  */
-export declare function NewsPanel({ items, sources, limit, title, renderBadge, height, empty, className, }: NewsPanelProps): import("react").JSX.Element;
+export declare function NewsPanel({ items, sources, limit, title, renderBadge, height, empty, onOpen, className, }: NewsPanelProps): import("react").JSX.Element;
