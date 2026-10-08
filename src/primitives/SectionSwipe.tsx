@@ -248,3 +248,20 @@ export function SwipeBand({ sections }: { sections: TabBarTab[] }) {
     </div>
   )
 }
+
+/**
+ * A new page opens at its top. Without this a single-page app keeps the
+ * window's scroll position across navigations, so a game opened from far
+ * down Today landed halfway down the game page, on whatever sat at that
+ * height (the shot chart). Back is left alone (`isBack`): returning to a
+ * list should find the reader where they were, which the browser restores.
+ *
+ *   const { pathname } = useLocation(); const type = useNavigationType()
+ *   useScrollToTop(pathname, type === "POP")
+ */
+export function useScrollToTop(pathname: string, isBack = false) {
+  useEffect(() => {
+    if (isBack || typeof window === "undefined") return
+    window.scrollTo(0, 0)
+  }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+}
