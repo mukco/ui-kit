@@ -7,6 +7,10 @@ export interface NotificationItem {
     time?: ReactNode;
     /** Where it came from, shown before the time ("ESPN", "League"). */
     source?: ReactNode;
+    /** When it happened (ISO): splits the list into Today and Earlier. */
+    at?: string | null;
+    /** Not yet read: a dot, and the title in the strong weight. Unset means unread. */
+    unread?: boolean;
 }
 /** A secondary action on every row, e.g. "Open in chat →". */
 export interface NotificationAction {
@@ -15,16 +19,29 @@ export interface NotificationAction {
 }
 interface Props {
     items: NotificationItem[];
-    /** Called when an item is clicked (typically to dismiss + navigate). */
+    /** Called when an item is tapped (typically to mark it read + navigate). */
     onItemClick?: (item: NotificationItem) => void;
     onDismissAll?: () => void;
-    /** Per-row dismiss (×). */
+    onMarkAllRead?: () => void;
+    /** Dismiss one: a swipe left, or Delete on the focused row. */
     onDismiss?: (item: NotificationItem) => void;
     action?: NotificationAction;
+    /** The empty sheet's way to the app's notification settings. */
+    settings?: {
+        label?: ReactNode;
+        onClick: () => void;
+    };
     empty?: string;
     className?: string;
 }
-/** Bell with unread badge opening a dropdown list. Items and dismissal are
-    the app's business; the kit draws the affordance. */
-export declare function NotificationBell({ items, onItemClick, onDismissAll, onDismiss, action, empty, className }: Props): import("react").JSX.Element;
+/**
+ * The bell, its count, and the sheet it opens — Family Hub's (2026-10-02),
+ * shared by the sports apps. It was a small dropdown hung off the bell: on a
+ * phone, tiny type and a corner ✕. Now on a phone it is a sheet the full width
+ * of the screen from under the bar to the bottom, rows at the phone's type
+ * scale, its actions real buttons at the top, and the list split into Today
+ * and Earlier; a desktop keeps a popover under the bell. Drawn into <body>
+ * so no bar's rules reach into it.
+ */
+export declare function NotificationBell({ items, onItemClick, onDismissAll, onMarkAllRead, onDismiss, action, settings, empty, className }: Props): import("react").JSX.Element;
 export {};
