@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { cn } from "../cn"
 
 export interface SortOption {
@@ -20,20 +21,38 @@ interface Props {
  * a row of chips per option. Football's waiver wire had nine sort chips
  * wrapping onto two lines under the position chips (2026-10-08); this is one
  * line, and the list it opens is the app's own, themed, not the phone's.
+ *
+ * The list is drawn into <body> at the key's position: inside the card it sat
+ * under the rows below it, their headshots and crests showing through
+ * (2026-10-08).
  */
 export function SortMenu({ options, active, onChange, label = "Sort", className }: Props) {
   const [open, setOpen] = useState(false)
+  const [at, setAt] = useState<{ top: number; left: number; maxHeight: number } | null>(null)
   const root = useRef<HTMLDivElement>(null)
+  const list = useRef<HTMLUListElement>(null)
+
+  const place = () => {
+    const r = root.current?.getBoundingClientRect()
+    if (!r) return
+    setAt({ top: r.bottom + 4, left: Math.max(8, Math.min(r.left, window.innerWidth - 8 - 176)), maxHeight: Math.max(160, window.innerHeight - r.bottom - 16) })
+  }
+  useLayoutEffect(() => { if (open) place() }, [open])
   const current = options.find((o) => o.id === active) ?? options[0]
 
   useEffect(() => {
     if (!open) return undefined
-    const away = (e: Event) => { if (!root.current?.contains(e.target as Node)) setOpen(false) }
+    const away = (e: Event) => { const t = e.target as Node; if (!root.current?.contains(t) && !list.current?.contains(t)) setOpen(false) }
+    const move = (e: Event) => { if (!list.current?.contains(e.target as Node)) place() }
     const key = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false) }
     document.addEventListener("mousedown", away)
     document.addEventListener("touchstart", away)
     document.addEventListener("keydown", key)
+    window.addEventListener("scroll", move, true)
+    window.addEventListener("resize", place)
     return () => {
+      window.removeEventListener("scroll", move, true)
+      window.removeEventListener("resize", place)
       document.removeEventListener("mousedown", away)
       document.removeEventListener("touchstart", away)
       document.removeEventListener("keydown", key)
@@ -47,8 +66,9 @@ export function SortMenu({ options, active, onChange, label = "Sort", className 
         <span className="ui-sortmenu-value">{current?.label}</span>
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
-      {open && (
-        <ul className="ui-sortmenu-list" role="listbox" aria-label={label}>
+      {open && at && typeof document !== "undefined" && createPortal(
+        <ul ref={list} className="ui-sortmenu-list" role="listbox" aria-label={label}
+            style={{ top: at.top, left: at.left, maxHeight: at.maxHeight }}>
           {options.map((o) => (
             <li key={o.id}>
               <button
@@ -62,7 +82,8 @@ export function SortMenu({ options, active, onChange, label = "Sort", className 
               </button>
             </li>
           ))}
-        </ul>
+        </ul>,
+        document.body,
       )}
     </div>
   )
