@@ -146,6 +146,8 @@ export type { BoxColumn, BoxRow, BoxSection, BoxTeam, BoxScoreProps } from "./sp
 export type { FeedPlay, PlayFeedProps } from "./sports/PlayFeed"
 export type { LineScoreProps, LineScorePeriod, LineScoreSide, LineScoreTotal } from "./sports/LineScore"
 export { NewsPanel } from "./sports/NewsPanel"
+export { ArticleReader, opensOutside } from "./sports/ArticleReader"
+export type { ArticleReaderProps, ArticleStory, ArticleSeed, ArticleBlock } from "./sports/ArticleReader"
 export { PlayerLeaders } from "./sports/PlayerLeaders"
 export type { LeaderRow, LeaderColumn } from "./sports/PlayerLeaders"
 export { DivisionRaceChart } from "./sports/DivisionRaceChart"
