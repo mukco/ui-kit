@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import type { GlossaryEntry } from "../models/glossary";
 export type GlossaryTone = "red" | "amber" | "green" | "muted";
 interface Props {
@@ -15,8 +16,13 @@ interface Props {
     /** Widen the bubble for content that needs more room (a rendered formula). */
     maxWidth?: number;
     className?: string;
+    /** The trigger: a stat's own label, dotted-underlined, instead of the "i"
+        button. A help on every row of a list then costs nothing — the "i" once
+        per column was a box that knocked the first row out of line, and none
+        on the others left them unexplained (football's waivers, 2026-10-08). */
+    children?: ReactNode;
 }
 /** Portal-positioned "i" tooltip for glossary concepts — survives scroll and
     overflow:hidden contexts that defeat ordinary CSS bubbles. */
-export declare function GlossaryTip({ hint, tone, note, maxWidth, className }: Props): import("react").JSX.Element | null;
+export declare function GlossaryTip({ hint, tone, note, maxWidth, className, children }: Props): import("react").JSX.Element;
 export {};

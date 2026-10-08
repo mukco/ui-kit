@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../cn";
@@ -10,7 +10,7 @@ const TONE_VAR = {
 };
 /** Portal-positioned "i" tooltip for glossary concepts — survives scroll and
     overflow:hidden contexts that defeat ordinary CSS bubbles. */
-export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }) {
+export function GlossaryTip({ hint, tone, note, maxWidth = 300, className, children }) {
     const [open, setOpen] = useState(false);
     const [position, setPosition] = useState(null);
     const id = useId();
@@ -67,7 +67,7 @@ export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }) {
         };
     }, [open]);
     if (!hint)
-        return null;
+        return _jsx(_Fragment, { children: children });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const keepOpen = (target) => Boolean(rootRef.current?.contains(target) || tooltipRef.current?.contains(target));
     const toneVar = tone ? TONE_VAR[tone] : undefined;
@@ -77,10 +77,10 @@ export function GlossaryTip({ hint, tone, note, maxWidth = 300, className }) {
         }, onFocus: () => setOpen(true), onBlur: (e) => {
             if (!rootRef.current?.contains(e.relatedTarget))
                 setOpen(false);
-        }, children: [_jsx("button", { ref: triggerRef, type: "button", "aria-label": `Explain ${hint.label}`, "aria-expanded": open, "aria-describedby": open ? id : undefined, className: "ui-tip-btn", style: toneVar ? { color: toneVar, borderColor: toneVar } : undefined, onMouseDown: (e) => e.stopPropagation(), onClick: (e) => {
+        }, children: [_jsx("button", { ref: triggerRef, type: "button", "aria-label": `Explain ${hint.label}`, "aria-expanded": open, "aria-describedby": open ? id : undefined, className: children != null ? "ui-tip-label" : "ui-tip-btn", style: toneVar ? (children != null ? { textDecorationColor: toneVar } : { color: toneVar, borderColor: toneVar }) : undefined, onMouseDown: (e) => e.stopPropagation(), onClick: (e) => {
                     e.stopPropagation();
                     setOpen((v) => !v);
-                }, children: "i" }), open &&
+                }, children: children ?? "i" }), open &&
                 createPortal(_jsxs("span", { ref: tooltipRef, id: id, role: "tooltip", className: "ui-tip-bubble", onMouseEnter: () => setOpen(true), onMouseLeave: (e) => {
                         if (!keepOpen(e.relatedTarget))
                             setOpen(false);
