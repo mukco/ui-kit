@@ -606,3 +606,13 @@
 :root[data-skin="phosphor"] :is(.ui-notif-close, .ui-notif-icon, .ui-notif-action) { border: 2px solid var(--amber); border-radius: 0; color: var(--amber); }
 :root[data-skin="phosphor"] .ui-notif-row.is-unread .ui-notif-dot { background: var(--amber); border-radius: 0; }
 :root[data-skin="phosphor"] .ui-notif-under { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--amber) 22%, var(--paper)) 0 4px, var(--paper) 4px 10px); color: var(--amber); }
+
+/* PlayerListButton / WatchList: amber, square. */
+:root[data-skin="phosphor"] .ui-listbtn { border-radius: 0; color: color-mix(in srgb, var(--amber) 55%, transparent); }
+:root[data-skin="phosphor"] .ui-listbtn--on { color: var(--paper); background: var(--amber); }
+:root[data-skin="phosphor"] .ui-listbtn--labelled { border: 2px solid var(--amber); font-family: var(--px-chrome); color: var(--amber); }
+:root[data-skin="phosphor"] .ui-listbtn--labelled.ui-listbtn--on { color: var(--paper); }
+:root[data-skin="phosphor"] .ui-listbtn .px-icon { width: 1.1rem; height: 1.1rem; }
+:root[data-skin="phosphor"] .ui-watchlist-row { border-bottom-color: color-mix(in srgb, var(--amber) 35%, transparent); }
+:root[data-skin="phosphor"] .ui-watchlist-remove { border: 2px solid var(--amber); border-radius: 0; background: transparent; color: var(--amber); }
+:root[data-skin="phosphor"] .ui-watchlist-meta { font-family: var(--px-chrome); }
