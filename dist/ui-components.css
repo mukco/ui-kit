@@ -186,46 +186,7 @@
 :root { --fs-bump: 0px; }
 @media (max-width: 640px) { :root { --fs-bump: 2px; } }
 
-/* @page-globals { */
-/* Base type — the kit owns this so every app reads the same. Sans for UI,
-   mono for numbers, both resolved from locally installed fonts. */
-html {
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 16px;
-  line-height: 1.45;
-  -webkit-font-smoothing: antialiased;
-}
 
-/* ---------- Focus ----------
-   One ring, for everything that can hold focus.
-
-   There were five `outline: none` declarations against two :focus-visible
-   rules, so on three of those controls the browser's ring was removed and
-   nothing was put back: a keyboard user tabbed into .ui-search-input,
-   .ui-assistant-input or .ui-sb-titleinput and had no way to know where they
-   were. That is not a styling preference, it is the control disappearing.
-
-   :focus-visible rather than :focus so a mouse click does not draw it. Wrapped
-   in :where() so it carries zero specificity — any component that genuinely
-   needs a different ring overrides it with a plain selector, and does so
-   on purpose rather than by accident of source order. */
-:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--focus-ring, var(--brand));
-  outline-offset: 2px;
-}
-
-/* Inputs sit flush inside their containers; an outset ring on those clips
-   against the neighbour instead of surrounding the field. */
-:where(input, select, textarea):focus-visible {
-  outline-offset: 0;
-}
-
-/* } @page-globals */
 
 /* ---------- Card ---------- */
 
@@ -4225,16 +4186,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
      Last in the file, so it wins on source order as well as by !important —
      belt and braces for a preference that must not be half-applied. */
-  /* @page-globals { */
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  /* } @page-globals */
+  
   /* The same for the kit's own elements, so a page that takes only the
      components (ui-components.css) still stops their spinners and shimmer. */
   :where([class^="ui-"], [class*=" ui-"]),
@@ -4597,55 +4549,14 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 
 .ui-optionrow-cost span { display: block; }
 
-/* @page-globals { */
-/* ---------- Scrollbars ----------
-   Baseball themes these and the kit did not, which is most of why a dark panel
-   still felt unfinished: the page goes to #07090e and the browser draws a
-   bright grey bar down the side of it, plus another under every table and log.
-   At six pixels with a border-coloured thumb the scrollbar stops being a piece
-   of the operating system sitting on top of the app.
 
-   Firefox gets the two-property version; WebKit and Blink the pseudo-elements.
-   Both are given, because a scrollbar that is themed in one engine and not the
-   other is worse than one that is themed in neither. */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track { background: transparent; }
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-/* The corner where two scrollbars meet, which otherwise stays the browser's
-   default grey square in the bottom-right of every scrollable table. */
-::-webkit-scrollbar-corner { background: transparent; }
-
-/* } @page-globals */
 
 /* ---------- Figures ----------
    Every monospace context gets tabular numerals, because the reason to set a
    number in mono is to line it up with the number above it. The kit had been
    applying this in eight separate places and missing everywhere else — a log
    timestamp, a code block, a kbd hint. */
-/* @page-globals { */
-code,
-kbd,
-pre,
-samp {
-  font-variant-numeric: tabular-nums;
-}
-/* } @page-globals */
+
 .ui-mono {
   font-variant-numeric: tabular-nums;
 }
@@ -4741,30 +4652,7 @@ samp {
   }
 }
 
-/* @page-globals { */
-/* ---------- Mobile input zoom floor ---------- */
 
-/* iOS Safari zooms the whole page whenever a focused field's text is under
-   16px, and it never zooms back out. Every kit control you can type into was
-   under it — .ui-field and .ui-navsearch-input at 14px, .ui-assistant-input at
-   13.6px, .ui-search-input at 13px — so tapping any of them left the page
-   zoomed with no way back.
-
-   `!important` is deliberate. Written as a plain element rule this loses to
-   every one of the classes above, which is the whole problem; and naming them
-   individually is a list that goes stale the next time someone styles a field.
-   The excluded types have no text to zoom to.
-
-   Apps may still override per-field by matching this specificity — the floor
-   is a platform constraint, not a design opinion. */
-@media (max-width: 767px) {
-  input:not([type='range']):not([type='checkbox']):not([type='radio']),
-  select,
-  textarea {
-    font-size: calc(16px + var(--fs-bump, 0px)) !important;
-  }
-}
-/* } @page-globals */
 
 
 /* ---------- Matchup card ---------- */
@@ -5651,11 +5539,7 @@ a.ui-news-chip::before { content: ""; position: absolute; inset: -4px 0; }
    the touch, so the swipe sprang back without going anywhere and had to be
    made again. clip (not hidden) so no scroll container is made and sticky
    headers keep working. */
-/* @page-globals { */
-@supports (overflow: clip) {
-  html, body { overflow-x: clip; }
-}
-/* } @page-globals */
+
 
 .ui-swipeband {
   position: fixed;
