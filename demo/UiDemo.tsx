@@ -1229,7 +1229,7 @@ export function UiDemo() {
       <section className="uidemo-section">
         <h2>ArticleReader — a story read in the app</h2>
         <p className="uidemo-note">
-          The app fetches; the kit draws. <code>actions</code> adds keys after Share (Family Hub&apos;s Save for later),
+          The app fetches; the kit draws. <code>actions</code> adds keys after Share (Family Hub&apos;s Save for later),{" "}
           <code>onShared</code> says how Share went, and the Back key carries <code>data-back</code> for an app&apos;s swipe.
         </p>
         <ArticleReader
