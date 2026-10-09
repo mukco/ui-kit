@@ -113,6 +113,7 @@ export { FollowButton } from "./primitives/FollowButton";
 export { AppearanceCard, InstallAppCard } from "./primitives/AppCards";
 export { NavSessionButtons, NavSessionDrawer } from "./primitives/NavSession";
 export { useSectionSwipe, SwipeBand, useScrollToTop } from "./primitives/SectionSwipe";
+export { PullDial } from "./primitives/PullDial";
 export { FantasyTeamBar, FantasyLayout } from "./fantasy/FantasyFrame";
 export { FantasyPlayerRow } from "./fantasy/FantasyPlayerRow";
 export { MetricStrip } from "./fantasy/MetricStrip";

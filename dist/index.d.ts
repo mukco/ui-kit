@@ -151,6 +151,8 @@ export { AppearanceCard, InstallAppCard } from "./primitives/AppCards";
 export type { SettingsGroupTone } from "./primitives/SettingsGroup";
 export { NavSessionButtons, NavSessionDrawer } from "./primitives/NavSession";
 export { useSectionSwipe, SwipeBand, useScrollToTop } from "./primitives/SectionSwipe";
+export { PullDial } from "./primitives/PullDial";
+export type { PullDialProps } from "./primitives/PullDial";
 export type { SectionSwipeOptions } from "./primitives/SectionSwipe";
 export { FantasyTeamBar, FantasyLayout } from "./fantasy/FantasyFrame";
 export type { FantasyTeamBarProps, FantasyTeamBarItem, FantasyLayoutProps } from "./fantasy/FantasyFrame";
