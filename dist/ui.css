@@ -48,7 +48,7 @@
      it paints the active nav item, which is the one item in the bar a reader
      needs to find. Light already passes at 5.15:1, so this is --brand there
      and a lighter blue in dark. */
-  --brand-text: #1e66e4;
+  --brand-text: #1a56c8;
   /* The foreground that goes on --brand. The kit needed this in seven places
      and wrote #fff in all seven, which is the one case where a literal is
      almost defensible and still wrong: a brand light enough to need dark text
@@ -74,7 +74,8 @@
   --chart-6: #0e7490;
   --chart-7: #a21caf;
   --chart-8: #4d7c0f;
-  --brand-light: #4c91f8;
+  /* Also link text: #4c91f8 was 3.1:1 on white (readability audit, 2026-10-09). */
+  --brand-light: #2563eb;
 
   /* States */
   /* 5.02:1 on white, up from 3.30:1. These carry meaning as text as well as
@@ -679,6 +680,7 @@ a.ui-player:hover .ui-player-name {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
+  min-height: 32px;
   color: inherit;
   font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
@@ -746,12 +748,13 @@ a.ui-team-link:hover {
 }
 
 .ui-segmented-btn {
-  padding: 0.125rem 0.5rem;
+  min-height: 32px;
+  padding: 0.125rem 0.75rem;
   border: 0;
   border-radius: 0.25rem;
   background: transparent;
   color: var(--muted);
-  font-size: calc(0.625rem + var(--fs-bump, 0px));
+  font-size: calc(0.75rem + var(--fs-bump, 0px));
   font-weight: 600;
   cursor: pointer;
 }
@@ -974,7 +977,7 @@ a.ui-team-link:hover {
   border-radius: 0.375rem;
   background: color-mix(in srgb, var(--brand) 10%, transparent);
   color: var(--brand-text);
-  font-size: calc(10px + var(--fs-bump, 0px));
+  font-size: calc(12px + var(--fs-bump, 0px));
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1327,10 +1330,10 @@ button.ui-matchup--link {
   text-align: left;
   padding: 0.75rem;
   border-bottom: 1px solid var(--border);
-  font-size: calc(11px + var(--fs-bump, 0px));
+  font-size: calc(12px + var(--fs-bump, 0px));
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--muted);
   cursor: pointer;
   user-select: none;
@@ -2538,12 +2541,18 @@ button.ui-matchup--link {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
-  font-size: calc(10px + var(--fs-bump, 0px));
+  font-size: calc(11px + var(--fs-bump, 0px));
+  /* A serif italic "i": the pixel face drew it as a bare bar. */
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
   font-weight: 700;
   line-height: 1;
   cursor: help;
   padding: 0;
+  position: relative;
 }
+/* A 32px target around a 16px mark. */
+.ui-tip-btn::before { content: ""; position: absolute; inset: -8px; }
 
 .ui-tip-btn:hover,
 .ui-tip-btn:focus-visible { color: var(--text); border-color: var(--muted); }
@@ -4486,6 +4495,8 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
   color: var(--text);
   font: inherit;
   font-size: calc(0.875rem + var(--fs-bump, 0px));
+  /* The whole 40px box is the target, not a 26px line inside it. */
+  align-self: stretch;
 }
 
 .ui-navsearch-input::placeholder { color: var(--muted); }
@@ -5284,17 +5295,19 @@ samp,
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  height: 1.25rem;
+  height: 1.5rem;
   padding: 0 0.5rem;
   border-radius: 9999px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px));
+  font-size: calc(12px + var(--fs-bump, 0px));
   color: var(--text-2);
   text-decoration: none;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
+/* A 32px target around a 24px chip. */
+a.ui-news-chip::before { content: ""; position: absolute; inset: -4px 0; }
 
 /* A capped panel: the answer scrolls inside a fixed height and fades out at the
    bottom, so a row of cards keeps its height however long one answer runs.
@@ -5369,7 +5382,9 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
    component's idea of one. */
 
 /* Hot and Slumping are a pair; stacked they stop being a comparison. */
-.ui-leaders { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 0.5rem; }
+.ui-leaders { display: grid; grid-template-columns: 1fr; row-gap: 1rem; column-gap: 0.5rem; }
+/* Two columns once a name fits in half the width: at 390 it was 79px. */
+@media (min-width: 480px) { .ui-leaders { grid-template-columns: repeat(2, 1fr); row-gap: 0; } }
 @media (min-width: 640px) { .ui-leaders { column-gap: 0.75rem; } }
 .ui-leaders-col { --ui-leaders-accent: var(--text-2); min-width: 0; }
 .ui-leaders-col--hot { --ui-leaders-accent: var(--ok); }
@@ -5388,16 +5403,16 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-leaders-icon { font-style: normal; }
 .ui-leaders-plink { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.25rem; }
 .ui-leaders-name {
-  font-size: calc(11px + var(--fs-bump, 0px));
+  font-size: calc(13px + var(--fs-bump, 0px));
   line-height: 1.25;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.ui-leaders-meta { font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px)); color: var(--muted); flex-shrink: 0; }
+.ui-leaders-meta { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); flex-shrink: 0; }
 .ui-leaders-val {
-  font-size: calc(11px + var(--fs-bump, 0px));
+  font-size: calc(13px + var(--fs-bump, 0px));
   font-family: var(--font-mono);
   font-weight: 600;
   flex-shrink: 0;
@@ -5560,7 +5575,7 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-race-body { flex: 1; min-height: 0; }
 .ui-race-none { flex: 1; display: flex; align-items: center; justify-content: center; font-size: calc(12px + var(--fs-bump, 0px)); color: var(--muted); }
 /* Recharts writes fill as an attribute; the stylesheet wins, so ticks follow the theme. */
-.ui-race-body .recharts-cartesian-axis-tick text { fill: var(--muted); }
+.ui-race-body .recharts-cartesian-axis-tick text { fill: var(--muted); font-size: calc(11px + var(--fs-bump, 0px)); }
 
 .ui-race-tip {
   background: var(--surface);
@@ -5585,7 +5600,8 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   flex-shrink: 0;
 }
 .ui-race-legend-item { display: flex; align-items: center; gap: 0.25rem; }
-.ui-race-legend-abbr { font-size: calc(var(--fs9, 9px) + var(--fs-bump, 0px)); font-weight: 500; }
+.ui-race-legend-abbr { font-size: calc(12px + var(--fs-bump, 0px)); font-weight: 500; color: var(--text-2); }
+.ui-race-legend-abbr--fav { color: var(--text); font-weight: 700; }
 
 /* ---------- Follow button and settings actions ---------- */
 .ui-follow { white-space: nowrap; }
@@ -5818,7 +5834,8 @@ html.ui-pulldial-on, html.ui-pulldial-on body { overscroll-behavior-y: none; }
    sliver. It is capped there and the name ends in "…" — the headshot, the
    position and the ★ stay, and a tap still opens the player. */
 @media (max-width: 639px) {
-  .ui-boxscore-player .ui-boxscore-who { max-width: 9rem; min-width: 0; vertical-align: middle; }
+  /* 10.5rem: at 9 a two-word name with a suffix lost its last letters. */
+  .ui-boxscore-player .ui-boxscore-who { max-width: 10.5rem; min-width: 0; vertical-align: middle; }
   .ui-boxscore-who > :first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ui-boxscore-who .ui-player { display: inline-flex; min-width: 0; max-width: 100%; }
   .ui-boxscore-who .ui-player-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -5952,7 +5969,7 @@ html.ui-pulldial-on, html.ui-pulldial-on body { overscroll-behavior-y: none; }
 .ui-mstrip-val { font-size: calc(14px + var(--fs-bump, 0px)); font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; line-height: 1; color: var(--text); }
 .ui-mstrip--compact .ui-mstrip-val { font-size: calc(12px + var(--fs-bump, 0px)); }
 .ui-mstrip-val--empty { color: var(--muted); font-weight: 400; }
-.ui-mstrip-label { display: flex; align-items: center; justify-content: flex-end; gap: 0.125rem; margin-top: 0.25rem; font-size: calc(9px + var(--fs-bump, 0px)); color: var(--muted); line-height: 1; }
+.ui-mstrip-label { display: flex; align-items: center; justify-content: flex-end; gap: 0.125rem; margin-top: 0.25rem; font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); line-height: 1; }
 @media (max-width: 639px) {
   .ui-mstrip { width: 100%; flex-shrink: 1; }
   .ui-mstrip--fixed .ui-mstrip-cell { flex: 1 1 0; width: auto; min-width: 48px; }
