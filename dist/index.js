@@ -102,12 +102,14 @@ export { age } from "./lib/age";
 // Skin theme (light / dark / Phosphor), pixel icons and the Phosphor tab bar.
 // The skin's CSS ships separately: import "@mukco/ui-kit/phosphor.css".
 export { SKIN_THEMES, PHOSPHOR_FONTS_HREF, configureSkinTheme, applySkinTheme, setSkinTheme, nextSkinTheme, useSkinTheme } from "./primitives/skinTheme";
-export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage } from "./primitives/Pixel";
+export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage, 
+// Family Hub's drawings
+Remote, Pot, SkipNext, SkipPrevious, Sunrise, PlantSprout, PlantSapling, PlantTree, PlantFlower, Takeout, Pan, PlayingCard, HeartFilled, TurnBack, TurnAhead, CheckBold, CheckDoubleBold, LinkBroken, Comic, StarFilledPointed, } from "./primitives/Pixel";
 export { TabBar } from "./primitives/TabBar";
 export { Basketball, Football, Baseball } from "./sports/pixelBalls";
 // Device notifications: the push client every app shares, its settings card,
 // the Follow button; and the standard settings cards.
-export { createPushClient, pushSupported, isStandalone, isIos, PushApiError } from "./primitives/push";
+export { createPushClient, pushSupported, isStandalone, isIos, PushApiError, pushErrorMessage, pushFetch } from "./primitives/push";
 export { NotificationSettings } from "./primitives/NotificationSettings";
 export { FollowButton } from "./primitives/FollowButton";
 export { AppearanceCard, InstallAppCard } from "./primitives/AppCards";

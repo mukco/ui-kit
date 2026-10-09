@@ -138,13 +138,13 @@ export type { NewsItem, NewsSource, NewsPanelProps, NewsPlayerMention, NewsTeamM
 export { age } from "./lib/age";
 export { SKIN_THEMES, PHOSPHOR_FONTS_HREF, configureSkinTheme, applySkinTheme, setSkinTheme, nextSkinTheme, useSkinTheme } from "./primitives/skinTheme";
 export type { SkinTheme, SkinThemeOptions } from "./primitives/skinTheme";
-export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage } from "./primitives/Pixel";
+export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage, Remote, Pot, SkipNext, SkipPrevious, Sunrise, PlantSprout, PlantSapling, PlantTree, PlantFlower, Takeout, Pan, PlayingCard, HeartFilled, TurnBack, TurnAhead, CheckBold, CheckDoubleBold, LinkBroken, Comic, StarFilledPointed, } from "./primitives/Pixel";
 export type { PixelIcon } from "./primitives/Pixel";
 export { TabBar } from "./primitives/TabBar";
 export type { TabBarTab, TabBarProps, TabBarMoreItem } from "./primitives/TabBar";
 export { Basketball, Football, Baseball } from "./sports/pixelBalls";
-export { createPushClient, pushSupported, isStandalone, isIos, PushApiError } from "./primitives/push";
-export type { PushClient, PushClientOptions, PushStatus, NotifyKind, NotifyPrefs } from "./primitives/push";
+export { createPushClient, pushSupported, isStandalone, isIos, PushApiError, pushErrorMessage, pushFetch } from "./primitives/push";
+export type { PushClient, PushClientOptions, PushStatus, PushState, PushFetcher, PushPaths, NotifyKind, NotifyPrefs } from "./primitives/push";
 export { NotificationSettings } from "./primitives/NotificationSettings";
 export { FollowButton } from "./primitives/FollowButton";
 export { AppearanceCard, InstallAppCard } from "./primitives/AppCards";

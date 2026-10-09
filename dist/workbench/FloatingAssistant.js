@@ -343,6 +343,24 @@ function AssistantMessage({ m, renderMarkdown, renderChart, messageActions, onOp
     const showActions = hasText && (Boolean(extractedSql && onOpenSandbox) || Boolean(messageActions));
     return (_jsxs(_Fragment, { children: [hasText && (_jsx("div", { className: "ui-fa-bubble-assistant", children: renderMarkdown ? renderMarkdown(m.text) : _jsx("div", { className: "ui-fa-plaintext", children: m.text }) })), !hasText && !hasCharts && hasTools && (_jsxs("div", { className: "ui-fa-bubble-tools", children: ["Used ", m.tools.length, " tool", m.tools.length !== 1 ? "s" : ""] })), showActions && (_jsxs("div", { className: "ui-fa-msg-actions", children: [extractedSql && onOpenSandbox && (_jsx("button", { type: "button", onClick: () => onOpenSandbox(extractedSql), className: "ui-fa-loadsql-btn", children: "Load in Sandbox \u2197" })), messageActions?.(m)] })), hasCharts && (_jsx("div", { className: "ui-fa-charts", children: m.charts.map((chart, i) => (_jsx("div", { className: "ui-fa-chart-card", children: renderChart ? renderChart(chart) : (chart.title ?? chart.type ?? "Chart") }, i))) })), hasTools && (_jsxs("details", { className: "ui-fa-tools", open: !hasText, children: [_jsxs("summary", { className: "ui-fa-tools-summary", children: ["Tools used (", m.tools.length, ")"] }), _jsx("div", { className: "ui-fa-tools-list", children: m.tools.map((t, i) => (_jsx("div", { className: "ui-fa-tool-row", children: t.tool }, i))) })] }))] }));
 }
+// The bubble steps aside while the page scrolls down (it sat over the right
+// edge of every card on a phone) and comes back on the way up.
+function Launcher({ title, onOpen }) {
+    const [hidden, setHidden] = useState(false);
+    useEffect(() => {
+        let last = window.scrollY;
+        const onScroll = () => {
+            const y = window.scrollY;
+            if (Math.abs(y - last) < 8)
+                return;
+            setHidden(y > last && y > 80);
+            last = y;
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+    return (_jsx("button", { type: "button", onClick: onOpen, title: `Open ${title}`, "aria-label": `Open ${title}`, className: hidden ? "ui-fa-launcher ui-fa-launcher--away" : "ui-fa-launcher", children: _jsx("svg", { width: 20, height: 20, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 1.8, children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" }) }) }));
+}
 export function FloatingAssistant({ pathname, deriveContext, onAsk, title = "Assistant", welcome = "Ask me anything about the page you are viewing.", storagePrefix, mentionSearch, renderMarkdown, renderChart, messageActions, onOpenSandbox, open, autoAsk, onAutoAskConsumed, pendingPrompt, onPendingPromptConsumed, prefillPrompt, onPrefillPromptConsumed, }) {
     const context = useMemo(() => ({ ...deriveContext(pathname), pathname }), [pathname, deriveContext]);
     const [sessions, setSessions] = useState(() => loadSessions(storagePrefix, welcome));
@@ -637,7 +655,7 @@ export function FloatingAssistant({ pathname, deriveContext, onAsk, title = "Ass
     }
     // Minimized — floating chat bubble launcher.
     if (minimized) {
-        return (_jsx("button", { type: "button", onClick: () => setMinimized(false), title: `Open ${title}`, "aria-label": `Open ${title}`, className: "ui-fa-launcher", children: _jsx("svg", { width: 20, height: 20, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 1.8, children: _jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" }) }) }));
+        return _jsx(Launcher, { title: title, onOpen: () => setMinimized(false) });
     }
     return (_jsxs("aside", { ref: panelRef, className: `ui-fa-panel ${dragging ? "ui-fa-panel--drag" : ""} ${dragging || resizing ? "ui-fa-panel--active" : ""}`, style: {
             ...panelGeometry({ position, width, height, available: keyboardH }),
