@@ -1,15 +1,64 @@
 import { useSyncExternalStore } from "react";
+const DEFAULT_PATHS = {
+    key: "/api/push/key",
+    subscription: "/api/push/subscription",
+    notify: "/api/notify",
+    test: "/api/push/test",
+    follow: (gameId) => `/api/notify/games/${gameId}`,
+};
 export class PushApiError extends Error {
     status;
     constructor(status, message) { super(message); this.status = status; }
 }
-async function api(path, init) {
-    const res = await fetch(path, { credentials: "include", ...init });
-    if (!res.ok)
-        throw new PushApiError(res.status, `${res.status} ${path}`);
-    const text = await res.text();
-    return (text ? JSON.parse(text) : undefined);
+/**
+ * What a failed request says when the server gave no reason of its own. These
+ * used to be "500 /api/push/subscription" and the browser's "Failed to
+ * fetch", shown as they were in Settings. Family Hub's words (lib/api.ts).
+ */
+export function pushErrorMessage(status) {
+    if (status === 0)
+        return "Couldn't reach the server — check the connection.";
+    if (status === 401)
+        return "You've been signed out — sign in again.";
+    if (status === 403)
+        return "That isn't allowed on this account.";
+    if (status === 404)
+        return "Push isn't set up on this server.";
+    if (status === 408 || status === 504)
+        return "The server took too long to answer.";
+    if (status === 429)
+        return "Too many tries — wait a moment.";
+    if (status >= 500)
+        return "Something went wrong on the server — try again.";
+    return "That didn't work.";
 }
+/** The kit's request function: the server's own words (`error` or `errors`) when it sent some, plain ones otherwise. */
+export const pushFetch = async (path, init) => {
+    let res;
+    try {
+        res = await fetch(path, { credentials: "include", ...init });
+    }
+    catch (e) {
+        if (e instanceof DOMException && e.name === "AbortError")
+            throw e;
+        throw new PushApiError(0, pushErrorMessage(0));
+    }
+    const text = await res.text();
+    if (!res.ok) {
+        let message = pushErrorMessage(res.status);
+        try {
+            const body = text ? JSON.parse(text) : null;
+            if (body && typeof body.error === "string")
+                message = body.error;
+            else if (body && Array.isArray(body.errors) && typeof body.errors[0] === "string")
+                message = body.errors.join(" ");
+        }
+        catch { /* not JSON: the plain words stand */ }
+        throw new PushApiError(res.status, message);
+    }
+    return (text ? JSON.parse(text) : undefined);
+};
+const statusOf = (err) => (err && typeof err === "object" && "status" in err ? err.status : undefined);
 const json = (method, body) => ({
     method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
 });
@@ -55,13 +104,17 @@ function sameKey(subscription, key) {
     return bytes.length === key.length && bytes.every((b, i) => b === key[i]);
 }
 const HEAL_EVERY_MS = 60 * 60 * 1000;
-export function createPushClient({ storagePrefix }) {
+export function createPushClient({ storagePrefix, fetcher = pushFetch, snooze: snoozing = false, paths: pathOverrides }) {
     const SUBSCRIBED_KEY = `${storagePrefix}-push-subscribed`;
     const OPTED_OUT_KEY = `${storagePrefix}-push-off`;
+    const SNOOZE_KEY = `${storagePrefix}-push-snoozed-until`;
+    const paths = { ...DEFAULT_PATHS, ...pathOverrides };
+    const api = fetcher;
     let state = {
         permission: typeof Notification !== "undefined" ? Notification.permission : "default",
         hasSubscription: (() => { const v = readKey(SUBSCRIBED_KEY); return v === null ? null : v === "1"; })(),
         optedOut: readKey(OPTED_OUT_KEY) === "1",
+        snoozedUntil: snoozing ? Number(readKey(SNOOZE_KEY)) || null : null,
     };
     const listeners = new Set();
     let lastHeal = 0;
@@ -71,15 +124,26 @@ export function createPushClient({ storagePrefix }) {
             writeKey(SUBSCRIBED_KEY, next.hasSubscription == null ? null : next.hasSubscription ? "1" : "0");
         if ("optedOut" in next)
             writeKey(OPTED_OUT_KEY, next.optedOut ? "1" : null);
+        if (snoozing && "snoozedUntil" in next)
+            writeKey(SNOOZE_KEY, next.snoozedUntil ? String(next.snoozedUntil) : null);
         listeners.forEach((l) => l());
     }
     function subscribe(listener) {
         listeners.add(listener);
         return () => { listeners.delete(listener); };
     }
+    /** The raw state, for an app's own offer rule. */
+    function usePushState() {
+        return useSyncExternalStore(subscribe, () => state, () => state);
+    }
+    /** "Not now": the offer stays hidden on this device for `ms`. Does nothing without `snooze: true`. */
+    function snooze(ms) {
+        if (snoozing)
+            update({ snoozedUntil: Date.now() + ms });
+    }
     /** This device's switch in Settings. "loading" until the service worker has said. */
     function usePushStatus() {
-        const s = useSyncExternalStore(subscribe, () => state, () => state);
+        const s = usePushState();
         if (!pushSupported())
             return "unsupported";
         if (s.permission === "denied")
@@ -102,12 +166,12 @@ export function createPushClient({ storagePrefix }) {
         catch { /* no service worker: leave what we knew */ }
     }
     async function vapidKey() {
-        const { public_key: key } = await api("/api/push/key");
+        const { public_key: key } = await api(paths.key);
         if (!key)
-            throw new Error("Push isn't set up on the server");
+            throw new Error("Push isn't configured on the server");
         return urlBase64ToUint8Array(key);
     }
-    const post = (subscription) => api("/api/push/subscription", json("POST", subscription.toJSON()));
+    const post = (subscription) => api(paths.subscription, json("POST", subscription.toJSON()));
     /**
      * Make sure this phone has a subscription and the server has it too.
      * Assumes permission is granted. Repairs, in order: none at all
@@ -129,7 +193,7 @@ export function createPushClient({ storagePrefix }) {
             await post(subscription);
         }
         catch (err) {
-            if (!(err instanceof PushApiError && err.status === 410))
+            if (statusOf(err) !== 410)
                 throw err;
             await subscription.unsubscribe();
             await post(await make());
@@ -167,7 +231,7 @@ export function createPushClient({ storagePrefix }) {
         update({ permission });
         if (permission !== "granted")
             return permission === "denied" ? "denied" : "off";
-        update({ optedOut: false });
+        update(snoozing ? { optedOut: false, snoozedUntil: null } : { optedOut: false });
         await saveSubscription();
         return "on";
     }
@@ -176,7 +240,7 @@ export function createPushClient({ storagePrefix }) {
         const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
         if (subscription) {
-            await api("/api/push/subscription", json("DELETE", { endpoint: subscription.endpoint }));
+            await api(paths.subscription, json("DELETE", { endpoint: subscription.endpoint }));
             await subscription.unsubscribe();
         }
         update({ hasSubscription: false, optedOut: true });
@@ -184,10 +248,10 @@ export function createPushClient({ storagePrefix }) {
     }
     /** What this user wants to be told, and the games they follow. */
     const notify = {
-        get: () => api("/api/notify"),
-        set: (kinds) => api("/api/notify", json("PATCH", { kinds })),
-        test: () => api("/api/push/test", { method: "POST" }),
-        follow: (gameId, on) => api(`/api/notify/games/${gameId}`, { method: on ? "POST" : "DELETE" }),
+        get: () => api(paths.notify),
+        set: (kinds) => api(paths.notify, json("PATCH", { kinds })),
+        test: () => api(paths.test, { method: "POST" }),
+        follow: (gameId, on) => api(paths.follow(gameId), { method: on ? "POST" : "DELETE" }),
     };
-    return { usePushStatus, refreshPushState, healPush, enablePush, disablePush, notify };
+    return { usePushStatus, usePushState, snooze, refreshPushState, healPush, enablePush, disablePush, notify };
 }
