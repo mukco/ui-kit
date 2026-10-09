@@ -6085,3 +6085,23 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 }
 .ui-sortmenu-opt:hover { background: var(--surface-2); }
 .ui-sortmenu-opt.is-on { font-weight: 700; color: var(--brand); }
+
+/* ---------- RatingBar (20–80) ---------- */
+.ui-ratingbar {
+  --rb: var(--muted);
+  display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) 4.5rem; align-items: center; gap: 0.75rem; min-height: 32px;
+}
+.ui-ratingbar--poor { --rb: var(--danger, #dc2626); }
+.ui-ratingbar--below { --rb: var(--warn, #d97706); }
+.ui-ratingbar--average { --rb: var(--text-2); }
+.ui-ratingbar--above { --rb: var(--ok, #16a34a); }
+.ui-ratingbar--plus { --rb: var(--brand); }
+.ui-ratingbar--elite { --rb: var(--chart-6, var(--brand)); }
+.ui-ratingbar-label { font-size: calc(0.8125rem + var(--fs-bump, 0px)); color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ui-ratingbar-track { position: relative; height: 0.5rem; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.ui-ratingbar-fill { position: absolute; inset: 0 auto 0 0; background: var(--rb); border-radius: 999px; }
+.ui-ratingbar-range { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--rb) 35%, transparent); }
+.ui-ratingbar-mid { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--border-strong); }
+.ui-ratingbar-value { display: inline-flex; align-items: baseline; justify-content: flex-end; gap: 0.5rem; font-variant-numeric: tabular-nums; }
+.ui-ratingbar-value strong { font-size: calc(0.9375rem + var(--fs-bump, 0px)); color: var(--text); }
+.ui-ratingbar-pot { font-size: calc(0.75rem + var(--fs-bump, 0px)); color: var(--muted); }
