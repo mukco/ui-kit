@@ -5,7 +5,9 @@ futbol…) — consumed as `@mukco/ui-kit` (git dep).
 
 **family-hub is its own thing.** Its System-7 design system is intentional;
 it does not consume this kit, and kit changes should never be justified by
-"family-hub could use this". Scope here = rails-vite-template descendants. Default palette = baseball's. See README.md for the component
+"family-hub could use this". The one exception: Family Hub and NoFuss may
+import `@mukco/ui-kit/observability` (error reporting) — that subpath only;
+the rest of this rule stands. Scope here = rails-vite-template descendants. Default palette = baseball's. See README.md for the component
 inventory.
 
 ## Commands
@@ -27,6 +29,12 @@ npm run build    # dist/ — CI commits this to main; never commit dist by hand
   give it a default in ui.css, use it.
 - **No I/O in components.** No fetch, no react-query, no router imports.
   Async edges are props (`onRun`, `fetcher`, `onSend`). The app owns its data.
+  The documented exceptions are I/O *modules*, not components:
+  `src/primitives/push.ts` (the push client) and `src/observability/` (error
+  reporting, shipped only as the `@mukco/ui-kit/observability` subpath —
+  never export it from `src/index.ts`). Both install nothing at import time;
+  `"sideEffects": ["*.css"]` in package.json depends on every module staying
+  that way.
 - **No sport names** outside `src/sports/`. A "player" is fine there; a
   "batter" is not fine anywhere.
 - **Playground or it didn't happen.** Every new/changed component gets a demo

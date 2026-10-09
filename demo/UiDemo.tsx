@@ -73,6 +73,7 @@ import {
   type NotificationItem,
 } from "../src"
 import { Article, Calendar, ChartBarBig, SettingsCog, Users } from "pixelarticons/react"
+import { ErrorBoundary } from "../src/observability"
 import "./demo.css"
 
 /* ---------- Offline test identity: SVG data URIs, no network needed. ---------- */
@@ -305,6 +306,12 @@ const DEMO_BELL: NotificationItem[] = [
   { id: "2", title: "Weekly digest ready", source: "Scheduled", time: "2h ago" },
 ]
 
+/* Throws on purpose, so the section below shows ErrorBoundary's fallback. */
+function Crasher({ crash }: { crash: boolean }) {
+  if (crash) throw new TypeError("Cannot read properties of undefined (reading 'homeTeam')")
+  return <p className="uidemo-note">Rendered fine — the boundary reset and the children came back.</p>
+}
+
 export function UiDemo() {
   const [following, setFollowing] = useState(false)
   const [tab, setTab] = useState("summary")
@@ -322,6 +329,7 @@ export function UiDemo() {
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [demoPeriod, setDemoPeriod] = useState("0")
   const [deployed, setDeployed] = useState(false)
+  const [crash, setCrash] = useState(true)
   const [range, setRange] = useState("6h")
   const [tile] = useState<string | null>("push")
   const [sections, setSections] = useState(["Recurring", "Queues", "Failures", "Notes"])
@@ -1179,6 +1187,23 @@ export function UiDemo() {
             Polls getRemoteBuild() every 5 min + on tab focus; here it flips immediately.
           </p>
         </Card>
+      </section>
+
+      <section className="uidemo-section">
+        <h2>ErrorBoundary — the default fallback</h2>
+        <p className="uidemo-note">
+          From <code>@mukco/ui-kit/observability</code> (a subpath, not the barrel). The child below
+          throws on purpose. Reporting is a no-op until <code>initReporting()</code> runs, and the
+          playground never calls it, so nothing is sent. Try again resets the boundary.
+        </p>
+        <ErrorBoundary name="demo" onReset={() => setCrash(false)}>
+          <Crasher crash={crash} />
+        </ErrorBoundary>
+        {!crash && (
+          <button className="uidemo-toggle" onClick={() => setCrash(true)}>
+            Crash it again
+          </button>
+        )}
       </section>
 
       <UpdateToast
