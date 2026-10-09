@@ -177,13 +177,20 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
                 hide();
             });
         };
-        // Passive: this never stops the page's own scrolling or its rubber-band.
+        // Passive: this never stops the page's own scrolling. iOS's rubber-band
+        // at the top is switched off instead (ui.css, html.ui-pulldial-on): it
+        // dragged the whole document — the sticky nav with it — down under the
+        // finger while the band stayed where the nav had been, so the estate
+        // showed a stripe floating in a gap above its own bar (2026-10-09). The
+        // pull itself is the overscroll now.
+        document.documentElement.classList.add("ui-pulldial-on");
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("touchstart", onStart, { passive: true });
         window.addEventListener("touchmove", onMove, { passive: true });
         window.addEventListener("touchend", onEnd, { passive: true });
         window.addEventListener("touchcancel", onEnd, { passive: true });
         return () => {
+            document.documentElement.classList.remove("ui-pulldial-on");
             window.clearTimeout(nudge);
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("touchstart", onStart);
