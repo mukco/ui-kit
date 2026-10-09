@@ -5659,6 +5659,66 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
 .ui-swipeband-icon .px-icon { width: 24px; height: 24px; }
 @keyframes ui-swipe-pop { 50% { scale: 1.2; } }
 
+/* ---------- Pull down (PullDial) ---------- */
+/* The band a pull at the top uncovers: tucked behind the page under the bar,
+   opening to exactly as far as the page has come down. The same ring as the
+   sideways band — it fills toward Refresh (--p), goes solid once letting go
+   will act, and shows the house when a longer pull will go Home. Family
+   Hub's band, in kit tokens. */
+.ui-pulldial {
+  position: fixed;
+  top: var(--ui-pulldial-top, 0px);
+  left: 0;
+  right: 0;
+  /* Beneath the page, which PullDial lifts to z-index 1 while it moves. */
+  z-index: 0;
+  height: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--brand) 10%, var(--bg));
+  border-bottom: 2px solid var(--brand);
+  pointer-events: none;
+}
+.ui-pulldial[style*="height: 0px"], .ui-pulldial:not([style*="height"]) { border-bottom: 0; }
+.ui-pulldial-ring {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: conic-gradient(var(--brand) calc(var(--p, 0) * 1turn), color-mix(in srgb, var(--brand) 22%, var(--bg)) 0);
+}
+.ui-pulldial-face {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--brand);
+}
+.ui-pulldial-face > * { grid-area: 1 / 1; }
+.ui-pulldial .ui-pulldial-face .px-icon { width: 24px; height: 24px; }
+/* Points down while pulling and turns to point up as the ring closes. */
+.ui-pulldial-arrow { rotate: calc(var(--p, 0) * 180deg); }
+/* Three classes: phosphor.css's ":root .px-icon" comes later at two. */
+.ui-pulldial .ui-pulldial-face .ui-pulldial-home, .ui-pulldial .ui-pulldial-face .ui-pulldial-working { display: none; }
+.ui-pulldial:is([data-stage="refresh"], [data-stage="home"]) { background: var(--brand); }
+.ui-pulldial:is([data-stage="refresh"], [data-stage="home"]) .ui-pulldial-ring { background: var(--bg); }
+.ui-pulldial:is([data-stage="refresh"], [data-stage="home"]) .ui-pulldial-face { background: var(--brand); color: var(--on-brand); }
+.ui-pulldial[data-stage="home"] .ui-pulldial-arrow { display: none; }
+.ui-pulldial[data-stage="home"] .ui-pulldial-home { display: grid; }
+.ui-pulldial.is-pop .ui-pulldial-ring { animation: ui-swipe-pop 0.18s ease-out; }
+/* Refreshing: the reload mark turns, four frames a turn like the rest of the
+   chrome. */
+.ui-pulldial.is-working .ui-pulldial-arrow { display: none; }
+.ui-pulldial.is-working .ui-pulldial-face .ui-pulldial-working { display: block; animation: ui-pull-tick 0.9s steps(4) infinite; }
+@keyframes ui-pull-tick { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .ui-pulldial.is-working .ui-pulldial-working { animation: none; }
+}
+
 /* The page arriving after a swipe slides in from the side the thumb pushed
    toward; the hook marks the root for the length of one arrival. */
 @keyframes ui-swipe-in-right { from { transform: translateX(100%); opacity: 0.4; } to { transform: none; opacity: 1; } }
