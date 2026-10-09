@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, type ReactNode } from "react"
 import { Share as PxShare } from "pixelarticons/react"
 import { cn } from "../cn"
 import { age } from "../lib/age"
@@ -16,6 +16,10 @@ import { Skeleton } from "../primitives/Skeleton"
  * A paywall or a page drawn by its scripts gives too little: the summary
  * then, and the way to the original, which is at the foot of every story
  * anyway. The kit draws; the app fetches (`story`, `loading`, `failed`).
+ *
+ * Family Hub draws it too (2026-10-09), with its Save key in `actions`, a
+ * toast from `onShared`, and its section swipe pressing the Back key, which
+ * carries `data-back` so any app's swipe can find the page's own Back.
  */
 export interface ArticleBlock {
   kind: "p" | "h" | "quote" | "li"
@@ -30,6 +34,8 @@ export interface ArticleStory {
   published_at?: string | null
   readable: boolean
   blocks: ArticleBlock[]
+  /** The server's own short summary, shown when the story is too short to read here. Before the seed's. */
+  summary?: string | null
 }
 
 /** What the list already knew, shown while the story loads. */
@@ -48,6 +54,10 @@ export interface ArticleReaderProps {
   loading?: boolean
   failed?: boolean
   onBack: () => void
+  /** More keys after Share (Family Hub's "Save for later"). */
+  actions?: ReactNode
+  /** How Share went: the share sheet finished, the link was copied (no share sheet), or copying failed. Not called when the sheet is dismissed. */
+  onShared?: (how: "shared" | "copied" | "failed") => void
   className?: string
 }
 
@@ -66,19 +76,19 @@ const LineShare = (props: { className?: string }) => (
   </svg>
 )
 
-function share(title: string, url: string) {
+function share(title: string, url: string, onShared?: ArticleReaderProps["onShared"]) {
   if (typeof navigator === "undefined") return
-  if (navigator.share) { navigator.share({ title, url }).catch(() => undefined); return }
-  navigator.clipboard?.writeText(url).catch(() => undefined)
+  if (navigator.share) { navigator.share({ title, url }).then(() => onShared?.("shared"), () => undefined); return }
+  navigator.clipboard?.writeText(url).then(() => onShared?.("copied"), () => onShared?.("failed"))
 }
 
-export function ArticleReader({ url, seed, story, loading, failed, onBack, className }: ArticleReaderProps) {
+export function ArticleReader({ url, seed, story, loading, failed, onBack, actions, onShared, className }: ArticleReaderProps) {
   useEffect(() => { window.scrollTo(0, 0) }, [url])
 
   const title = story?.title || seed?.title || ""
   const source = seed?.source || story?.source || hostOf(url)
   const art = story?.image_url || seed?.imageUrl || null
-  const summary = seed?.summary || null
+  const summary = story?.summary || seed?.summary || null
   const when = age(story?.published_at || seed?.publishedAt)
   const pending = !story && loading && !failed
   const short = !pending && !story?.readable
@@ -86,7 +96,7 @@ export function ArticleReader({ url, seed, story, loading, failed, onBack, class
   return (
     <article className={cn("ui-article", className)}>
       <div className="ui-article-bar">
-        <button type="button" className="ui-article-back" onClick={onBack}>← Back</button>
+        <button type="button" className="ui-article-back" data-back onClick={onBack}>← Back</button>
         <span className="ui-article-source">{source}</span>
       </div>
       {art && (
@@ -95,10 +105,11 @@ export function ArticleReader({ url, seed, story, loading, failed, onBack, class
       )}
       <h1 className="ui-article-title">{title}</h1>
       <div className="ui-article-keys">
-        <Button size="sm" onClick={() => share(title, url)} className="ui-article-share">
+        <Button size="sm" onClick={() => share(title, url, onShared)} className="ui-article-share">
           <Skin px={<PxShare className="ui-article-icon" />}><LineShare className="ui-article-icon" /></Skin>
           Share
         </Button>
+        {actions}
       </div>
       <p className="ui-article-meta">
         <img className="ui-article-favicon" src={`https://www.google.com/s2/favicons?domain=${hostOf(url)}&sz=32`} alt="" loading="lazy"
