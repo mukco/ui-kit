@@ -32,7 +32,7 @@ export declare class ErrorBoundary extends Component<ErrorBoundaryProps, State> 
     static getDerivedStateFromError(error: unknown): State;
     componentDidCatch(error: unknown, info: ErrorInfo): void;
     reset: () => void;
-    render(): string | number | bigint | boolean | Iterable<ReactNode> | Promise<string | number | bigint | boolean | import("react").ReactPortal | import("react").ReactElement<unknown, string | import("react").JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | import("react").JSX.Element | null | undefined;
+    render(): ReactNode;
 }
 /**
  * The default fallback. Works without ui.css: its own rules ride along in a

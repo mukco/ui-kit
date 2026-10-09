@@ -28,6 +28,9 @@ export class ErrorBoundary extends Component {
         }
         catch { /* the app's own reset failed; the boundary will catch what follows */ }
     };
+    // Declared, not inferred (2026-10-09): inferred from React 19's types the
+    // emitted .d.ts named Promise and bigint, and an app on @types/react 18
+    // (football) could not use the boundary as a JSX element (TS2786).
     render() {
         if (!this.state.failed)
             return this.props.children;
