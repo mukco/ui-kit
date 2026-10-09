@@ -63,10 +63,20 @@ export const Comic = pixel("M0 2h24v2H0zM0 20h24v2H0zM0 4h2v16H0zM22 4h2v16h-2zM
 // A finer filled star, its point one unit wide: Family Hub's "Pick a few you
 // love" in Read (2026-10-04). StarFilled above is the same idea on the 2×2 grid.
 export const StarFilledPointed = pixel("M11 2h2v2h-2zM10 4h4v2h-4zM9 6h6v2h-6zM2 8h20v2h-20zM4 10h16v2h-16zM6 12h12v2h-12zM6 14h12v2h-12zM5 16h5v2h-5zM14 16h5v2h-5zM4 18h4v2h-4zM16 18h4v2h-4zM3 20h3v2h-3zM18 20h3v2h-3z");
-/** The pixel icon under Phosphor; whatever was there before otherwise. */
+let pixelEverywhere = false;
+/**
+ * For an app whose icons are pixel icons in every look (Family Hub, whose
+ * rule is "pixel icons, never emoji or line icons"): Skin and Glyph then pick
+ * the pixel one whatever the skin theme. Call once at boot. Off by default:
+ * the template apps keep their line icons and emoji outside Phosphor.
+ */
+export function configurePixel({ everywhere }) {
+    pixelEverywhere = everywhere;
+}
+/** The pixel icon under Phosphor (or everywhere, see configurePixel); whatever was there before otherwise. */
 export function Skin({ px, children }) {
     const [theme] = useSkinTheme();
-    return _jsx(_Fragment, { children: theme === "phosphor" ? px : children });
+    return _jsx(_Fragment, { children: pixelEverywhere || theme === "phosphor" ? px : children });
 }
 // Emoji the apps use as marks, and the pixel icon each becomes under Phosphor.
 // An emoji a person chose (a team icon, a note) is theirs and is never swapped.
@@ -79,9 +89,9 @@ const GLYPHS = {
 export function registerGlyphs(more) {
     Object.assign(GLYPHS, more);
 }
-/** An app emoji: itself in light and dark, its pixel icon under Phosphor. */
+/** An app emoji: itself in light and dark, its pixel icon under Phosphor (or everywhere, see configurePixel). */
 export function Glyph({ e, className }) {
     const [theme] = useSkinTheme();
     const Px = GLYPHS[e];
-    return theme === "phosphor" && Px ? _jsx(Px, { className: `px-icon${className ? ` ${className}` : ""}` }) : _jsx(_Fragment, { children: e });
+    return (pixelEverywhere || theme === "phosphor") && Px ? _jsx(Px, { className: `px-icon${className ? ` ${className}` : ""}` }) : _jsx(_Fragment, { children: e });
 }

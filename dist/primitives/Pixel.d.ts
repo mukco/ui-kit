@@ -37,14 +37,23 @@ export declare const CheckDoubleBold: (props: SVGProps<SVGSVGElement>) => JSX.El
 export declare const LinkBroken: (props: SVGProps<SVGSVGElement>) => JSX.Element;
 export declare const Comic: (props: SVGProps<SVGSVGElement>) => JSX.Element;
 export declare const StarFilledPointed: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-/** The pixel icon under Phosphor; whatever was there before otherwise. */
+/**
+ * For an app whose icons are pixel icons in every look (Family Hub, whose
+ * rule is "pixel icons, never emoji or line icons"): Skin and Glyph then pick
+ * the pixel one whatever the skin theme. Call once at boot. Off by default:
+ * the template apps keep their line icons and emoji outside Phosphor.
+ */
+export declare function configurePixel({ everywhere }: {
+    everywhere: boolean;
+}): void;
+/** The pixel icon under Phosphor (or everywhere, see configurePixel); whatever was there before otherwise. */
 export declare function Skin({ px, children }: {
     px: ReactNode;
     children: ReactNode;
 }): JSX.Element;
 /** Add an app's own marks (its ball, say) to the emoji Glyph knows. */
 export declare function registerGlyphs(more: Record<string, PixelIcon>): void;
-/** An app emoji: itself in light and dark, its pixel icon under Phosphor. */
+/** An app emoji: itself in light and dark, its pixel icon under Phosphor (or everywhere, see configurePixel). */
 export declare function Glyph({ e, className }: {
     e: string;
     className?: string;

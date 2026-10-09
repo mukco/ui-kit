@@ -102,7 +102,7 @@ export { age } from "./lib/age";
 // Skin theme (light / dark / Phosphor), pixel icons and the Phosphor tab bar.
 // The skin's CSS ships separately: import "@mukco/ui-kit/phosphor.css".
 export { SKIN_THEMES, PHOSPHOR_FONTS_HREF, configureSkinTheme, applySkinTheme, setSkinTheme, nextSkinTheme, useSkinTheme } from "./primitives/skinTheme";
-export { pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage, 
+export { pixel, Skin, Glyph, registerGlyphs, configurePixel, StarFilled, Bandage, 
 // Family Hub's drawings
 Remote, Pot, SkipNext, SkipPrevious, Sunrise, PlantSprout, PlantSapling, PlantTree, PlantFlower, Takeout, Pan, PlayingCard, HeartFilled, TurnBack, TurnAhead, CheckBold, CheckDoubleBold, LinkBroken, Comic, StarFilledPointed, } from "./primitives/Pixel";
 export { TabBar } from "./primitives/TabBar";
