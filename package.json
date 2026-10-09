@@ -19,9 +19,17 @@
       "types": "./dist/observability/core.d.ts",
       "default": "./dist/observability/core.js"
     },
+    "./observability/boot-guard": {
+      "types": "./dist/observability/bootGuard.d.ts",
+      "default": "./dist/observability/bootGuard.js"
+    },
     "./push": {
       "types": "./dist/primitives/push.d.ts",
       "default": "./dist/primitives/push.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "default": "./dist/vite.js"
     },
     "./ui.css": "./dist/ui.css",
     "./ui-components.css": "./dist/ui-components.css",
@@ -34,11 +42,11 @@
     "*.css"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
+    "build": "node scripts/build-boot-guard.mjs && rm -rf dist && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
     "check": "tsc -p tsconfig.json && npm run check:conventions",
     "check:conventions": "node scripts/check-conventions.mjs",
     "dev": "vite",
-    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs test/push.test.mjs",
+    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs test/push.test.mjs test/bootGuard.test.mjs",
     "visual": "node scripts/visual.mjs",
     "visual:update": "node scripts/visual.mjs --update"
   },
