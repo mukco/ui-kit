@@ -171,7 +171,7 @@ export function RollingAverageChart({
               domain={[0, tickData.length - 1]}
               ticks={ticks}
               tickFormatter={(i: number) => tickData[i]?._label ?? ""}
-              tick={{ fill: MUTED, fontSize: 11 }}
+              tick={{ fill: MUTED, fontSize: 12 }}
               axisLine={{ stroke: BORDER }}
               tickLine={false}
             />
@@ -183,7 +183,7 @@ export function RollingAverageChart({
                 if (Math.abs(v) >= 1) return v.toFixed(1)
                 return v.toFixed(2)
               }}
-              tick={{ fill: MUTED, fontSize: 11 }}
+              tick={{ fill: MUTED, fontSize: 12 }}
               axisLine={{ stroke: BORDER }}
               tickLine={false}
               width={40}

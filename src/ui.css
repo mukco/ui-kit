@@ -680,6 +680,7 @@ a.ui-player:hover .ui-player-name {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
+  min-height: 32px;
   color: inherit;
   font-size: calc(0.875rem + var(--fs-bump, 0px));
 }
@@ -5294,17 +5295,19 @@ samp,
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  height: 1.25rem;
+  height: 1.5rem;
   padding: 0 0.5rem;
   border-radius: 9999px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  font-size: calc(var(--fs10, 10px) + var(--fs-bump, 0px));
+  font-size: calc(12px + var(--fs-bump, 0px));
   color: var(--text-2);
   text-decoration: none;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
+/* A 32px target around a 24px chip. */
+a.ui-news-chip::before { content: ""; position: absolute; inset: -4px 0; }
 
 /* A capped panel: the answer scrolls inside a fixed height and fades out at the
    bottom, so a row of cards keeps its height however long one answer runs.
@@ -5831,7 +5834,8 @@ html.ui-pulldial-on, html.ui-pulldial-on body { overscroll-behavior-y: none; }
    sliver. It is capped there and the name ends in "…" — the headshot, the
    position and the ★ stay, and a tap still opens the player. */
 @media (max-width: 639px) {
-  .ui-boxscore-player .ui-boxscore-who { max-width: 9rem; min-width: 0; vertical-align: middle; }
+  /* 10.5rem: at 9 a two-word name with a suffix lost its last letters. */
+  .ui-boxscore-player .ui-boxscore-who { max-width: 10.5rem; min-width: 0; vertical-align: middle; }
   .ui-boxscore-who > :first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .ui-boxscore-who .ui-player { display: inline-flex; min-width: 0; max-width: 100%; }
   .ui-boxscore-who .ui-player-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
