@@ -123,6 +123,30 @@ Queued events go in batches of ≤ 10 by `fetch` keepalive, and by
   when `ready()` is still false after `ms` of visible time; returns a cancel.
 - `@mukco/ui-kit/observability/core` is the same minus React.
 
+## Push — `createPushClient` (also `@mukco/ui-kit/push`)
+
+Family Hub's Web Push client, shared. One per app, at module level:
+
+```ts
+import { createPushClient } from "@mukco/ui-kit"           // or "@mukco/ui-kit/push": no barrel, loads on plain node
+export const push = createPushClient({ storagePrefix: "hoops" })
+// push.healPush() on start and on visible; push.enablePush() from a tap;
+// push.usePushStatus() for the Settings switch; push.notify.* for preferences
+```
+
+Options, all off by default (what the template apps had):
+
+- `fetcher` — the app's own request function (`(path, init) => Promise<json>`,
+  rejecting with an Error that has a readable `message` and an HTTP `status`,
+  0 for no connection). Without it the kit's `pushFetch` is used: the
+  server's `error`/`errors` words, else plain ones (`pushErrorMessage`) —
+  never "500 /api/push/subscription" or "Failed to fetch".
+- `snooze: true` — remembers "Not now" (`push.snooze(ms)`, key
+  `${prefix}-push-snoozed-until`), cleared by `enablePush`; Family Hub's Home
+  bar runs its own offer rule on `push.usePushState()`.
+- `paths` — move any endpoint (`key`, `subscription`, `notify`, `test`,
+  `follow(id)`); the notify ones are only called if the app calls `notify.*`.
+
 ## The three rules
 
 1. **Components read tokens, never colors.** Every visual value comes from a

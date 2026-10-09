@@ -172,8 +172,8 @@ export { Basketball, Football, Baseball } from "./sports/pixelBalls"
 
 // Device notifications: the push client every app shares, its settings card,
 // the Follow button; and the standard settings cards.
-export { createPushClient, pushSupported, isStandalone, isIos, PushApiError } from "./primitives/push"
-export type { PushClient, PushClientOptions, PushStatus, NotifyKind, NotifyPrefs } from "./primitives/push"
+export { createPushClient, pushSupported, isStandalone, isIos, PushApiError, pushErrorMessage, pushFetch } from "./primitives/push"
+export type { PushClient, PushClientOptions, PushStatus, PushState, PushFetcher, PushPaths, NotifyKind, NotifyPrefs } from "./primitives/push"
 export { NotificationSettings } from "./primitives/NotificationSettings"
 export { FollowButton } from "./primitives/FollowButton"
 export { AppearanceCard, InstallAppCard } from "./primitives/AppCards"

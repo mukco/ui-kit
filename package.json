@@ -19,6 +19,10 @@
       "types": "./dist/observability/core.d.ts",
       "default": "./dist/observability/core.js"
     },
+    "./push": {
+      "types": "./dist/primitives/push.d.ts",
+      "default": "./dist/primitives/push.js"
+    },
     "./ui.css": "./dist/ui.css",
     "./ui-components.css": "./dist/ui-components.css",
     "./phosphor.css": "./dist/phosphor.css"
@@ -34,7 +38,7 @@
     "check": "tsc -p tsconfig.json && npm run check:conventions",
     "check:conventions": "node scripts/check-conventions.mjs",
     "dev": "vite",
-    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs",
+    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs test/push.test.mjs",
     "visual": "node scripts/visual.mjs",
     "visual:update": "node scripts/visual.mjs --update"
   },

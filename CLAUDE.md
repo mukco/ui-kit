@@ -32,7 +32,8 @@ npm run build    # dist/ — CI commits this to main; never commit dist by hand
 - **No I/O in components.** No fetch, no react-query, no router imports.
   Async edges are props (`onRun`, `fetcher`, `onSend`). The app owns its data.
   The documented exceptions are I/O *modules*, not components:
-  `src/primitives/push.ts` (the push client) and `src/observability/` (error
+  `src/primitives/push.ts` (the push client, also the `@mukco/ui-kit/push`
+  subpath) and `src/observability/` (error
   reporting, shipped only as the `@mukco/ui-kit/observability` subpath —
   never export it from `src/index.ts`). Both install nothing at import time;
   `"sideEffects": ["*.css"]` in package.json depends on every module staying
