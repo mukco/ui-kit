@@ -311,6 +311,10 @@ function installLifecycle(s: State) {
  */
 export function initReporting(options: ReportingOptions): void {
   try {
+    // The bundle is running: the index.html boot guard (bootGuard.ts) stands
+    // down on this assignment. First, and even with reporting disabled — a
+    // guard that never hears it would reload a healthy app.
+    if (hasWindow()) (window as unknown as Record<string, unknown>).__kitBooted = true
     if (state || !hasWindow() || options.enabled === false) return
     const opts = { endpoint: "/internal/errors", source: "client" as Source, ...options }
     if (typeof window.fetch === "function") nativeFetch = window.fetch.bind(window)

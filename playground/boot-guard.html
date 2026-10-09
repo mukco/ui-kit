@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Boot guard — @mukco/ui-kit</title>
+  </head>
+  <body>
+    <!--
+      The boot guard, live: a page whose "main bundle" 404s. Open
+      /boot-guard.html — the guard reports, reloads once, and the second
+      failure inside 30 s shows the fallback. ?booted=1 plays a healthy
+      boot instead (nothing happens). ?reset=1 clears the reload guard.
+    -->
+    <script type="module" src="./bootGuard.ts"></script>
+  </body>
+</html>

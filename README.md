@@ -124,6 +124,48 @@ Queued events go in batches of ≤ 10 by `fetch` keepalive, and by
   when `ready()` is still false after `ms` of visible time; returns a cancel.
 - `@mukco/ui-kit/observability/core` is the same minus React.
 
+### Boot guard — when the bundle itself never loads
+
+Everything above lives in the bundle. When the bundle 404s (a phone restores an
+old `index.html` whose `/assets/index-*.js` a later deploy deleted — Football,
+2026-10-09) none of it runs: white screen, nothing reported. The boot guard is
+a ~3 KB (1.7 KB gzipped) ES5 script inlined at the top of `<head>`, ahead of
+the module script, that needs no bundle:
+
+```ts
+// vite.config.ts — every HTML entry gets it (NoFuss has three); build only
+import { kitBootGuard } from "@mukco/ui-kit/vite"
+
+plugins: [react(), kitBootGuard({ app: "Football", build: buildId /* same value as __BUILD_ID__ */ })]
+// options: endpoint ("/internal/errors"), assetPrefix ("/assets/"), timeoutMs (12000), dev (false)
+```
+
+- Watches (capture phase) for an `error` on a `<script>` or
+  `<link rel=stylesheet|modulepreload>` under this origin + `assetPrefix`.
+  Images, media, other origins and other paths never count.
+- `initReporting()` sets `window.__kitBooted = true` first thing (even with
+  `enabled: false`); the guard stands down on that assignment — listeners and
+  timer removed, nothing sent. **So an app with the guard must call
+  `initReporting()` at the top of main.tsx**, or set the flag itself.
+- No boot signal within `timeoutMs` (one extra wait while the HTML is still
+  parsing) is a failed boot too — e.g. a module that throws while evaluating.
+- A failed boot sends one event (`sendBeacon`, else `fetch` keepalive) —
+  `level: error`, `kind: boot`, `fingerprint: boot`, message "The app's code
+  didn't load", context `{ reason: "asset" | "timeout", failed: ["/assets/…"],
+  reload: "once" | "blocked", route, ua, screen, online, build, waited_ms,
+  ready_state }` — then reloads once (sessionStorage timestamp, 30 s, like
+  `installChunkReload`). A second failure inside the window — or no
+  sessionStorage to remember it in — shows a full-screen "Football couldn't
+  start" with a 44px Try again, its own inline CSS, light/dark from the system.
+  `npm run dev` → `/boot-guard.html` plays it (`?booted=1`: a healthy boot;
+  `?reset=1`: forget the last reload).
+- Not on Vite: `bootGuardScript(options)` from
+  `@mukco/ui-kit/observability/boot-guard` returns the script text to inline
+  yourself. A strict CSP needs its hash or a nonce.
+- Source: `src/observability/bootGuard.es5.js` (readable ES5);
+  `npm run build` minifies it into `bootGuard.min.ts` (committed) and refuses
+  anything newer than ES5.
+
 ## Push — `createPushClient` (also `@mukco/ui-kit/push`)
 
 Family Hub's Web Push client, shared. One per app, at module level:

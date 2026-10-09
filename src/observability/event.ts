@@ -16,6 +16,7 @@ export type Kind =
   | "log"
   | "console"
   | "network"
+  | "boot"
 
 /** Small key/values that travel with an event. ≤ 8 KB serialized. */
 export interface ReportContext {
