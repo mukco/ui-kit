@@ -93,10 +93,15 @@
         r.setAttribute("role", "alert");
         r.innerHTML = "<style>" +
           s + "{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:24px;color-scheme:light dark;background:Canvas;color:CanvasText;font:16px/1.5 system-ui,sans-serif;text-align:center}" +
-          s + " h1{margin:20px 0 8px;font:inherit;font-size:21px;font-weight:600;line-height:1.3}" +
-          s + " p{margin:0 0 28px;opacity:.7;max-width:18em}" +
-          s + " svg{width:48px;height:48px;opacity:.5}" +
-          s + " button{min-height:44px;padding:0 32px;border:0;border-radius:12px;background:CanvasText;color:Canvas;font:inherit;font-weight:600}" +
+          // The app's own CSS may have loaded when only its JS failed: Football's
+          // svg{display:block;position:absolute;width:100%} pushed the icon to the
+          // left and its Phosphor h1 glowed (2026-10-09). Everything here says
+          // what it wants rather than inheriting the page's rules.
+          s + ">div{display:block;position:static;margin:0;padding:0;max-width:none;transform:none}" +
+          s + " h1{margin:20px 0 8px;padding:0;font:inherit;font-size:21px;font-weight:600;line-height:1.3;color:inherit;text-shadow:none;letter-spacing:normal;text-transform:none}" +
+          s + " p{margin:0 auto 28px;padding:0;opacity:.7;max-width:18em;color:inherit;text-shadow:none;font:inherit}" +
+          s + " svg{display:block;position:static;margin:0 auto;width:48px;height:48px;max-width:none;opacity:.5;filter:none;transform:none}" +
+          s + " button{min-height:44px;padding:0 32px;margin:0;border:0;border-radius:12px;background:CanvasText;color:Canvas;font:inherit;font-weight:600;text-shadow:none;box-shadow:none;text-transform:none;letter-spacing:normal}" +
           "</style><div><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round'><path d='M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5'/></svg><h1></h1>" +
           "<p>Something stopped it from loading. Trying again usually fixes it.</p><button type='button'>Try again</button></div>";
         r.getElementsByTagName("h1")[0].appendChild(d.createTextNode(c.a + " couldn’t start"));

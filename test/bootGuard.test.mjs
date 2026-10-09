@@ -286,7 +286,9 @@ test("the script: ES5, ASCII, small, safe to inline, generated file in sync", ()
   assert.doesNotMatch(s, /<\/script/i)
   assert.doesNotMatch(s, /[^\x00-\x7f]/)
   const plain = bootGuardScript(opts)
-  assert.ok(plain.length < 3500, `guard is ${plain.length} bytes`)
+  // The fallback now sets every property it relies on, against an app's CSS
+  // that loaded when its JS did not (2026-10-09).
+  assert.ok(plain.length < 4096, `guard is ${plain.length} bytes`)
   const src = readFileSync(new URL("../src/observability/bootGuard.es5.js", import.meta.url), "utf8")
   const committed = readFileSync(new URL("../src/observability/bootGuard.min.ts", import.meta.url), "utf8")
   assert.equal(render(minifyGuard(src)), committed, "run npm run build and commit bootGuard.min.ts")
@@ -294,7 +296,7 @@ test("the script: ES5, ASCII, small, safe to inline, generated file in sync", ()
   assert.ok(es5Violations("var f=()=>1").length > 0)
 })
 
-test("vite plugin: guard first in <head>, before module scripts, in every entry", async () => {
+test("vite plugin: guard right after <meta charset>, before module scripts, in every entry", async () => {
   const plugin = kitBootGuard({ app: "NoFuss", build: "b1" })
   assert.equal(plugin.apply, "build")
   assert.equal(plugin.transformIndexHtml.order, "pre")
@@ -320,9 +322,12 @@ test("vite plugin: guard first in <head>, before module scripts, in every entry"
       const guard = html.indexOf("__kitBootGuard")
       assert.ok(guard > 0, `${name}: guard injected`)
       assert.equal((html.match(/__kitBootGuard=1/g) ?? []).length, 1, `${name}: exactly once`)
-      const head = html.indexOf("<head>")
-      const firstTagAfterHead = html.slice(head + 6).trimStart()
-      assert.match(firstTagAfterHead, /^<script>\(function/, `${name}: first thing in <head>`)
+      // The charset stays first (browsers look for it in the first 1024
+      // bytes); the guard comes straight after it.
+      const charset = html.match(/<meta[^>]*charset[^>]*>/i)
+      assert.ok(charset && charset.index < 1024, `${name}: charset within the first 1024 bytes`)
+      const afterCharset = html.slice(charset.index + charset[0].length).trimStart()
+      assert.match(afterCharset, /^<script>\(function/, `${name}: right after <meta charset>`)
       const moduleScript = html.indexOf('<script type="module"')
       assert.ok(moduleScript > guard, `${name}: before the module script`)
       const css = html.indexOf('rel="stylesheet"')
