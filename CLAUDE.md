@@ -72,6 +72,9 @@ const { theme, resolved, setTheme } = useTheme()              // same state, for
                    mono clamp={3} detail="…" onClick={fn} /></ListRows>
 <Chip onClick={fn}>a chip that opens something</Chip>
 <Button tone="primary|quiet|danger" size="sm" href={url} external onClick={fn} />
+<Stack gap={4} as="ul">…</Stack>                          // gap: 1|2|3|4|5|6, nothing else
+<Cluster gap={2} align="center" justify="between" wrap>…</Cluster>
+<Page width="wide">…</Page>                          // narrow 48rem | wide 60rem | full
 ```
 
 A list of things — failures, running jobs, processes, search hits — is
@@ -82,8 +85,13 @@ Status colour is `--sev-ok/-warn/-error/-unknown`, never `--stat-*` — that ram
 is a percentile scale where elite is red, so it paints a healthy service in the
 colour of a broken one.
 
-Styling rule reminder: apps use their own layout classes (e.g. `.muted`,
-`.panel`) plus kit classes (`ui-*`). The kit ships no bare-text utility classes.
+Styling rule reminder: layout comes from `Stack`, `Cluster` and `Page` — not
+from a fresh `display: flex; gap: 0.3rem` rule per screen. That habit is what
+made two apps built from the same kit read as different products: the gap
+between any two things was decided again in every file, and estate ended up
+with 1rem, 0.5rem, 0.3rem, 10px, 0.2rem and 8px all meaning "a small gap".
+Apps still bring their own text classes (e.g. `.muted`); the kit ships no
+bare-text utility classes.
 
 ## Versioning
 

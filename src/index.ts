@@ -3,6 +3,12 @@
 
 export { cn } from "./cn"
 
+// Layout. These come first because everything below sits inside them: a screen
+// is a Page of Stacks of Clusters, and the gap between any two things in it is
+// a rung of the scale rather than a number somebody picked in the moment.
+export { Cluster, Page, Stack } from "./primitives/Layout"
+export type { Space } from "./primitives/Layout"
+
 export { AwardCard } from "./primitives/AwardCard"
 export { Assistant } from "./primitives/Assistant"
 export type { ChatMessage } from "./primitives/Assistant"
