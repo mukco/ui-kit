@@ -76,6 +76,7 @@ import {
 import * as Px from "../src/primitives/Pixel"
 import { Article, Calendar, ChartBarBig, SettingsCog, Users } from "pixelarticons/react"
 import { ErrorBoundary } from "../src/observability"
+import { ArticleReader } from "../src/sports/ArticleReader"
 import "./demo.css"
 
 /* ---------- Offline test identity: SVG data URIs, no network needed. ---------- */
@@ -331,6 +332,7 @@ export function UiDemo() {
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [demoPeriod, setDemoPeriod] = useState("0")
   const [deployed, setDeployed] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [crash, setCrash] = useState(true)
   const [range, setRange] = useState("6h")
   const [tile] = useState<string | null>("push")
@@ -1222,6 +1224,27 @@ export function UiDemo() {
             Crash it again
           </button>
         )}
+      </section>
+
+      <section className="uidemo-section">
+        <h2>ArticleReader — a story read in the app</h2>
+        <p className="uidemo-note">
+          The app fetches; the kit draws. <code>actions</code> adds keys after Share (Family Hub&apos;s Save for later),{" "}
+          <code>onShared</code> says how Share went, and the Back key carries <code>data-back</code> for an app&apos;s swipe.
+        </p>
+        <ArticleReader
+          url="https://example.invalid/story"
+          seed={{ source: "The Kit Times" }}
+          story={{ title: "A park opens on the east side after a long debate", source: "The Kit Times", image_url: null, byline: "Jane Reporter",
+                   published_at: null, readable: true, blocks: [
+                     { kind: "p", text: "The council voted late on Tuesday to turn the old rail yard into a park." },
+                     { kind: "h", text: "What happens next" },
+                     { kind: "quote", text: "We have waited eleven years for this." },
+                     { kind: "li", text: "A playground with a splash pad" },
+                   ] }}
+          onBack={() => {}}
+          actions={<Button size="sm" aria-pressed={saved} onClick={() => setSaved(!saved)}>{saved ? "Saved" : "Save for later"}</Button>}
+        />
       </section>
 
       <UpdateToast

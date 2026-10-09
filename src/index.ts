@@ -165,7 +165,7 @@ export { age } from "./lib/age"
 export { SKIN_THEMES, PHOSPHOR_FONTS_HREF, configureSkinTheme, applySkinTheme, setSkinTheme, nextSkinTheme, useSkinTheme } from "./primitives/skinTheme"
 export type { SkinTheme, SkinThemeOptions } from "./primitives/skinTheme"
 export {
-  pixel, Skin, Glyph, registerGlyphs, StarFilled, Bandage,
+  pixel, Skin, Glyph, registerGlyphs, configurePixel, StarFilled, Bandage,
   // Family Hub's drawings
   Remote, Pot, SkipNext, SkipPrevious, Sunrise, PlantSprout, PlantSapling, PlantTree, PlantFlower, Takeout, Pan, PlayingCard,
   HeartFilled, TurnBack, TurnAhead, CheckBold, CheckDoubleBold, LinkBroken, Comic, StarFilledPointed,
