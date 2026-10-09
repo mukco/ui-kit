@@ -1,4 +1,4 @@
-import { createElement, type ComponentType, type ReactNode, type SVGProps } from "react"
+import { createElement, type ComponentType, type JSX, type ReactNode, type SVGProps } from "react"
 import {
   Calendar, ChartBarBig, Check, Cut, DiamondGem, Fire, HumanArmsUp, Lock, PartyPopper, Snowflake, Target, Trophy, WarningDiamond, Zap,
 } from "pixelarticons/react"
@@ -16,9 +16,10 @@ export type PixelIcon = ComponentType<SVGProps<SVGSVGElement>>
  * One icon from a path on Pixelarticons' 24×24 grid, in the text colour.
  * Decorative by default (`aria-hidden`), unless it is given a name
  * (`aria-label` / `aria-labelledby`): a labelled icon is the thing a screen
- * reader should hear, as Family Hub's "Liked" heart is.
+ * reader should hear, as Family Hub's "Liked" heart is. Typed as Pixelarticons'
+ * own components are, so the two mix in one list.
  */
-export const pixel = (d: string): PixelIcon => (props) =>
+export const pixel = (d: string) => (props: SVGProps<SVGSVGElement>): JSX.Element =>
   createElement("svg", {
     viewBox: "0 0 24 24", width: 24, height: 24, fill: "currentColor",
     "aria-hidden": props["aria-label"] || props["aria-labelledby"] ? undefined : true,
