@@ -104,4 +104,8 @@ Styling rule reminder: apps use their own layout classes (e.g. `.muted`,
 
 Consumers pin `github:mukco/ui-kit#main` while the kit is young; tags exist
 for pinning when stability matters. CI pushes a dist commit after every main
-merge, so `#main` installs are always buildable.
+merge, so `#main` installs are always buildable — unless the merge commit's
+message contains the skip-CI marker. A squash merge lists every commit of the
+branch, and the "Update visual baselines" workflow's commits carry that
+marker, so squash-merge with a message of your own (`gh pr merge --squash
+--subject … --body …`) or no dist is built (#104 and #105, 2026-10-09).
