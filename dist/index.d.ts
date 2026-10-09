@@ -118,7 +118,7 @@ export { TeamIcon } from "./sports/TeamIcon";
 export { TeamLink } from "./sports/TeamLink";
 export { LineScore } from "./sports/LineScore";
 export { ProfileHero } from "./sports/ProfileHero";
-export { RatingBar, ratingTier } from "./sports/RatingBar";
+export { RatingBar, ratingHeat, ratingTier } from "./sports/RatingBar";
 export type { RatingBarProps } from "./sports/RatingBar";
 export type { ProfileHeroProps, ProfileFact, ProfileLink, ProfileAward } from "./sports/ProfileHero";
 export { PlayFeed, PlayTag } from "./sports/PlayFeed";
