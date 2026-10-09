@@ -6118,6 +6118,17 @@ html.ui-pulldial-on, html.ui-pulldial-on body { overscroll-behavior-y: none; }
 .ui-notif-empty { display: grid; justify-items: center; gap: 0.75rem; padding: 2rem 1.5rem; text-align: center; }
 .ui-notif-empty-icon { color: var(--muted); }
 .ui-notif-empty-title { margin: 0; font-weight: 700; font-size: calc(1rem + var(--fs-bump, 0px)); }
+.ui-notif-empty-text { margin: 0; max-width: 22rem; font-size: calc(0.9375rem + var(--fs-bump, 0px)); line-height: 1.45; color: var(--text-2); }
+.ui-notif-under-label { display: inline-flex; align-items: center; gap: var(--space-2); }
+.ui-notif-titleline { display: flex; align-items: baseline; gap: 0.5rem; }
+.ui-notif-titleline .ui-notif-title { flex: 1 1 auto; min-width: 0; }
+.ui-notif-titleline > :last-child:not(.ui-notif-title) { flex: none; font-size: calc(0.8125rem + var(--fs-bump, 0px)); color: var(--muted); white-space: nowrap; }
+.ui-notif-loading { padding: 0.75rem 1rem; }
+.ui-notif-stale, .ui-notif-hint { margin: 0; padding: 0.75rem 1rem 1rem; font-size: calc(0.8125rem + var(--fs-bump, 0px)); color: var(--muted); text-align: center; }
+.ui-notif-retry--inline { margin-left: var(--space-2); }
+
+/* Read by a screen reader, not drawn ("Unread: " before a row's title). */
+.ui-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ---------- PlayerListButton / WatchList ----------
    Baseball's list buttons, shared: an eye for the watchlist (scissors for

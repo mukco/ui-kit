@@ -9,10 +9,23 @@ export interface PullDialProps {
     canRefresh?: boolean;
     /** What slides down to uncover the band. The section swipe's element by default. */
     page?: string;
-    /** The band hangs from the bottom of this — the app's bar. */
-    under?: string;
+    /** The band hangs from the bottom of this — the app's bar. null: the app's CSS places it (Family Hub). */
+    under?: string | null;
     /** The Home stage's mark. */
     homeIcon?: ReactNode;
+    /** The mark while pulling (default the pixel ArrowBigDown). Given one, give it the ui-pulldial-arrow class. */
+    arrowIcon?: ReactNode;
+    /** The mark while a refresh runs (default the pixel Reload); null for none — the ring turns on its own. */
+    workingIcon?: ReactNode | null;
+    /** Who owns a touch that starts here, replacing the kit's rule (dialogs, sheets, drawers, charts,
+        editors, [data-no-pull], and any box scrolled down inside the page). body[data-swiping] still always stands it down. */
+    ownsTouch?: (target: Element | null) => boolean;
+    /** Leave iOS's own rubber-band on at the top (Family Hub). Off by default: the kit switches it off while mounted. */
+    rubberBand?: boolean;
+    /** Mark the page data-pulled while it is down, for the app's CSS. */
+    markPulled?: boolean;
+    /** After the page settles back: the app's own repaint of pinned bars, replacing the kit's. */
+    onSettled?: () => void;
 }
 /**
  * Family Hub's pull-down (its web/src/shell/PullDial.tsx), for the kit's
@@ -36,4 +49,4 @@ export interface PullDialProps {
  *
  *   <PullDial onRefresh={refetchVisible} onHome={atHome ? undefined : goHome} />
  */
-export declare function PullDial({ onRefresh, onHome, enabled, canRefresh, page, under, homeIcon }: PullDialProps): import("react").ReactPortal | null;
+export declare function PullDial({ onRefresh, onHome, enabled, canRefresh, page, under, homeIcon, arrowIcon, workingIcon, ownsTouch, rubberBand, markPulled, onSettled, }: PullDialProps): import("react").ReactPortal | null;

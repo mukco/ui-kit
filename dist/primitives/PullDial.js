@@ -43,11 +43,13 @@ const OWNS_TOUCH = "[aria-modal='true'], [role='dialog'], .ui-notif-sheet, .ui-d
  *
  *   <PullDial onRefresh={refetchVisible} onHome={atHome ? undefined : goHome} />
  */
-export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true, page = "[data-swipe-content]", under = ".ui-nav", homeIcon }) {
+export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true, page = "[data-swipe-content]", under = ".ui-nav", homeIcon, arrowIcon, workingIcon, ownsTouch, rubberBand = false, markPulled = false, onSettled, }) {
     const dial = useRef(null);
     // Read when a pull ends, so the listeners never need setting up again.
-    const props = useRef({ onRefresh, onHome, enabled, canRefresh, page, under });
-    props.current = { onRefresh, onHome, enabled, canRefresh, page, under };
+    const props = useRef({ onRefresh, onHome, enabled, canRefresh, page, under, ownsTouch, markPulled, onSettled });
+    props.current = { onRefresh, onHome, enabled, canRefresh, page, under, ownsTouch, markPulled, onSettled };
+    // Read once: whether the document's rubber-band is ours to switch off.
+    const keepRubberBand = useRef(rubberBand).current;
     useEffect(() => {
         let startY = null;
         let startX = 0;
@@ -72,6 +74,12 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
                 // Over the band while it moves, so the band is only seen in the gap.
                 pageEl.style.position = y > 0 ? "relative" : "";
                 pageEl.style.zIndex = y > 0 ? "1" : "";
+                if (props.current.markPulled) {
+                    if (y > 0)
+                        pageEl.dataset.pulled = "";
+                    else
+                        delete pageEl.dataset.pulled;
+                }
             }
         };
         const setStage = (next) => {
@@ -105,7 +113,10 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
             show(0, still() ? "none" : SETTLE);
             setStage("pull");
             el()?.style.setProperty("--p", "0");
-            replaceFixed();
+            if (props.current.onSettled)
+                props.current.onSettled();
+            else
+                replaceFixed();
         };
         // A box that scrolls on its own and is not at its top: pulling down
         // there scrolls it back up, not the page.
@@ -124,13 +135,15 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
             if (document.body.dataset.swiping === "true")
                 return;
             const target = event.target instanceof Element ? event.target : null;
-            if (target?.closest(OWNS_TOUCH) || scrolledInside(target))
+            if (p.ownsTouch ? p.ownsTouch(target) : target?.closest(OWNS_TOUCH) || scrolledInside(target))
                 return;
             startY = event.touches[0].clientY;
             startX = event.touches[0].clientX;
             // Hung from wherever the bar ends, whatever the notch makes it.
-            const bar = document.querySelector(p.under);
-            el()?.style.setProperty("--ui-pulldial-top", `${Math.max(0, Math.round(bar?.getBoundingClientRect().bottom ?? 0))}px`);
+            if (p.under !== null) {
+                const bar = document.querySelector(p.under);
+                el()?.style.setProperty("--ui-pulldial-top", `${Math.max(0, Math.round(bar?.getBoundingClientRect().bottom ?? 0))}px`);
+            }
         };
         const onMove = (event) => {
             if (startY === null)
@@ -183,14 +196,16 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
         // finger while the band stayed where the nav had been, so the estate
         // showed a stripe floating in a gap above its own bar (2026-10-09). The
         // pull itself is the overscroll now.
-        document.documentElement.classList.add("ui-pulldial-on");
+        if (!keepRubberBand)
+            document.documentElement.classList.add("ui-pulldial-on");
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("touchstart", onStart, { passive: true });
         window.addEventListener("touchmove", onMove, { passive: true });
         window.addEventListener("touchend", onEnd, { passive: true });
         window.addEventListener("touchcancel", onEnd, { passive: true });
         return () => {
-            document.documentElement.classList.remove("ui-pulldial-on");
+            if (!keepRubberBand)
+                document.documentElement.classList.remove("ui-pulldial-on");
             window.clearTimeout(nudge);
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("touchstart", onStart);
@@ -202,5 +217,5 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
     // On <body>: inside the page it would slide down with it.
     if (typeof document === "undefined")
         return null;
-    return createPortal(_jsx("div", { ref: dial, className: "ui-pulldial", "data-stage": "pull", "aria-hidden": "true", children: _jsx("span", { className: "ui-pulldial-ring", children: _jsxs("span", { className: "ui-pulldial-face", children: [_jsx(ArrowBigDown, { className: "px-icon ui-pulldial-arrow" }), _jsx(Reload, { className: "px-icon ui-pulldial-working" }), _jsx("span", { className: "ui-pulldial-home", children: homeIcon ?? _jsx(Home, { className: "px-icon" }) })] }) }) }), document.body);
+    return createPortal(_jsx("div", { ref: dial, className: "ui-pulldial", "data-stage": "pull", "aria-hidden": "true", children: _jsx("span", { className: "ui-pulldial-ring", children: _jsxs("span", { className: "ui-pulldial-face", children: [arrowIcon ?? _jsx(ArrowBigDown, { className: "px-icon ui-pulldial-arrow" }), workingIcon === undefined ? _jsx(Reload, { className: "px-icon ui-pulldial-working" }) : workingIcon, _jsx("span", { className: "ui-pulldial-home", children: homeIcon ?? _jsx(Home, { className: "px-icon" }) })] }) }) }), document.body);
 }
