@@ -5680,6 +5680,9 @@ a.ui-news-chip:hover { color: var(--text); border-color: var(--brand); }
   border-bottom: 2px solid var(--brand);
   pointer-events: none;
 }
+/* No rubber-band at the top while a PullDial is mounted (PullDial.tsx): the
+   page under the finger is the pull. */
+html.ui-pulldial-on, html.ui-pulldial-on body { overscroll-behavior-y: none; }
 .ui-pulldial[style*="height: 0px"], .ui-pulldial:not([style*="height"]) { border-bottom: 0; }
 .ui-pulldial-ring {
   display: grid;
