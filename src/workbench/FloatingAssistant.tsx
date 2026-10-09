@@ -509,6 +509,36 @@ export interface FloatingAssistantProps {
   onPrefillPromptConsumed?: () => void
 }
 
+// The bubble steps aside while the page scrolls down (it sat over the right
+// edge of every card on a phone) and comes back on the way up.
+function Launcher({ title, onOpen }: { title: string; onOpen: () => void }) {
+  const [hidden, setHidden] = useState(false)
+  useEffect(() => {
+    let last = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      if (Math.abs(y - last) < 8) return
+      setHidden(y > last && y > 80)
+      last = y
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      title={`Open ${title}`}
+      aria-label={`Open ${title}`}
+      className={hidden ? "ui-fa-launcher ui-fa-launcher--away" : "ui-fa-launcher"}
+    >
+      <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    </button>
+  )
+}
+
 export function FloatingAssistant({
   pathname,
   deriveContext,
@@ -834,19 +864,7 @@ export function FloatingAssistant({
 
   // Minimized — floating chat bubble launcher.
   if (minimized) {
-    return (
-      <button
-        type="button"
-        onClick={() => setMinimized(false)}
-        title={`Open ${title}`}
-        aria-label={`Open ${title}`}
-        className="ui-fa-launcher"
-      >
-        <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      </button>
-    )
+    return <Launcher title={title} onOpen={() => setMinimized(false)} />
   }
 
   return (
