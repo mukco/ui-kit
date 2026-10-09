@@ -5,11 +5,16 @@ baseball, football, futbol, and anything else scaffolded from
 rails-vite-template. One set of components and design tokens so those apps
 look and behave like one product. The default palette is baseball's.
 
-**Family Hub is deliberately not a consumer.** It is its own thing with its
-own System-7 design language and its own conventions; do not add it to this
-list or assume kit components belong there. One explicit exception: Family
-Hub and NoFuss may import `@mukco/ui-kit/observability` (error reporting,
-below) — that subpath and nothing else.
+**Family Hub is a consumer too** (decided 2026-10-09; the old "Family Hub is
+not a consumer" rule is retired). Most of the family-flavoured pieces here —
+the Phosphor skin, TabBar, NotificationBell, PullDial, SectionSwipe,
+ArticleReader, the push client — were copied out of the hub for the sports
+apps, so the hub is moving onto them rather than keeping a second copy
+(family-hub `web/docs/kit-port.md` has the plan). It keeps its own System-7
+look: it imports `@mukco/ui-kit/ui-components.css` (below), points the kit's
+tokens at its own, and draws kit components in its four looks from its own
+stylesheet. A kit change for the hub is a prop or option that defaults to
+what the other apps have today.
 
 Apps install it as a git dependency:
 
@@ -22,6 +27,17 @@ Apps install it as a git dependency:
 // main.tsx — once at boot, before anything renders
 import "@mukco/ui-kit/ui.css"
 ```
+
+`ui.css` is the whole kit: tokens, components and the **page globals** — base
+type on `html`/`body`, the focus ring, themed scrollbars, tabular figures in
+`code`/`pre`, the iOS input-zoom floor, `overflow-x: clip` on the page, and
+reduced motion for every element. An app with its own design system that
+wants kit components inside it imports `@mukco/ui-kit/ui-components.css`
+instead: the same file without those globals, so nothing it did not draw with
+the kit changes. The globals are marked in `src/ui.css` with
+`/* @page-globals { */ … /* } @page-globals */`; `scripts/build-css.mjs`
+strips them. Anything new that styles `html`, `body`, `*` or a bare element
+goes between those markers.
 
 ```tsx
 import { StatCard, DataTable } from "@mukco/ui-kit"

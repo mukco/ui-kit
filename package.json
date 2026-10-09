@@ -20,6 +20,7 @@
       "default": "./dist/observability/core.js"
     },
     "./ui.css": "./dist/ui.css",
+    "./ui-components.css": "./dist/ui-components.css",
     "./phosphor.css": "./dist/phosphor.css"
   },
   "files": [
@@ -29,7 +30,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json && cp src/ui.css dist/ui.css && cp src/phosphor.css dist/phosphor.css",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node scripts/build-css.mjs",
     "check": "tsc -p tsconfig.json && npm run check:conventions",
     "check:conventions": "node scripts/check-conventions.mjs",
     "dev": "vite",
