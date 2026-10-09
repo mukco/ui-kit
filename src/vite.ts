@@ -18,7 +18,7 @@ export interface KitVitePlugin {
   apply?: "build" | "serve"
   transformIndexHtml: {
     order: "pre"
-    handler: (html: string) => { tag: string; children: string; injectTo: "head-prepend" }[]
+    handler: (html: string) => string
   }
 }
 
@@ -42,7 +42,16 @@ export function kitBootGuard(options: KitBootGuardOptions): KitVitePlugin {
     ...(dev ? {} : { apply: "build" as const }),
     transformIndexHtml: {
       order: "pre",
-      handler: () => [{ tag: "script", children: script, injectTo: "head-prepend" }],
+      // Right after <meta charset> when there is one, else first in <head>:
+      // prepended ahead of the charset it pushed the declaration past the
+      // first 1024 bytes browsers look in (2026-10-09). Still ahead of every
+      // module script, stylesheet and preload.
+      handler: (html: string) => {
+        const tag = `<script>${script}</script>`
+        const charset = /<meta[^>]*charset[^>]*>/i
+        if (charset.test(html)) return html.replace(charset, (m) => m + tag)
+        return html.replace(/<head[^>]*>/i, (m) => m + tag)
+      },
     },
   }
 }
