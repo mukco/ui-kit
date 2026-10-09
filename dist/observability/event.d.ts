@@ -5,7 +5,7 @@
  */
 export type Level = "error" | "warning" | "info";
 export type Source = "client" | "tv";
-export type Kind = "boundary" | "onerror" | "unhandledrejection" | "watchdog" | "session_died" | "chunk" | "manual" | "log" | "console" | "network";
+export type Kind = "boundary" | "onerror" | "unhandledrejection" | "watchdog" | "session_died" | "chunk" | "manual" | "log" | "console" | "network" | "boot";
 /** Small key/values that travel with an event. ≤ 8 KB serialized. */
 export interface ReportContext {
     kind?: Kind;

@@ -324,6 +324,11 @@ function installLifecycle(s) {
  */
 export function initReporting(options) {
     try {
+        // The bundle is running: the index.html boot guard (bootGuard.ts) stands
+        // down on this assignment. First, and even with reporting disabled — a
+        // guard that never hears it would reload a healthy app.
+        if (hasWindow())
+            window.__kitBooted = true;
         if (state || !hasWindow() || options.enabled === false)
             return;
         const opts = { endpoint: "/internal/errors", source: "client", ...options };
