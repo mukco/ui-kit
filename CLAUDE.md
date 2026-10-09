@@ -3,11 +3,12 @@
 The UI kit for template-derived estate apps (estate, baseball, football,
 futbol…) — consumed as `@mukco/ui-kit` (git dep).
 
-**family-hub is its own thing.** Its System-7 design system is intentional;
-it does not consume this kit, and kit changes should never be justified by
-"family-hub could use this". The one exception: Family Hub and NoFuss may
-import `@mukco/ui-kit/observability` (error reporting) — that subpath only;
-the rest of this rule stands. Scope here = rails-vite-template descendants. Default palette = baseball's. See README.md for the component
+**Family Hub is a consumer** (2026-10-09 — the old "family-hub is its own
+thing, never justify a kit change by it" rule is retired). It keeps its
+System-7 look by importing `ui-components.css` (no page globals) and bridging
+the kit's tokens to its own; a kit change it needs is an option that defaults
+to what the template apps already get. Scope: rails-vite-template descendants
+plus Family Hub. Default palette = baseball's. See README.md for the component
 inventory.
 
 ## Commands
@@ -16,6 +17,7 @@ inventory.
 npm run dev      # playground: every component with test data, offline
 npm run check    # typecheck (src + demo + playground)
 npm run build    # dist/ — CI commits this to main; never commit dist by hand
+                 # (scripts/build-css.mjs: ui.css, ui-components.css, phosphor.css)
 ```
 
 ## Non-negotiables
@@ -45,6 +47,10 @@ npm run build    # dist/ — CI commits this to main; never commit dist by hand
   scroll with an edge fade, text-size floors under 640px.
 - **Dark mode via `[data-theme='dark']` tokens only** — no `.dark` variants of
   classes, no JS theme logic beyond setting the attribute.
+- **Page globals are marked.** A rule that styles `html`, `body`, `*` or a
+  bare element (not a `ui-*` class) goes between `/* @page-globals { */` and
+  `/* } @page-globals */` in `src/ui.css`, so `ui-components.css` leaves it
+  out. An unmarked one leaks into Family Hub.
 
 ## Adding a component
 
