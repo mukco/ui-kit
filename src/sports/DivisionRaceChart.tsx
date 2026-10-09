@@ -144,10 +144,9 @@ export function DivisionRaceChart({
         {legendSorted.map(t => (
           <div key={t.teamId} className="ui-race-legend-item">
             <TeamIcon teamId={t.teamId} size={14} name={t.teamAbbr} />
-            <span
-              className="ui-race-legend-abbr"
-              style={{ color: t.displayColor, opacity: t.teamId === favTeamId ? 1 : 0.8 }}
-            >
+            {/* The logo carries the team colour; the label is text-coloured, so
+                LAA and OAK stay legible on white (was 1.7:1). */}
+            <span className={t.teamId === favTeamId ? "ui-race-legend-abbr ui-race-legend-abbr--fav" : "ui-race-legend-abbr"}>
               {t.teamAbbr}
             </span>
           </div>

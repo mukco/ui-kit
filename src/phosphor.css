@@ -189,7 +189,7 @@
 
 :root[data-skin="phosphor"] .ui-segmented { border: 2px solid var(--amber); padding: 0; gap: 0; background: var(--surface); }
 
-:root[data-skin="phosphor"] .ui-segmented-btn { font-family: var(--px-chrome); font-size: calc(0.72rem + var(--fs-bump, 0px)); border-radius: 0; padding: 0.15rem 0.6rem; color: var(--text-2); }
+:root[data-skin="phosphor"] .ui-segmented-btn { font-family: var(--px-chrome); font-size: calc(0.8rem + var(--fs-bump, 0px)); border-radius: 0; padding: 0.125rem 0.75rem; color: var(--text-2); }
 
 :root[data-skin="phosphor"] .ui-segmented-btn--active { background: var(--amber); color: var(--paper); box-shadow: none; }
 
@@ -218,6 +218,10 @@
 :root[data-skin="phosphor"] :is(.ui-table th, .ui-th, table thead th) {
   background: var(--amber); color: var(--paper); font-family: var(--px-chrome);
 }
+/* The pixel face reads a size smaller than its px. */
+:root[data-skin="phosphor"] .ui-th { font-size: calc(13px + var(--fs-bump, 0px)); }
+:root[data-skin="phosphor"] :is(.ui-mstrip-label, .ui-race-legend-abbr) { font-size: calc(13px + var(--fs-bump, 0px)); }
+:root[data-skin="phosphor"] .ui-tip-btn { font-family: Georgia, "Times New Roman", serif; }
 
 :root[data-skin="phosphor"] :is(.ui-table th, .ui-th) .ui-sort-arrow { color: var(--paper); }
 
