@@ -15,11 +15,7 @@ export interface KitVitePlugin {
     apply?: "build" | "serve";
     transformIndexHtml: {
         order: "pre";
-        handler: (html: string) => {
-            tag: string;
-            children: string;
-            injectTo: "head-prepend";
-        }[];
+        handler: (html: string) => string;
     };
 }
 /**
