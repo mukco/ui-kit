@@ -35,10 +35,23 @@ export interface PullDialProps {
   canRefresh?: boolean
   /** What slides down to uncover the band. The section swipe's element by default. */
   page?: string
-  /** The band hangs from the bottom of this — the app's bar. */
-  under?: string
+  /** The band hangs from the bottom of this — the app's bar. null: the app's CSS places it (Family Hub). */
+  under?: string | null
   /** The Home stage's mark. */
   homeIcon?: ReactNode
+  /** The mark while pulling (default the pixel ArrowBigDown). Given one, give it the ui-pulldial-arrow class. */
+  arrowIcon?: ReactNode
+  /** The mark while a refresh runs (default the pixel Reload); null for none — the ring turns on its own. */
+  workingIcon?: ReactNode | null
+  /** Who owns a touch that starts here, replacing the kit's rule (dialogs, sheets, drawers, charts,
+      editors, [data-no-pull], and any box scrolled down inside the page). body[data-swiping] still always stands it down. */
+  ownsTouch?: (target: Element | null) => boolean
+  /** Leave iOS's own rubber-band on at the top (Family Hub). Off by default: the kit switches it off while mounted. */
+  rubberBand?: boolean
+  /** Mark the page data-pulled while it is down, for the app's CSS. */
+  markPulled?: boolean
+  /** After the page settles back: the app's own repaint of pinned bars, replacing the kit's. */
+  onSettled?: () => void
 }
 
 /**
@@ -63,11 +76,16 @@ export interface PullDialProps {
  *
  *   <PullDial onRefresh={refetchVisible} onHome={atHome ? undefined : goHome} />
  */
-export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true, page = "[data-swipe-content]", under = ".ui-nav", homeIcon }: PullDialProps) {
+export function PullDial({
+  onRefresh, onHome, enabled = true, canRefresh = true, page = "[data-swipe-content]", under = ".ui-nav", homeIcon,
+  arrowIcon, workingIcon, ownsTouch, rubberBand = false, markPulled = false, onSettled,
+}: PullDialProps) {
   const dial = useRef<HTMLDivElement>(null)
   // Read when a pull ends, so the listeners never need setting up again.
-  const props = useRef({ onRefresh, onHome, enabled, canRefresh, page, under })
-  props.current = { onRefresh, onHome, enabled, canRefresh, page, under }
+  const props = useRef({ onRefresh, onHome, enabled, canRefresh, page, under, ownsTouch, markPulled, onSettled })
+  props.current = { onRefresh, onHome, enabled, canRefresh, page, under, ownsTouch, markPulled, onSettled }
+  // Read once: whether the document's rubber-band is ours to switch off.
+  const keepRubberBand = useRef(rubberBand).current
 
   useEffect(() => {
     let startY: number | null = null
@@ -94,6 +112,10 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
         // Over the band while it moves, so the band is only seen in the gap.
         pageEl.style.position = y > 0 ? "relative" : ""
         pageEl.style.zIndex = y > 0 ? "1" : ""
+        if (props.current.markPulled) {
+          if (y > 0) pageEl.dataset.pulled = ""
+          else delete pageEl.dataset.pulled
+        }
       }
     }
     const setStage = (next: Stage) => {
@@ -123,7 +145,8 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
       show(0, still() ? "none" : SETTLE)
       setStage("pull")
       el()?.style.setProperty("--p", "0")
-      replaceFixed()
+      if (props.current.onSettled) props.current.onSettled()
+      else replaceFixed()
     }
 
     // A box that scrolls on its own and is not at its top: pulling down
@@ -141,12 +164,14 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
       if (!p.enabled || busy || event.touches.length !== 1 || window.scrollY > 0) return
       if (document.body.dataset.swiping === "true") return
       const target = event.target instanceof Element ? event.target : null
-      if (target?.closest(OWNS_TOUCH) || scrolledInside(target)) return
+      if (p.ownsTouch ? p.ownsTouch(target) : target?.closest(OWNS_TOUCH) || scrolledInside(target)) return
       startY = event.touches[0].clientY
       startX = event.touches[0].clientX
       // Hung from wherever the bar ends, whatever the notch makes it.
-      const bar = document.querySelector(p.under)
-      el()?.style.setProperty("--ui-pulldial-top", `${Math.max(0, Math.round(bar?.getBoundingClientRect().bottom ?? 0))}px`)
+      if (p.under !== null) {
+        const bar = document.querySelector(p.under)
+        el()?.style.setProperty("--ui-pulldial-top", `${Math.max(0, Math.round(bar?.getBoundingClientRect().bottom ?? 0))}px`)
+      }
     }
 
     const onMove = (event: TouchEvent) => {
@@ -189,14 +214,14 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
     // finger while the band stayed where the nav had been, so the estate
     // showed a stripe floating in a gap above its own bar (2026-10-09). The
     // pull itself is the overscroll now.
-    document.documentElement.classList.add("ui-pulldial-on")
+    if (!keepRubberBand) document.documentElement.classList.add("ui-pulldial-on")
     window.addEventListener("scroll", onScroll, { passive: true })
     window.addEventListener("touchstart", onStart, { passive: true })
     window.addEventListener("touchmove", onMove, { passive: true })
     window.addEventListener("touchend", onEnd, { passive: true })
     window.addEventListener("touchcancel", onEnd, { passive: true })
     return () => {
-      document.documentElement.classList.remove("ui-pulldial-on")
+      if (!keepRubberBand) document.documentElement.classList.remove("ui-pulldial-on")
       window.clearTimeout(nudge)
       window.removeEventListener("scroll", onScroll)
       window.removeEventListener("touchstart", onStart)
@@ -212,8 +237,8 @@ export function PullDial({ onRefresh, onHome, enabled = true, canRefresh = true,
     <div ref={dial} className="ui-pulldial" data-stage="pull" aria-hidden="true">
       <span className="ui-pulldial-ring">
         <span className="ui-pulldial-face">
-          <ArrowBigDown className="px-icon ui-pulldial-arrow" />
-          <Reload className="px-icon ui-pulldial-working" />
+          {arrowIcon ?? <ArrowBigDown className="px-icon ui-pulldial-arrow" />}
+          {workingIcon === undefined ? <Reload className="px-icon ui-pulldial-working" /> : workingIcon}
           <span className="ui-pulldial-home">{homeIcon ?? <Home className="px-icon" />}</span>
         </span>
       </span>
