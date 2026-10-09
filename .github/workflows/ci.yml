@@ -20,7 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
-      - run: node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs
+      - run: node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs test/push.test.mjs
       # Every shared component, screenshotted and compared with the baselines
       # CI made. A difference fails the build and uploads the new shots and
       # their diffs; to accept a change on purpose, run "Update visual
