@@ -73,6 +73,7 @@ import {
   AppearanceCard, Baseball, Basketball, FollowButton, Football, Glyph, IconStar, InstallAppCard, NavSessionButtons, TabBar,
   type NotificationItem,
 } from "../src"
+import * as Px from "../src/primitives/Pixel"
 import { Article, Calendar, ChartBarBig, SettingsCog, Users } from "pixelarticons/react"
 import { ErrorBoundary } from "../src/observability"
 import "./demo.css"
@@ -1160,6 +1161,9 @@ export function UiDemo() {
             <NavSessionButtons email="kit@example.com" onSettings={() => {}} onSignOut={() => {}} />
             <NotificationBell items={DEMO_BELL} onDismiss={() => {}} onDismissAll={() => {}} action={{ label: "Open in chat →", onClick: () => {} }} />
             <span>Balls: <Basketball className="px-icon" /> <Football className="px-icon" /> <Baseball className="px-icon" /> · Glyph <Glyph e="🏆" /></span>
+            <span>Pixel: {(["StarFilled", "StarFilledPointed", "Bandage", "Remote", "Pot", "SkipPrevious", "SkipNext", "TurnBack", "TurnAhead", "Sunrise",
+              "PlantSprout", "PlantSapling", "PlantTree", "PlantFlower", "Takeout", "Pan", "PlayingCard", "HeartFilled", "CheckBold", "CheckDoubleBold", "LinkBroken", "Comic"] as const)
+              .map((name) => { const Icon = Px[name]; return <Icon key={name} className="px-icon" aria-label={name} role="img" /> })}</span>
           </div>
           <TabBar pathname="/" onNavigate={() => {}} tabs={[
             { to: "/", label: "Today", Icon: Calendar, match: ["/"] },
