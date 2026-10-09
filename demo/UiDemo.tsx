@@ -30,6 +30,7 @@ import {
   ModelResults,
   NavBar,
   NotificationBell,
+  PullDial,
   PageHeader,
   PercentileGauge,
   PlayerLink,
@@ -1130,6 +1131,19 @@ export function UiDemo() {
             </SettingRow>
           </SettingsGroup>
         </div>
+      </section>
+
+      {/* Mounted for the whole page: pull down at the top on a phone (or in
+          device mode) and the playground slides down over the band. */}
+      <PullDial page=".uidemo" onRefresh={() => new Promise((r) => setTimeout(r, 1200))} onHome={() => window.scrollTo(0, 0)} />
+      <section className="uidemo-section">
+        <h2>PullDial — pull down at the top</h2>
+        <p>
+          Family Hub&apos;s pull-down. At the very top of the page, a short pull (160px of finger) refreshes:
+          the ring fills, goes solid with ↑, and turns while <code>onRefresh</code> runs. Pulled on past
+          420px it shows the house and goes Home (<code>onHome</code>; leave it out where you already are).
+          Touch only — try it here at phone width.
+        </p>
       </section>
 
       <section className="uidemo-section">
