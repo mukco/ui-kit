@@ -56,6 +56,7 @@ pin).
 | Charts | DynamicChart, RollingAverageChart, SparklineChart, PercentileGauge |
 | SQL workbench | SandboxCell, SandboxChart, SandboxPivot, SandboxContext |
 | Models | ModelResults, PredActualChart, ClassBreakdownChart, RunComparison, RunHistory, LayerBuilder, NNExplainer, ML_GLOSSARY |
+| Pixel icons | `pixel` (draw one on Pixelarticons' grid; decorative unless given an `aria-label`), `Skin`, `Glyph`, `registerGlyphs`; icons the set lacks: StarFilled, StarFilledPointed, Bandage, and Family Hub's Remote, Pot, SkipNext/SkipPrevious, TurnBack/TurnAhead, Sunrise, PlantSprout/Sapling/Tree/Flower, Takeout, Pan, PlayingCard, HeartFilled, CheckBold, CheckDoubleBold, LinkBroken, Comic; balls in `sports/pixelBalls` |
 | Sports identity | configureSports({ photoUrl, logoUrl, playerHref?, teamHref?, resolvePlayer? }), PlayerLink, TeamIcon, TeamLink |
 
 ## Error reporting — `@mukco/ui-kit/observability`
