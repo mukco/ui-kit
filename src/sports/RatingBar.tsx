@@ -6,8 +6,10 @@ import { cn } from "../cn"
  * "55 · 60–70" at the right says the same in numbers. A veteran's range
  * collapses onto his rating; a 20-year-old's is wide.
  *
- * Coloured by the scale's own bands (20–35 poor, 40–45 below, 50 average,
- * 55–60 above, 65–70 plus, 75–80 elite), so a page of them reads at a glance.
+ * Heat-mapped on the apps' stat ramp (--stat-poor … --stat-elite) by the
+ * scale's own bands (20–35 poor, 40–45 below, 50 average, 55–60 above,
+ * 65+ plus/elite): the bar, the rating and each end of the range, so a page
+ * of them reads at a glance, in every theme.
  */
 export interface RatingBarProps {
   label: string
@@ -30,6 +32,11 @@ export function ratingTier(v: number): "poor" | "below" | "average" | "above" | 
   return "poor"
 }
 
+const HEAT = { poor: "--stat-poor", below: "--stat-below", average: "--stat-avg", above: "--stat-great", plus: "--stat-elite", elite: "--stat-elite" } as const
+
+/** The heat colour of a 20–80 rating. */
+export const ratingHeat = (v: number) => `var(${HEAT[ratingTier(v)]})`
+
 export function RatingBar({ label, current, potentialLow, potentialHigh, className }: RatingBarProps) {
   const low = potentialLow ?? current
   const high = potentialHigh ?? current
@@ -44,7 +51,13 @@ export function RatingBar({ label, current, potentialLow, potentialHigh, classNa
       </span>
       <span className="ui-ratingbar-value">
         <strong>{current}</strong>
-        {growing && <span className="ui-ratingbar-pot">{low === high ? high : `${low}–${high}`}</span>}
+        {growing && (
+          <span className="ui-ratingbar-pot">
+            {low === high ? <span style={{ color: ratingHeat(high) }}>{high}</span> : <>
+              <span style={{ color: ratingHeat(low) }}>{low}</span>–<span style={{ color: ratingHeat(high) }}>{high}</span>
+            </>}
+          </span>
+        )}
       </span>
     </div>
   )
