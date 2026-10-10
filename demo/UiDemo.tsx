@@ -77,6 +77,7 @@ import * as Px from "../src/primitives/Pixel"
 import { Article, Calendar, ChartBarBig, SettingsCog, Users } from "pixelarticons/react"
 import { ErrorBoundary } from "../src/observability"
 import { ArticleReader } from "../src/sports/ArticleReader"
+import { SettingsNav } from "../src/primitives/SettingsNav"
 import "./demo.css"
 
 /* ---------- Offline test identity: SVG data URIs, no network needed. ---------- */
@@ -1245,6 +1246,18 @@ export function UiDemo() {
           onBack={() => {}}
           actions={<Button size="sm" aria-pressed={saved} onClick={() => setSaved(!saved)}>{saved ? "Saved" : "Save for later"}</Button>}
         />
+      </section>
+
+      <section className="uidemo-section">
+        <h2>SettingsNav — settings as a list of sections</h2>
+        <p className="uidemo-note">Each row opens its section as a page of its own; the last can act instead (no ›).</p>
+        <Card>
+          <SettingsNav items={[
+            { key: "appearance", label: "Appearance", icon: <Px.StarFilled className="px-icon" />, summary: "Phosphor", onSelect: () => {} },
+            { key: "notifications", label: "Notifications", icon: <Px.Remote className="px-icon" />, summary: "What reaches this device", onSelect: () => {} },
+            { key: "out", label: "Sign out", icon: <Px.TurnBack className="px-icon" />, summary: "kit@example.com", onSelect: () => {}, chevron: false },
+          ]} />
+        </Card>
       </section>
 
       <UpdateToast
