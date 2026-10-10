@@ -6041,6 +6041,27 @@ html.ui-pulldial-on, html.ui-pulldial-on body { overscroll-behavior-y: none; }
 .ui-article-original--main { background: var(--brand); border-color: var(--brand); color: var(--on-brand, #fff); }
 .ui-article-original--main:hover { background: var(--brand); filter: brightness(1.08); }
 
+/* ---------- SettingsNav ----------
+   Family Hub's Control Panel list: a row per section, its icon in a tile,
+   its name and what it is set to now, a › to open it. */
+.ui-setnav { display: grid; border-top: 1px solid var(--border); }
+.ui-setnav-row {
+  display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; gap: var(--space-3); align-items: center;
+  width: 100%; min-height: 3.5rem; padding: var(--space-2) var(--space-1); text-align: left;
+  background: none; border: 0; border-bottom: 1px solid var(--border); border-radius: 0;
+  color: var(--text); font: inherit; cursor: pointer;
+}
+.ui-setnav-row:hover { background: var(--surface-2); }
+.ui-setnav-icon {
+  display: grid; place-items: center; width: 2.5rem; height: 2.5rem; font-size: 1.25rem;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+}
+.ui-setnav-icon .px-icon, .ui-setnav-icon svg { width: 1.25rem; height: 1.25rem; }
+.ui-setnav-words { display: grid; gap: 0.125rem; min-width: 0; }
+.ui-setnav-name { font-weight: 700; font-size: calc(1rem + var(--fs-bump, 0px)); }
+.ui-setnav-now { font-size: calc(0.8125rem + var(--fs-bump, 0px)); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-setnav-go { width: 1.25rem; height: 1.25rem; color: var(--muted); }
+
 /* ---------- NotificationBell sheet ----------
    Family Hub's (2026-10-02): a popover under the bell on a desktop, and on a
    phone the whole screen under the bar, rows at the phone's type scale. */
