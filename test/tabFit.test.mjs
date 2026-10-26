@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { fitTabs, shownTabs, slotWidth } from "../dist/primitives/tabFit.js"
+import { fitTabs, moreSections, shownTabs, slotWidth } from "../dist/primitives/tabFit.js"
 
 // Frame widths roughly as Phosphor draws them at 390 with the phone's +2px:
 // Today, Fantasy, Teams, Stats, News, Picks, Sim, Sandbox, Settings.
@@ -71,4 +71,35 @@ test("never fewer than one tab, never a slot under the 44px target", () => {
 
 test("an unmeasured bar (hidden: no room) shows every tab", () => {
   assert.equal(fitTabs({ ...base, room: 0 }), W.length)
+})
+
+const T = (to, label, match = [to]) => ({ to, label, match })
+
+test("More's sheet: the tabs that did not fit first, under one heading, then the app's groups", () => {
+  const tabs = [T("/", "Today", ["/", "/game"]), T("/news", "News"), T("/sim", "Sim")]
+  const items = [
+    { to: "/digest", label: "Stat Blast", group: "News" },
+    { to: "/news", label: "News", group: "News" }, // also a tab: dropped
+    { to: "/ref", label: "Reference", group: "Definitions" },
+  ]
+  const s = moreSections(tabs.slice(1), items, tabs, "/", "Sections")
+  assert.deepEqual(s.map((x) => [x.heading, x.entries.map((e) => e.label)]), [
+    ["Sections", ["News", "Sim"]],
+    ["News", ["Stat Blast"]],
+    ["Definitions", ["Reference"]],
+  ])
+})
+
+test("an ungrouped item is a section of its own, never part of the run above it", () => {
+  const s = moreSections([T("/sim", "Sim")], [{ to: "/x", label: "X" }], [T("/sim", "Sim")], "/", "Sections")
+  assert.equal(s.length, 2)
+  assert.equal(s[1].heading, undefined)
+  assert.deepEqual(s[1].entries.map((e) => e.label), ["X"])
+})
+
+test("a sheet row is current by the tab's own match, or the item's path", () => {
+  const s = moreSections([T("/", "Today", ["/", "/game"])], [{ to: "/digest", label: "Stat Blast", group: "News" }], [], "/game/12", "Sections")
+  assert.equal(s[0].entries[0].here, true)
+  assert.equal(s[1].entries[0].here, false)
+  assert.equal(moreSections([], [{ to: "/digest", label: "Stat Blast" }], [], "/digest/3", "Sections")[0].entries[0].here, true)
 })

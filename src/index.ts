@@ -172,8 +172,8 @@ export {
 } from "./primitives/Pixel"
 export type { PixelIcon } from "./primitives/Pixel"
 export { TabBar } from "./primitives/TabBar"
-export { fitTabs, shownTabs, slotWidth } from "./primitives/tabFit"
-export type { TabFitInput } from "./primitives/tabFit"
+export { fitTabs, moreSections, shownTabs, slotWidth } from "./primitives/tabFit"
+export type { TabFitInput, MoreSheetEntry, MoreSheetSection } from "./primitives/tabFit"
 export type { TabBarTab, TabBarProps, TabBarMoreItem } from "./primitives/TabBar"
 export { Basketball, Football, Baseball } from "./sports/pixelBalls"
 

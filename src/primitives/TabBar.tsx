@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react"
 import { MoreHorizontal } from "pixelarticons/react"
 import type { PixelIcon } from "./Pixel"
-import { fitTabs, shownTabs } from "./tabFit"
+import { fitTabs, moreSections, shownTabs } from "./tabFit"
 
 /**
  * The phone tab bar for the Phosphor skin: the app's places along the foot of
@@ -46,7 +46,7 @@ export interface TabBarProps {
    * tab is in the bar or already at the top of the sheet.
    */
   more?: { items: TabBarMoreItem[]; footer?: ReactNode }
-  /** Heads the tabs that did not fit, at the top of More. */
+  /** Heads the tabs that did not fit, at the top of More (the same word in every app). */
   overflowHeading?: string
 }
 
@@ -80,6 +80,8 @@ export function TabBar({ tabs, pathname, onNavigate, label = "Sections", more, o
     setM((prev) => (same(prev, next) ? prev : next))
   }, [])
 
+  // The first render shows every tab; this re-fits before paint, so the bar
+  // never flashes the unfitted row.
   useLayoutEffect(measure, [measure, tabs])
   useEffect(() => {
     // The bar's room (window, the skin showing the bar) and the ruler's size
@@ -114,9 +116,9 @@ export function TabBar({ tabs, pathname, onNavigate, label = "Sections", more, o
   const hasMore = alwaysMore || overflow.length > 0
   const hereShown = shownIdx.includes(hereIdx)
   const moreActive = open || (!hereShown && (hereIdx >= 0 || extra.some((i) => under(pathname, i.to))))
+  const sections = moreSections(overflow, more?.items ?? [], tabs, pathname, overflowHeading)
 
   const go = (to: string) => { setOpen(false); onNavigate(to) }
-  let lastGroup: string | undefined
   return (
     <>
       <nav className="ph-tabbar" aria-label={label}>
@@ -125,6 +127,8 @@ export function TabBar({ tabs, pathname, onNavigate, label = "Sections", more, o
             const t = tabs[i]
             const here = i === hereIdx
             return (
+              // While More's sheet is open only More is framed; the page's tab
+              // keeps aria-current, which is still true.
               <button key={t.to} type="button" className={`ph-tab${here && !open ? " ph-tab--here" : ""}`} aria-current={here ? "page" : undefined} onClick={() => go(t.to)}>
                 <t.Icon className="ph-tab-icon" aria-hidden="true" /><span className="ph-tab-label">{t.label}</span>
               </button>
@@ -148,21 +152,20 @@ export function TabBar({ tabs, pathname, onNavigate, label = "Sections", more, o
       {hasMore && open && (
         <div className="ph-more" onClick={() => setOpen(false)}>
           <div className="ph-more-sheet" role="dialog" aria-modal="true" aria-label="More" onClick={(e) => e.stopPropagation()}>
-            <ul className="ph-more-list">
-              {[...overflow.map((t) => ({ to: t.to, label: t.label, group: overflowHeading })), ...extra].map((i) => {
-                const head = i.group && i.group !== lastGroup ? i.group : null
-                lastGroup = i.group
-                const here = under(pathname, i.to)
-                return (
-                  <li key={i.to}>
-                    {head && <div className="ph-more-group">{head}</div>}
-                    <button type="button" className={`ph-more-item${here ? " ph-more-item--here" : ""}`} aria-current={here ? "page" : undefined} onClick={() => go(i.to)}>
-                      {i.label}
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
+            {sections.map((sec, n) => (
+              <div key={n} className="ph-more-section">
+                {sec.heading && <div className="ph-more-group">{sec.heading}</div>}
+                <ul className="ph-more-list">
+                  {sec.entries.map((i) => (
+                    <li key={i.to}>
+                      <button type="button" className={`ph-more-item${i.here ? " ph-more-item--here" : ""}`} aria-current={i.here ? "page" : undefined} onClick={() => go(i.to)}>
+                        {i.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
             {more?.footer && <div className="ph-more-foot">{more.footer}</div>}
           </div>
         </div>

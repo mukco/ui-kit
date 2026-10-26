@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react"
 
 const MIN_OPACITY = 0.25
 const DEFAULT_OPACITY = 0.9
@@ -585,6 +585,10 @@ export function FloatingAssistant({
   // leaves visible. It is deliberately not `height`: `height` is persisted, and
   // a keyboard must not permanently shrink the panel the user sized.
   const [keyboardH, setKeyboardH] = useState<any>(null)
+  // What a shown tab bar covers, read when the panel opens and when the
+  // window changes (rotation, the skin) rather than on every render: it is
+  // a layout read, and a drag renders every frame.
+  const [inset, setInset] = useState(0)
   const [dragging, setDragging] = useState(false)
   const [resizing, setResizing] = useState(false)
   const [opacity, setOpacity] = useState(() => loadOpacity(storagePrefix))
@@ -613,9 +617,12 @@ export function FloatingAssistant({
     return () => vv.removeEventListener("resize", sync)
   }, [])
 
+  useLayoutEffect(() => { if (!minimized) setInset(tabBarInset()) }, [minimized])
+
   // Keep the panel/bubble on-screen and the size within the viewport when it resizes.
   useEffect(() => {
     const handler = () => {
+      setInset(tabBarInset())
       setWidth((w: number) => Math.min(w, Math.floor(window.innerWidth * 0.92)))
       setHeight((h: number) => Math.min(h, Math.floor(window.innerHeight * 0.92)))
       setPosition((p: any) => clampPosition(p.x, p.y, width, panelRef.current?.offsetHeight ?? height))
@@ -888,7 +895,7 @@ export function FloatingAssistant({
         dragging || resizing ? "ui-fa-panel--active" : ""
       }`}
       style={{
-        ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : tabBarInset() }),
+        ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : inset }),
         transformOrigin: "center",
         // Lifting the panel nudges it more opaque so it reads as "above" the page.
         backgroundColor: `color-mix(in srgb, var(--surface) ${Math.round(Math.min(1, (dragging || resizing) ? opacity + 0.05 : opacity) * 100)}%, transparent)`,
