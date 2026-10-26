@@ -15,14 +15,18 @@ export function isMobileViewport() {
 // that is what hid the send button: the sheet is 100dvh, dvh does not shrink
 // for the keyboard, so the composer sat underneath it with nothing to scroll.
 // Now the panel is clamped into whatever the keyboard leaves visible.
-export function panelGeometry({ position, width, height, available }: any) {
+// `inset` is how much of the bottom of the screen a bar covers (the Phosphor
+// tab bar): the panel stands above it rather than hiding the tabs under its
+// composer. With the keyboard up the bar is beneath the keyboard anyway.
+export function panelGeometry({ position, width, height, available, inset = 0 }: any) {
   // The floor is the panel's own height, not MIN_HEIGHT: this clamp exists to
   // shrink a panel into the visible strip, and must never grow one the user
   // already made smaller.
   const floor = Math.min(MIN_HEIGHT, height)
-  const h = available ? Math.max(floor, Math.min(height, available - 16)) : height
-  const top = available
-    ? Math.max(8, Math.min(position.y, available - h - 8))
+  const room = available || (inset > 0 ? window.innerHeight - inset : 0)
+  const h = room ? Math.max(floor, Math.min(height, room - 16)) : height
+  const top = room
+    ? Math.max(8, Math.min(position.y, room - h - 8))
     : position.y
 
   return {
@@ -169,9 +173,17 @@ function loadOpacity(prefix: string) {
   return DEFAULT_OPACITY
 }
 
+/** The height a shown Phosphor tab bar covers at the foot of the screen; 0 without one. */
+export function tabBarInset() {
+  if (typeof document === "undefined") return 0
+  const bar = document.querySelector<HTMLElement>(".ph-tabbar")
+  const r = bar?.getBoundingClientRect()
+  return r && r.height > 0 ? Math.max(0, Math.round(window.innerHeight - r.top)) : 0
+}
+
 export function clampPosition(x: any, y: any, w: any, h: any) {
   const maxX = Math.max(0, window.innerWidth - w)
-  const maxY = Math.max(0, window.innerHeight - h)
+  const maxY = Math.max(0, window.innerHeight - tabBarInset() - h)
   return {
     x: Math.min(Math.max(0, x), maxX),
     y: Math.min(Math.max(0, y), maxY),
@@ -876,7 +888,7 @@ export function FloatingAssistant({
         dragging || resizing ? "ui-fa-panel--active" : ""
       }`}
       style={{
-        ...panelGeometry({ position, width, height, available: keyboardH }),
+        ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : tabBarInset() }),
         transformOrigin: "center",
         // Lifting the panel nudges it more opaque so it reads as "above" the page.
         backgroundColor: `color-mix(in srgb, var(--surface) ${Math.round(Math.min(1, (dragging || resizing) ? opacity + 0.05 : opacity) * 100)}%, transparent)`,

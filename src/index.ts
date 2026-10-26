@@ -104,7 +104,7 @@ export { RollingAverageChart } from "./charts/RollingAverageChart"
 export { SparklineChart } from "./charts/SparklineChart"
 
 // SQL workbench
-export { FloatingAssistant, isMobileViewport, panelGeometry, clampPosition, MOBILE_BREAKPOINT } from "./workbench/FloatingAssistant"
+export { FloatingAssistant, isMobileViewport, panelGeometry, clampPosition, tabBarInset, MOBILE_BREAKPOINT } from "./workbench/FloatingAssistant"
 export { assistantMarkdown } from "./workbench/assistantMarkdown"
 export type { FloatingAssistantProps } from "./workbench/FloatingAssistant"
 export { SandboxCell } from "./workbench/SandboxCell"
@@ -172,6 +172,8 @@ export {
 } from "./primitives/Pixel"
 export type { PixelIcon } from "./primitives/Pixel"
 export { TabBar } from "./primitives/TabBar"
+export { fitTabs, shownTabs, slotWidth } from "./primitives/tabFit"
+export type { TabFitInput } from "./primitives/tabFit"
 export type { TabBarTab, TabBarProps, TabBarMoreItem } from "./primitives/TabBar"
 export { Basketball, Football, Baseball } from "./sports/pixelBalls"
 
