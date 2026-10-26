@@ -83,8 +83,9 @@ export function moreSections(
   let run: MoreSheetSection | null = null
   for (const i of items) {
     if (allTabs.some((t) => t.to === i.to)) continue
-    if (!run || run.heading !== i.group) {
-      run = { heading: i.group, entries: [] }
+    const group = i.group || undefined
+    if (!run || run.heading !== group) {
+      run = { heading: group, entries: [] }
       out.push(run)
     }
     run.entries.push({ to: i.to, label: i.label, here: under(pathname, i.to) })

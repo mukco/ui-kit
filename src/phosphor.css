@@ -321,8 +321,8 @@
 .ph-more-list { list-style: none; margin: 0; padding: 0; }
 /* A run with no heading still starts a section of its own. */
 .ph-more-section + .ph-more-section:not(:has(> .ph-more-group)) { margin-top: 0.75rem; padding-top: 0.25rem; border-top: 1px dotted color-mix(in srgb, var(--brand) 35%, transparent); }
-/* The assistant's button would float over the sheet's last rows. */
-body:has(.ph-more) :is(.ui-fa-launcher, .ui-assistant-root) { display: none; }
+/* The assistant's button floated over the sheet's last rows (2026-10-25). */
+body:has(.ph-more) :is(.ui-fa-launcher, .ui-assistant-fab) { display: none; }
 .ph-more-group { margin: 0.75rem 0 0.25rem; font-size: calc(0.7rem + var(--fs-bump, 0px)); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .ph-more-item { display: block; width: 100%; min-height: 44px; padding: 0.75rem 0.5rem; border: 2px solid transparent; background: none; color: inherit; font: inherit; font-size: calc(1rem + var(--fs-bump, 0px)); text-align: left; cursor: pointer; }
 .ph-more-item--here { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 12%, transparent); }

@@ -617,7 +617,17 @@ export function FloatingAssistant({
     return () => vv.removeEventListener("resize", sync)
   }, [])
 
-  useLayoutEffect(() => { if (!minimized) setInset(tabBarInset()) }, [minimized])
+  useLayoutEffect(() => {
+    if (minimized) return
+    setInset(tabBarInset())
+    // The bar showing or going (a skin switch, a page that hides it) changes
+    // its size without a window resize.
+    const bar = document.querySelector(".ph-tabbar")
+    if (!bar || typeof ResizeObserver === "undefined") return
+    const ro = new ResizeObserver(() => setInset(tabBarInset()))
+    ro.observe(bar)
+    return () => ro.disconnect()
+  }, [minimized])
 
   // Keep the panel/bubble on-screen and the size within the viewport when it resizes.
   useEffect(() => {
