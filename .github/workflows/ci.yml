@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Rebuild main's dist by hand when a merge skipped CI (see CLAUDE.md, Versioning).
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -37,7 +39,7 @@ jobs:
       # exist in the tree. CI commits it on main; [skip ci] prevents a loop.
       # (dist stays gitignored locally so local builds never pollute.)
       - name: Commit dist on main
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         run: |
           git config user.name "ui-kit-bot"
           git config user.email "bot@users.noreply.github.com"

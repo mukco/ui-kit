@@ -115,4 +115,5 @@ merge, so `#main` installs are always buildable — unless the merge commit's
 message contains the skip-CI marker. A squash merge lists every commit of the
 branch, and the "Update visual baselines" workflow's commits carry that
 marker, so squash-merge with a message of your own (`gh pr merge --squash
---subject … --body …`) or no dist is built (#104 and #105, 2026-10-09).
+--subject … --body …`) or no dist is built (#104 and #105, 2026-10-09). If it happens anyway (#115), run CI on main by hand:
+`gh workflow run ci.yml --ref main`.
