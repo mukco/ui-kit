@@ -647,13 +647,10 @@ export const REGISTRY: ComponentDef[] = [
     icon: "⚠",
     imports: ["ErrorState"],
     defaultW: 12,
-    defaults: { children: "Couldn't load this panel.", icon: "⚠" },
-    propDefs: [
-      { key: "children", label: "Message", type: "string" },
-      { key: "icon", label: "Icon", type: "string" },
-    ],
-    render: (p) => <ErrorState icon={String(p.icon)}>{String(p.children)}</ErrorState>,
-    code: (p) => `<ErrorState icon="${esc(String(p.icon))}">${esc(String(p.children))}</ErrorState>`,
+    defaults: { what: "this panel" },
+    propDefs: [{ key: "what", label: "What failed", type: "string" }],
+    render: (p) => <ErrorState what={String(p.what)} onRetry={() => {}} />,
+    code: (p) => `<ErrorState what="${esc(String(p.what))}" onRetry={refetch} />`,
   },
   {
     type: "Loading",

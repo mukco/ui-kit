@@ -130,3 +130,12 @@ export const IconCrt = (p: IconProps) => (
     <path d="M8 21h8M12 17v4M7 9h4M7 12h7" />
   </Svg>
 )
+
+/** Something went wrong: Lucide's triangle-alert. */
+export const IconAlert = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+    <path d="M12 9v4" />
+    <path d="M12 17h.01" />
+  </Svg>
+)

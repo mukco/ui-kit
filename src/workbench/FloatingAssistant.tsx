@@ -2,8 +2,8 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 
 const MIN_OPACITY = 0.25
 const DEFAULT_OPACITY = 0.9
-// Used only to pick touch-friendly starting sizes. The panel is a floating,
-// draggable, resizable window at every width — it is not a mode.
+// Under this width the panel is a bottom sheet (see FloatingAssistant); above
+// it, a floating, draggable, resizable window.
 export const MOBILE_BREAKPOINT = 640
 
 export function isMobileViewport() {
@@ -171,6 +171,32 @@ function loadOpacity(prefix: string) {
     /* ignore */
   }
   return DEFAULT_OPACITY
+}
+
+/** True while the viewport is phone-width; follows rotation and resizes. */
+function useMobileViewport() {
+  const [mobile, setMobile] = useState(isMobileViewport)
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return
+    const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const sync = () => setMobile(mq.matches)
+    sync()
+    mq.addEventListener?.("change", sync)
+    return () => mq.removeEventListener?.("change", sync)
+  }, [])
+  return mobile
+}
+
+/**
+ * Where the phone sheet goes. With the keyboard up it fills what the keyboard
+ * leaves visible (`available`, from the top of the visual viewport, which iOS
+ * scrolls when it focuses the input); otherwise it stands on the tab bar
+ * (`inset`) and stops a thumb's reach short of the top, where the scrim shows
+ * and a tap closes it.
+ */
+export function sheetGeometry({ available, viewportTop = 0, inset = 0 }: { available?: number | null; viewportTop?: number; inset?: number }) {
+  if (available) return { top: viewportTop, bottom: "auto", height: available }
+  return { top: "calc(env(safe-area-inset-top, 0px) + 3rem)", bottom: inset, height: "auto" }
 }
 
 /** The height a shown Phosphor tab bar covers at the foot of the screen; 0 without one. */
@@ -585,6 +611,13 @@ export function FloatingAssistant({
   // leaves visible. It is deliberately not `height`: `height` is persisted, and
   // a keyboard must not permanently shrink the panel the user sized.
   const [keyboardH, setKeyboardH] = useState<any>(null)
+  // Where the visible viewport starts while the keyboard is up: iOS scrolls
+  // the layout viewport to keep the focused input in view.
+  const [viewportTop, setViewportTop] = useState(0)
+  // A phone gets a bottom sheet: opaque, full width, above the tab bar, no
+  // drag, no resize grips, no transparency slider. Those are a pointer's
+  // affordances; on a phone they were stray bars on the panel's edges.
+  const mobile = useMobileViewport()
   // What a shown tab bar covers, read when the panel opens and when the
   // window changes (rotation, the skin) rather than on every render: it is
   // a layout read, and a drag renders every frame.
@@ -611,10 +644,18 @@ export function FloatingAssistant({
   useEffect(() => {
     const vv = window.visualViewport
     if (!vv) return
-    const sync = () => setKeyboardH(vv.height < window.innerHeight - 80 ? vv.height : null)
+    const sync = () => {
+      const up = vv.height < window.innerHeight - 80
+      setKeyboardH(up ? vv.height : null)
+      setViewportTop(up ? vv.offsetTop : 0)
+    }
     sync()
     vv.addEventListener("resize", sync)
-    return () => vv.removeEventListener("resize", sync)
+    vv.addEventListener("scroll", sync)
+    return () => {
+      vv.removeEventListener("resize", sync)
+      vv.removeEventListener("scroll", sync)
+    }
   }, [])
 
   useLayoutEffect(() => {
@@ -896,24 +937,42 @@ export function FloatingAssistant({
     return <Launcher title={title} onOpen={() => setMinimized(false)} />
   }
 
+  const sheetFlush = mobile && !keyboardH && inset === 0
   return (
+    <>
+    {mobile && (
+      // The page behind the sheet, dimmed; a tap on it closes the sheet. It
+      // stops at the tab bar, which stays live.
+      <div
+        className="ui-fa-scrim"
+        aria-hidden="true"
+        style={{ bottom: keyboardH ? 0 : inset }}
+        onClick={() => setMinimized(true)}
+      />
+    )}
     <aside
       ref={panelRef}
-      className={`ui-fa-panel ${
-        dragging ? "ui-fa-panel--drag" : ""
-      } ${
-        dragging || resizing ? "ui-fa-panel--active" : ""
-      }`}
-      style={{
-        ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : inset }),
-        transformOrigin: "center",
-        // Lifting the panel nudges it more opaque so it reads as "above" the page.
-        backgroundColor: `color-mix(in srgb, var(--surface) ${Math.round(Math.min(1, (dragging || resizing) ? opacity + 0.05 : opacity) * 100)}%, transparent)`,
-      }}
+      aria-label={mobile ? title : undefined}
+      className={
+        mobile
+          ? `ui-fa-panel ui-fa-panel--sheet${sheetFlush ? " ui-fa-panel--flush" : ""}`
+          : `ui-fa-panel ${dragging ? "ui-fa-panel--drag" : ""} ${dragging || resizing ? "ui-fa-panel--active" : ""}`
+      }
+      onKeyDown={mobile ? (e) => { if (e.key === "Escape") setMinimized(true) } : undefined}
+      style={
+        mobile
+          ? sheetGeometry({ available: keyboardH, viewportTop, inset })
+          : {
+              ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : inset }),
+              transformOrigin: "center",
+              // Lifting the panel nudges it more opaque so it reads as "above" the page.
+              backgroundColor: `color-mix(in srgb, var(--surface) ${Math.round(Math.min(1, (dragging || resizing) ? opacity + 0.05 : opacity) * 100)}%, transparent)`,
+            }
+      }
     >
-      {/* Drag and resize are touch affordances too — the grips grow under a
-          coarse pointer rather than disappearing. */}
-      <>
+      {/* Drag and resize are a pointer's affordances: a window you place on a
+          desktop. The phone sheet has neither. */}
+      {!mobile && <>
         {/* Resize handle — left edge (width) */}
         <button
           type="button"
@@ -939,11 +998,11 @@ export function FloatingAssistant({
           onPointerDown={e => startResizing(e, { w: true, h: true })}
           className="ui-fa-resize-corner"
         />
-      </>
+      </>}
       <div className="ui-fa-header">
         <div
-          onPointerDown={startDragging}
-          className="ui-fa-header-row ui-fa-header-row--drag"
+          onPointerDown={mobile ? undefined : startDragging}
+          className={mobile ? "ui-fa-header-row" : "ui-fa-header-row ui-fa-header-row--drag"}
         >
           <div className="ui-fa-title-wrap">
             <div className="ui-fa-title">
@@ -989,7 +1048,7 @@ export function FloatingAssistant({
           </div>
         </div>
 
-        <div
+        {!mobile && <div
           onPointerDown={e => e.stopPropagation()}
           className="ui-fa-opacity-row"
           title="Panel transparency"
@@ -1009,7 +1068,7 @@ export function FloatingAssistant({
             className="ui-fa-opacity-range"
             style={{ "--op-fill": `${((opacity * 100 - MIN_OPACITY * 100) / (100 - MIN_OPACITY * 100)) * 100}%` } as any}
           />
-        </div>
+        </div>}
 
         {sessionPanelOpen && (
           <div className="ui-fa-sessions">
@@ -1087,8 +1146,11 @@ export function FloatingAssistant({
         prefill={composerPrefill}
         onPrefillConsumed={() => setComposerPrefill(null)}
         mentionSearch={mentionSearch}
-        placeholder={mentionSearch ? "Ask about this page… Use @ to mention" : "Ask about this page…"}
+        // A phone's composer is about 25 characters wide; the long form was
+        // cut to "Ask about this page… Use @ t".
+        placeholder={mobile ? (mentionSearch ? "Ask, or @ to mention" : "Ask about this page") : mentionSearch ? "Ask about this page… Use @ to mention" : "Ask about this page…"}
       />
     </aside>
+    </>
   )
 }

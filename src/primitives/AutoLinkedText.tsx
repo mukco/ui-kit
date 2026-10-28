@@ -4,6 +4,10 @@ import { PlayerLink } from "../sports/PlayerLink"
 import { extractCandidates, matchKey } from "../sports/playerNames"
 import { cn } from "../cn"
 
+// A face taller than this outgrows a line of body text, so it is centred on
+// the line rather than hung from its foot (.ui-autolink-player--lg).
+const LINE_AVATAR_MAX = 18
+
 const NUM_SPLIT = /(\b\d+\.?\d*%?|\.\d+\b)/g
 
 function renderWithNumbers(text: string, keyPrefix: string): ReactNode[] {
@@ -51,6 +55,11 @@ interface Props {
    * this for AI text where nothing knows the cast in advance.
    */
   resolveFromProse?: boolean
+  /**
+   * The linked player's face, in px. 16 sits inside a line of body prose; a
+   * roomier line — a play feed, a recap — reads better with 24.
+   */
+  avatarSize?: number
 }
 
 /** AI-prose renderer: bolds numbers and turns known player/team names into
@@ -65,6 +74,7 @@ export function AutoLinkedText({
   links = [],
   className,
   resolveFromProse = false,
+  avatarSize = 16,
 }: Props) {
   const identity = sportsIdentity()
   const [proseIds, setProseIds] = useState<Record<string, PlayerId>>({})
@@ -153,10 +163,10 @@ export function AutoLinkedText({
             <PlayerLink
               key={`pl-${i}`}
               player={{ id: playerId, name: part }}
-              size={16}
-              photoSize={48}
+              size={avatarSize}
+              photoSize={Math.max(48, avatarSize * 2)}
               stopPropagation
-              className="ui-autolink-player"
+              className={avatarSize > LINE_AVATAR_MAX ? "ui-autolink-player ui-autolink-player--lg" : "ui-autolink-player"}
               href={playerHref ? playerHref(playerId) : undefined}
               wrap={wrapPlayer}
             />

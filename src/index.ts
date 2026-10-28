@@ -23,7 +23,9 @@ export { DateNav } from "./primitives/DateNav"
 export { PeriodNav } from "./primitives/PeriodNav"
 export { Drawer } from "./primitives/Drawer"
 export { EmptyState } from "./primitives/EmptyState"
-export { ErrorState } from "./primitives/ErrorState"
+export { ErrorState, couldNotLoad, busyLine, useRetryCountdown } from "./primitives/ErrorState"
+export { useScrollEdges, SCROLL_EDGE_TABLES, SCROLL_EDGE_STRIPS } from "./primitives/useScrollEdges"
+export type { ScrollEdgesOptions } from "./primitives/useScrollEdges"
 export { ConfirmDialog } from "./primitives/ConfirmDialog"
 export { useFocusTrap } from "./primitives/useFocusTrap"
 export { useRovingSelect } from "./primitives/useRovingSelect"
@@ -32,7 +34,7 @@ export { NavSearch } from "./primitives/NavSearch"
 export { ThemeSwitch } from "./primitives/ThemeSwitch"
 export {
   IconSun, IconMoon, IconSignOut, IconSettings,
-  IconSearch, IconRefresh, IconClose, IconBell, IconBellOff, IconMonitor, IconStar, IconDownload, IconTrophy, IconCrt,
+  IconSearch, IconRefresh, IconClose, IconBell, IconBellOff, IconMonitor, IconStar, IconDownload, IconTrophy, IconCrt, IconAlert,
 } from "./primitives/Icon"
 
 export { ExpandableCard } from "./primitives/ExpandableCard"

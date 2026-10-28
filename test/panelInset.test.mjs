@@ -25,3 +25,27 @@ test("the keyboard's visible height wins over the bar inset", () => {
   const g = panelGeometry({ position: { x: 0, y: 300 }, width: 380, height: 400, available: 420, inset: 82 })
   assert.ok(g.top + g.height <= 420)
 })
+
+// The phone sheet (under 640px).
+const { sheetGeometry } = await import("../dist/workbench/FloatingAssistant.js")
+
+test("the phone sheet stands on the tab bar", () => {
+  const g = sheetGeometry({ inset: 82 })
+  assert.equal(g.bottom, 82)
+  assert.equal(g.height, "auto")
+})
+
+test("with no bar the sheet reaches the foot of the screen", () => {
+  assert.equal(sheetGeometry({}).bottom, 0)
+})
+
+test("with the keyboard up the sheet fills what is left visible, from its top", () => {
+  const g = sheetGeometry({ available: 420, viewportTop: 120, inset: 82 })
+  assert.equal(g.top, 120)
+  assert.equal(g.height, 420)
+  assert.equal(g.bottom, "auto")
+})
+
+test("a keyboard reading of 0 is no keyboard", () => {
+  assert.equal(sheetGeometry({ available: 0, inset: 82 }).bottom, 82)
+})
