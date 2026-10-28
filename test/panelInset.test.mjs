@@ -45,3 +45,7 @@ test("with the keyboard up the sheet fills what is left visible, from its top", 
   assert.equal(g.height, 420)
   assert.equal(g.bottom, "auto")
 })
+
+test("a keyboard reading of 0 is no keyboard", () => {
+  assert.equal(sheetGeometry({ available: 0, inset: 82 }).bottom, 82)
+})

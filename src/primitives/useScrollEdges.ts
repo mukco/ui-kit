@@ -22,7 +22,7 @@ const join = (...parts: Array<string | undefined>) => parts.filter(Boolean).join
 
 /**
  * Marks every horizontal scroller under `root` with `data-more-right` /
- * `data-more-left` while it has more that way; the kit's ui.css fades that
+ * `data-more-left` (and `data-scroll-edges`) while it has more that way; ui.css fades that
  * edge. iOS draws no scrollbar, so without it a column cut mid-number, or a
  * view cut to "Mar", reads as the end of the table. A table's left edge is its
  * pinned name column, so tables only ever get `data-more-right`.
@@ -44,6 +44,11 @@ export function useScrollEdges({ root, tables, strips, enabled = true }: ScrollE
     const all = join(tableSel, stripSel)
     const seen = new WeakSet<HTMLElement>()
     const mark = (s: HTMLElement) => {
+      // [data-scroll-edges] is what ui.css keys the fade on: a bare
+      // [data-more-*] rule would reach any element in any consumer that
+      // happened to carry it. An attribute, not a class: CodeMirror rewrites
+      // its scroller's className and would drop one.
+      s.setAttribute("data-scroll-edges", "")
       const isTable = s.matches(tableSel) && !s.matches(stripSel)
       if (!isTable && !seen.has(s) && s.clientWidth > 0) {
         seen.add(s)

@@ -1325,25 +1325,25 @@ button.ui-matchup--link {
 /* ---------- Scroll edges (useScrollEdges) ----------
    A scroller wider than its card fades out at the edge it carries on past.
    iOS draws no scrollbar, so a column cut mid-number read as the end of the
-   table. The hook sets the attributes; any element carrying them fades, so an
-   app's own strip only needs the hook's `strips` option, or the .ui-scrollx
-   class, or [data-scroll-edges]. */
+   table. The hook marks each scroller it finds with [data-scroll-edges] and the
+   [data-more-*] attributes, so an app's own strip only needs the hook's `strips` option,
+   the .ui-scrollx class, or [data-scroll-edges]. */
 .ui-scrollx {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-[data-more-right] {
+[data-scroll-edges][data-more-right] {
   -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
   mask-image: linear-gradient(to right, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
 }
 
-[data-more-left] {
+[data-scroll-edges][data-more-left] {
   -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px);
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px);
 }
 
-[data-more-left][data-more-right] {
+[data-scroll-edges][data-more-left][data-more-right] {
   -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
 }
@@ -1355,7 +1355,9 @@ button.ui-matchup--link {
    horizontal scroller the scroller clips the vertical part of the box, so a
    strip of small buttons wants a little block padding of its own. */
 @media (pointer: coarse) {
-  :is(.ui-hit, .ui-segmented-btn, .ui-listbtn, .ui-profilehero-link, .ui-datenav-datebtn, .ui-watchlist-remove) {
+  /* :where, so any author rule that positions the control wins: the box
+     only needs a positioned ancestor, not this one in particular. */
+  :where(.ui-hit, .ui-segmented-btn, .ui-listbtn, .ui-profilehero-link, .ui-datenav-datebtn, .ui-watchlist-remove) {
     position: relative;
   }
   :is(.ui-hit, .ui-segmented-btn, .ui-listbtn, .ui-profilehero-link, .ui-datenav-datebtn, .ui-watchlist-remove)::after {
@@ -1368,7 +1370,6 @@ button.ui-matchup--link {
     transform: translate(-50%, -50%);
   }
   .ui-tip-btn::before { inset: -14px; }
-  .ui-fa-session-del { opacity: 1; }
 }
 
 /* A row's delete that only appears on hover cannot be found without one. */
@@ -4900,6 +4901,8 @@ samp {
     color-mix(in srgb, var(--bg) 92%, transparent)
   );
 }
+
+:root:not([data-theme="dark"]) .ui-matchup--hero .ui-matchup-meta { color: var(--text-2); }
 
 .ui-matchup-head {
   position: relative;

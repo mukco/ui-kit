@@ -4,6 +4,10 @@ import { PlayerLink } from "../sports/PlayerLink"
 import { extractCandidates, matchKey } from "../sports/playerNames"
 import { cn } from "../cn"
 
+// A face taller than this outgrows a line of body text, so it is centred on
+// the line rather than hung from its foot (.ui-autolink-player--lg).
+const LINE_AVATAR_MAX = 18
+
 const NUM_SPLIT = /(\b\d+\.?\d*%?|\.\d+\b)/g
 
 function renderWithNumbers(text: string, keyPrefix: string): ReactNode[] {
@@ -162,7 +166,7 @@ export function AutoLinkedText({
               size={avatarSize}
               photoSize={Math.max(48, avatarSize * 2)}
               stopPropagation
-              className={avatarSize > 18 ? "ui-autolink-player ui-autolink-player--lg" : "ui-autolink-player"}
+              className={avatarSize > LINE_AVATAR_MAX ? "ui-autolink-player ui-autolink-player--lg" : "ui-autolink-player"}
               href={playerHref ? playerHref(playerId) : undefined}
               wrap={wrapPlayer}
             />

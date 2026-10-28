@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react"
 import { cn } from "../cn"
 import { IconAlert } from "./Icon"
+import { busyLine, couldNotLoad } from "./errorCopy"
 
 interface Props {
   /**
@@ -37,11 +38,7 @@ interface Props {
   className?: string
 }
 
-/** The one phrasing for a read that failed. */
-export const couldNotLoad = (what: string) => `Couldn't load ${what}.`
-
-/** The line a held-back retry shows while it counts down. */
-export const busyLine = (seconds: number) => `Busy · try again in ${seconds}s`
+export { busyLine, couldNotLoad }
 
 /**
  * Seconds left of a Retry-After, ticking once a second down to 0. Pass the
@@ -106,7 +103,13 @@ export function ErrorState({
         {icon ?? <IconAlert size={compact ? 16 : 24} />}
       </span>
       <span className="ui-error-msg">{message}</span>
-      {shownDetail != null && <code className="ui-error-detail">{shownDetail}</code>}
+      {shownDetail != null && (
+        // A countdown changes every second; inside the alert it would be read
+        // out every second. The wait is announced once, as the alert appears.
+        <code className="ui-error-detail" aria-live={wait > 0 ? "off" : undefined} aria-label={wait > 0 ? "Busy, try again shortly" : undefined}>
+          {shownDetail}
+        </code>
+      )}
       {onRetry && wait === 0 && (
         <button type="button" className="ui-error-retry" onClick={onRetry}>
           {retryLabel}

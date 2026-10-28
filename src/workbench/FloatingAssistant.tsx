@@ -952,7 +952,6 @@ export function FloatingAssistant({
     )}
     <aside
       ref={panelRef}
-      role={mobile ? "dialog" : undefined}
       aria-label={mobile ? title : undefined}
       className={
         mobile

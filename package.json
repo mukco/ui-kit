@@ -46,7 +46,7 @@
     "check": "tsc -p tsconfig.json && npm run check:conventions",
     "check:conventions": "node scripts/check-conventions.mjs",
     "dev": "vite",
-    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs test/push.test.mjs test/bootGuard.test.mjs test/tabFit.test.mjs test/panelInset.test.mjs",
+    "test": "npm run build && node --test test/updateReady.test.mjs test/playerNames.test.mjs test/observability.test.mjs test/push.test.mjs test/bootGuard.test.mjs test/tabFit.test.mjs test/panelInset.test.mjs test/errorState.test.mjs",
     "visual": "node scripts/visual.mjs",
     "visual:update": "node scripts/visual.mjs --update"
   },

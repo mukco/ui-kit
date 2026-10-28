@@ -9,7 +9,7 @@ import { SKIN_THEMES, useSkinTheme, type SkinTheme } from "./skinTheme"
  * by default: three named options say what they are. An app that has a
  * genuinely non-obvious point to make passes `description`.
  */
-export function AppearanceCard({ description }: { /** Kept for callers; no longer shown. */ appName?: string; description?: ReactNode } = {}) {
+export function AppearanceCard({ description }: { /** @deprecated No longer shown; drop it from callers. */ appName?: string; description?: ReactNode } = {}) {
   const [theme, setTheme] = useSkinTheme()
   return (
     <SettingsGroup title="Appearance" description={description} icon={<IconMonitor size={18} />}>
@@ -26,7 +26,7 @@ type InstallEvent = Event & { prompt: () => void }
  * title and the Install button say what it does, so there is no description
  * unless the app passes one.
  */
-export function InstallAppCard({ storageKey, description }: { /** Kept for callers; no longer shown. */ appName?: string; storageKey: string; description?: ReactNode }) {
+export function InstallAppCard({ storageKey, description }: { /** @deprecated No longer shown; drop it from callers. */ appName?: string; storageKey: string; description?: ReactNode }) {
   const standalone = typeof window !== "undefined" && (window.matchMedia("(display-mode: standalone)").matches || (navigator as { standalone?: boolean }).standalone === true)
   const [event, setEvent] = useState<InstallEvent | null>(null)
   const [dismissed, setDismissed] = useState(() => {
