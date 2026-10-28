@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 export declare const MOBILE_BREAKPOINT = 640;
 export declare function isMobileViewport(): boolean;
-export declare function panelGeometry({ position, width, height, available }: any): {
+export declare function panelGeometry({ position, width, height, available, inset }: any): {
     left: any;
     top: any;
     width: any;
@@ -9,6 +9,8 @@ export declare function panelGeometry({ position, width, height, available }: an
     maxWidth: string;
     maxHeight: string;
 };
+/** The height a shown Phosphor tab bar covers at the foot of the screen; 0 without one. */
+export declare function tabBarInset(): number;
 export declare function clampPosition(x: any, y: any, w: any, h: any): {
     x: number;
     y: number;

@@ -67,7 +67,7 @@ export { PercentileGauge } from "./charts/PercentileGauge";
 export { RollingAverageChart } from "./charts/RollingAverageChart";
 export { SparklineChart } from "./charts/SparklineChart";
 // SQL workbench
-export { FloatingAssistant, isMobileViewport, panelGeometry, clampPosition, MOBILE_BREAKPOINT } from "./workbench/FloatingAssistant";
+export { FloatingAssistant, isMobileViewport, panelGeometry, clampPosition, tabBarInset, MOBILE_BREAKPOINT } from "./workbench/FloatingAssistant";
 export { assistantMarkdown } from "./workbench/assistantMarkdown";
 export { SandboxCell } from "./workbench/SandboxCell";
 export { SandboxChart } from "./workbench/SandboxChart";
@@ -106,6 +106,7 @@ export { pixel, Skin, Glyph, registerGlyphs, configurePixel, StarFilled, Bandage
 // Family Hub's drawings
 Remote, Pot, SkipNext, SkipPrevious, Sunrise, PlantSprout, PlantSapling, PlantTree, PlantFlower, Takeout, Pan, PlayingCard, HeartFilled, TurnBack, TurnAhead, CheckBold, CheckDoubleBold, LinkBroken, Comic, StarFilledPointed, } from "./primitives/Pixel";
 export { TabBar } from "./primitives/TabBar";
+export { fitTabs, moreSections, shownTabs, slotWidth } from "./primitives/tabFit";
 export { Basketball, Football, Baseball } from "./sports/pixelBalls";
 // Device notifications: the push client every app shares, its settings card,
 // the Follow button; and the standard settings cards.
