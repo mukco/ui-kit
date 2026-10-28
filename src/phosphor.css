@@ -261,68 +261,72 @@
 :root[data-skin="phosphor"] :is(.ui-fa-launcher, .ui-updatetoast-card, .ui-fa-panel, .ui-confirm) { border-radius: 0; border: 2px solid var(--amber); box-shadow: 4px 4px 0 #000; }
 
 
-/* ---- the phone: Family Hub's tab bar along the foot -------------------- */
+/* ---- the phone: the tab bar along the foot (TabBar) -------------------- */
+/* The bar's height, for anything that has to stand clear of it: the page's
+   own bottom padding, More's sheet, the assistant and its launcher. 0 where
+   the bar is not shown. */
+:root { --ph-tabbar-h: 0px; }
 .ph-tabbar { display: none; }
 
-@media (max-width: 640px) {:root[data-skin="phosphor"] .ph-tabbar {
+@media (max-width: 640px) {
+:root[data-skin="phosphor"] { --ph-tabbar-h: calc(2px + 0.75rem + 3.5rem + env(safe-area-inset-bottom)); }
+
+:root[data-skin="phosphor"] .ph-tabbar {
     display: flex; align-items: center; position: fixed; left: 0; right: 0; bottom: 0; z-index: 48;
-    background: var(--surface); border-top: 2px solid var(--amber);
-    padding: 0.375rem 0 calc(0.375rem + env(safe-area-inset-bottom));
+    background: var(--surface); border-top: 2px solid var(--brand);
+    padding: 0.375rem max(0.5rem, env(safe-area-inset-right)) calc(0.375rem + env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
   }
 
-:root[data-skin="phosphor"] body { padding-bottom: calc(2px + 0.75rem + 3.5rem + env(safe-area-inset-bottom)); }
+:root[data-skin="phosphor"] body { padding-bottom: var(--ph-tabbar-h); }
 
   /* The tab bar is the phone's navigation under Phosphor: the menu behind
      the hamburger only repeated it, and what the tabs leave out is under
      More. */
 :root[data-skin="phosphor"] .ui-nav-burger { display: none; }
 
-  /* The bar's own launcher and the assistant stand on the tab bar. */
-:root[data-skin="phosphor"] .ui-fa-launcher { bottom: calc(5rem + env(safe-area-inset-bottom)); }
+  /* The assistants stand on the tab bar. */
+:root[data-skin="phosphor"] :is(.ui-fa-launcher, .ui-assistant-root) { bottom: calc(var(--ph-tabbar-h) + 0.75rem); }
 
 }
 
-.ph-tabbar-track {
-  display: flex; gap: 0.25rem; height: 3.5rem; align-items: center;
-  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
-  padding-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.25rem), rgba(0, 0, 0, 0.15));
-  mask-image: linear-gradient(to right, #000 calc(100% - 2.25rem), rgba(0, 0, 0, 0.15));
-}
-
-.ph-tabbar-track::-webkit-scrollbar { display: none; }
+/* Equal slots, More last: the room is shared evenly, so no app's bar has a
+   gap of its own before More and More is as wide as any tab. TabBar puts in
+   only the tabs whose labels fit whole in a slot. */
+.ph-tabbar-track { flex: 1; min-width: 0; display: flex; gap: 0.25rem; height: 3.5rem; align-items: center; }
+.ph-tabbar-track > .ph-tab { flex: 1 1 0; min-width: 0; }
 
 .ph-tab {
-  /* At least a fifth-and-a-bit of the screen, wider when the label needs it:
-     a fixed width let "Projections" spill into its neighbour (2026-10-09). */
-  flex: 0 0 auto; box-sizing: border-box; min-width: max(3.9rem, calc((100vw - 1rem) / 5.5 - 0.25rem)); min-height: 3.25rem;
-  display: grid; place-items: center; align-content: center; gap: 0.2rem; padding: 0.35rem 0.5rem; white-space: nowrap;
-  border: 2px solid transparent; background: none; color: var(--amber); cursor: pointer;
-  font-family: var(--px-chrome); font-size: calc(1.35rem + var(--fs-bump, 0px)); line-height: 1; text-shadow: 0 0 6px rgba(255, 176, 0, 0.35);
+  box-sizing: border-box; min-height: 3.25rem;
+  display: grid; place-items: center; align-content: center; gap: 0.25rem; padding: 0.375rem 0.25rem; white-space: nowrap;
+  border: 2px solid transparent; background: none; color: var(--brand); cursor: pointer;
+  font-family: var(--px-chrome, inherit); line-height: 1; text-shadow: 0 0 6px color-mix(in srgb, var(--brand) 35%, transparent);
 }
+.ph-tab-label { max-width: 100%; overflow: hidden; font-size: calc(0.7rem + var(--fs-bump, 0px)); }
+.ph-tab-icon { width: 1.6rem; height: 1.6rem; filter: drop-shadow(0 0 4px color-mix(in srgb, var(--brand) 35%, transparent)); }
+.ph-tab--here { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 12%, transparent); }
+.ph-tab:focus-visible { outline: 2px solid var(--brand-light, var(--brand)); outline-offset: -4px; }
 
-.ph-tab span { font-size: calc(0.7rem + var(--fs-bump, 0px)); }
+/* Each frame at its natural width, out of sight, for TabBar to measure. */
+.ph-tabbar-ruler { position: absolute; left: 0; top: 0; display: flex; width: max-content; visibility: hidden; pointer-events: none; }
+.ph-tabbar-ruler > .ph-tab { flex: none; }
 
-.ph-tab-icon { width: 1.6rem; height: 1.6rem; filter: drop-shadow(0 0 4px rgba(255, 176, 0, 0.35)); }
-
-.ph-tab--here { border-color: var(--amber); background: rgba(255, 176, 0, 0.12); }
-
-.ph-tabbar-track { flex: 1; min-width: 0; }
-.ph-tab--more { margin-inline-end: max(0.5rem, env(safe-area-inset-right)); border-left: 2px solid rgba(255, 176, 0, 0.35); }
-
-/* More: the places the tabs leave out, and signing out, in a sheet that
-   rises from the tab bar. */
-.ph-more { position: fixed; inset: 0 0 calc(2px + 0.75rem + 3.5rem + env(safe-area-inset-bottom)); z-index: 70; background: rgba(0, 0, 0, 0.55); }
+/* More: the tabs that did not fit, the places the tabs leave out, and
+   signing out, in a sheet that rises from the tab bar. */
+.ph-more { position: fixed; inset: 0 0 var(--ph-tabbar-h); z-index: 70; background: color-mix(in srgb, var(--bg) 55%, transparent); }
 .ph-more-sheet {
   position: absolute; left: 0; right: 0; bottom: 0; max-height: 70vh; overflow-y: auto;
-  background: var(--surface); border-top: 2px solid var(--amber); padding: 0.5rem 1rem 1rem;
-  font-family: var(--px-chrome); color: var(--amber);
+  background: var(--surface); border-top: 2px solid var(--brand); padding: 0.5rem 1rem 1rem;
+  font-family: var(--px-chrome, inherit); color: var(--brand);
 }
 .ph-more-list { list-style: none; margin: 0; padding: 0; }
+/* A run with no heading still starts a section of its own. */
+.ph-more-section + .ph-more-section:not(:has(> .ph-more-group)) { margin-top: 0.75rem; padding-top: 0.25rem; border-top: 1px dotted color-mix(in srgb, var(--brand) 35%, transparent); }
+/* The assistant's button floated over the sheet's last rows (2026-10-25). */
+body:has(.ph-more) :is(.ui-fa-launcher, .ui-assistant-fab) { display: none; }
 .ph-more-group { margin: 0.75rem 0 0.25rem; font-size: calc(0.7rem + var(--fs-bump, 0px)); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.ph-more-item { display: block; width: 100%; padding: 0.75rem 0.5rem; border: 2px solid transparent; background: none; color: inherit; font: inherit; font-size: calc(1rem + var(--fs-bump, 0px)); text-align: left; cursor: pointer; }
-.ph-more-item--here { border-color: var(--amber); background: rgba(255, 176, 0, 0.12); }
-.ph-more-foot { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dotted rgba(255, 176, 0, 0.35); }
+.ph-more-item { display: block; width: 100%; min-height: 44px; padding: 0.75rem 0.5rem; border: 2px solid transparent; background: none; color: inherit; font: inherit; font-size: calc(1rem + var(--fs-bump, 0px)); text-align: left; cursor: pointer; }
+.ph-more-item--here { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 12%, transparent); }
+.ph-more-foot { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dotted color-mix(in srgb, var(--brand) 35%, transparent); }
 
 
 /* ---- fixes found in screenshots ---------------------------------------- */

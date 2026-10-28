@@ -74,7 +74,7 @@ import {
   type NotificationItem,
 } from "../src"
 import * as Px from "../src/primitives/Pixel"
-import { Article, Calendar, ChartBarBig, SettingsCog, Users } from "pixelarticons/react"
+import { Article, Calendar, ChartBarBig, Coins, Gamepad, SettingsCog, Target, Terminal, Users } from "pixelarticons/react"
 import { ErrorBoundary } from "../src/observability"
 import { ArticleReader } from "../src/sports/ArticleReader"
 import "./demo.css"
@@ -328,6 +328,7 @@ export function UiDemo() {
   const [faSandboxSql, setFaSandboxSql] = useState<string | null>(null)
   const [liveScores, setLiveScores] = useState(true)
   const [team, setTeam] = useState("north")
+  const [tabPath, setTabPath] = useState("/")
   const [name, setName] = useState("")
   const [demoDate, setDemoDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [demoPeriod, setDemoPeriod] = useState("0")
@@ -1167,13 +1168,24 @@ export function UiDemo() {
               "PlantSprout", "PlantSapling", "PlantTree", "PlantFlower", "Takeout", "Pan", "PlayingCard", "HeartFilled", "CheckBold", "CheckDoubleBold", "LinkBroken", "Comic"] as const)
               .map((name) => { const Icon = Px[name]; return <Icon key={name} className="px-icon" aria-label={name} role="img" /> })}</span>
           </div>
-          <TabBar pathname="/" onNavigate={() => {}} tabs={[
+          <TabBar pathname={tabPath} onNavigate={setTabPath} tabs={[
             { to: "/", label: "Today", Icon: Calendar, match: ["/"] },
+            { to: "/fantasy", label: "Fantasy", Icon: Coins, match: ["/fantasy"] },
             { to: "/teams", label: "Teams", Icon: Users, match: ["/teams"] },
             { to: "/stats", label: "Stats", Icon: ChartBarBig, match: ["/stats"] },
             { to: "/news", label: "News", Icon: Article, match: ["/news"] },
+            { to: "/picks", label: "Picks", Icon: Target, match: ["/picks"] },
+            { to: "/sim", label: "Sim", Icon: Gamepad, match: ["/sim"] },
+            { to: "/sandbox", label: "Sandbox", Icon: Terminal, match: ["/sandbox"] },
             { to: "/settings", label: "Settings", Icon: SettingsCog, match: ["/settings"] },
-          ]} />
+          ]} more={{
+            items: [
+              { to: "/digest", label: "Stat Blast", group: "News" },
+              { to: "/standings", label: "Standings", group: "Teams" },
+              { to: "/reference", label: "Stats Reference", group: "Definitions" },
+            ],
+            footer: <button type="button" className="ph-more-item" onClick={() => setTabPath("/")}>Sign out</button>,
+          }} />
         </div>
       </section>
 
