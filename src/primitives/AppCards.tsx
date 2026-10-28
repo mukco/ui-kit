@@ -4,13 +4,15 @@ import { SegmentedControl } from "./SegmentedControl"
 import { IconDownload, IconMonitor } from "./Icon"
 import { SKIN_THEMES, useSkinTheme, type SkinTheme } from "./skinTheme"
 
-const possessive = (name: string) => (name.endsWith("s") ? `${name}'` : `${name}'s`)
-
-/** Settings → Appearance: light, dark or Phosphor. */
-export function AppearanceCard({ appName }: { appName: string }) {
+/**
+ * Settings → Appearance: light, dark or Phosphor. No sentence under the title
+ * by default: three named options say what they are. An app that has a
+ * genuinely non-obvious point to make passes `description`.
+ */
+export function AppearanceCard({ description }: { /** Kept for callers; no longer shown. */ appName?: string; description?: ReactNode } = {}) {
   const [theme, setTheme] = useSkinTheme()
   return (
-    <SettingsGroup title="Appearance" description={`Phosphor is Family Hub's amber screen, with ${possessive(appName)} photos and colour.`} icon={<IconMonitor size={18} />}>
+    <SettingsGroup title="Appearance" description={description} icon={<IconMonitor size={18} />}>
       <SegmentedControl options={SKIN_THEMES} active={theme} onChange={(id) => setTheme(id as SkinTheme)} />
     </SettingsGroup>
   )
@@ -20,9 +22,11 @@ type InstallEvent = Event & { prompt: () => void }
 
 /**
  * Settings → Install the app. Uses the browser's install prompt where there is
- * one; on iPhone it says how. Hidden once installed, or after "Not now".
+ * one; on iPhone it says how. Hidden once installed, or after "Not now". The
+ * title and the Install button say what it does, so there is no description
+ * unless the app passes one.
  */
-export function InstallAppCard({ appName, storageKey, description }: { appName: string; storageKey: string; description?: ReactNode }) {
+export function InstallAppCard({ storageKey, description }: { /** Kept for callers; no longer shown. */ appName?: string; storageKey: string; description?: ReactNode }) {
   const standalone = typeof window !== "undefined" && (window.matchMedia("(display-mode: standalone)").matches || (navigator as { standalone?: boolean }).standalone === true)
   const [event, setEvent] = useState<InstallEvent | null>(null)
   const [dismissed, setDismissed] = useState(() => {
@@ -39,7 +43,7 @@ export function InstallAppCard({ appName, storageKey, description }: { appName: 
   if (standalone || dismissed) return null
 
   return (
-    <SettingsGroup title="Install the app" description={description ?? `Get ${appName} on your home screen — one tap, no app store.`} icon={<IconDownload size={18} />}>
+    <SettingsGroup title="Install the app" description={description} icon={<IconDownload size={18} />}>
       {showIos || (ios && !event) ? (
         <p className="ui-settings-note">In Safari: tap Share, then “Add to Home Screen”.</p>
       ) : (

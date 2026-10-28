@@ -15,6 +15,8 @@ import {
   Drawer,
   DynamicChart,
   EmptyState,
+  ErrorState,
+  useScrollEdges,
   ExpandableCard,
   FactGrid,
   FloatingAssistant,
@@ -134,6 +136,13 @@ function demoPhoto(id: string | number | null | undefined, size = 80): string {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="100%" height="100%" fill="${color}"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.round(size / 2.6)}" font-weight="700" fill="#fff">${initials}</text></svg>`
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
 }
+
+// A stadium photo stand-in: sky, stands, a green field — enough colour to
+// show what the hero's scrim does to a real venue image. No parentheses in
+// it: MatchupCard puts it in an unquoted CSS url().
+const DEMO_VENUE = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="640" height="360" fill="#5b9fd6"/><rect width="640" height="80" fill="#3b82c4"/><path d="M0 150 Q320 70 640 150 V230 H0Z" fill="#6b5a4e"/><path d="M0 175 Q320 105 640 175 V240 H0Z" fill="#8a2b2b" opacity="0.8"/><rect y="230" width="640" height="130" fill="#2f8a3c"/><path d="M0 300 H640" stroke="#fff" stroke-width="3" opacity="0.7"/></svg>`,
+)}`
 
 function demoLogo(teamId: string | number): string {
   const seed = String(teamId)
@@ -316,6 +325,8 @@ function Crasher({ crash }: { crash: boolean }) {
 }
 
 export function UiDemo() {
+  // Every scroller on the page fades at the edge it carries on past.
+  useScrollEdges()
   const [following, setFollowing] = useState(false)
   const [tab, setTab] = useState("summary")
   const [statView, setStatView] = useState("season")
@@ -466,6 +477,7 @@ export function UiDemo() {
             tone="final"
             meta="Eastgate Field · 41°F, clear"
             detail="EAS -2.5 · O/U 38.5"
+            art={DEMO_VENUE}
           >
             <LineScore
               away={{ name: "RIV" }}
@@ -541,7 +553,7 @@ export function UiDemo() {
       </section>
 
       <section className="uidemo-section">
-        <h2>FloatingAssistant — draggable, resizable, its own window (bottom-right launcher)</h2>
+        <h2>FloatingAssistant — a window on a desktop, a bottom sheet on a phone</h2>
         <Card>
           <p className="uidemo-note">
             Baseball's chat panel, promoted: drag the header, resize the left/bottom/corner
@@ -606,6 +618,12 @@ export function UiDemo() {
           </Card>
           <Card>
             <EmptyState icon="⚾">No games today. Check back tomorrow.</EmptyState>
+          </Card>
+          <Card>
+            <ErrorState what="news" detail="ESPN answered 503" onRetry={() => {}} />
+          </Card>
+          <Card>
+            <ErrorState what="the schedule" retryAfter={30} onRetry={() => {}} />
           </Card>
         </div>
       </section>
@@ -937,6 +955,16 @@ export function UiDemo() {
               links={[{ name: "Northside", href: "#team-north" }, { name: "Eastgate", href: "#team-east" }]}
             />
           </p>
+          <p style={{ fontSize: "0.9rem", lineHeight: 1.6 }}>
+            <AutoLinkedText
+              text="Ava Martinez pull-up three from the left wing, assisted by Ben Okafor."
+              players={[
+                { name: "Ava Martinez", id: "p101" },
+                { name: "Ben Okafor", id: "p102" },
+              ]}
+              avatarSize={24}
+            />
+          </p>
         </Card>
       </section>
 
@@ -947,7 +975,7 @@ export function UiDemo() {
         </Card>
         <div style={{ marginTop: "0.75rem" }}>
           <SandboxCell
-            cell={{ id: "c1", type: "sql", sql: "SELECT name, season, war FROM batters LIMIT 200", title: "WAR by season" }}
+            cell={{ id: "c1", type: "sql", sql: "SELECT name, season, war, ops_plus, wrc_plus FROM batters WHERE season >= 2020 ORDER BY war DESC LIMIT 200", title: "WAR by season" }}
             index={0}
             onRun={async () => ({ columns: SB_COLUMNS, rows: SB_ROWS, rowCount: SB_ROWS.length, runtimeMs: 42 })}
             onUpdateSql={() => {}}

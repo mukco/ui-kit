@@ -1322,6 +1322,60 @@ button.ui-matchup--link {
   -webkit-overflow-scrolling: touch;
 }
 
+/* ---------- Scroll edges (useScrollEdges) ----------
+   A scroller wider than its card fades out at the edge it carries on past.
+   iOS draws no scrollbar, so a column cut mid-number read as the end of the
+   table. The hook sets the attributes; any element carrying them fades, so an
+   app's own strip only needs the hook's `strips` option, or the .ui-scrollx
+   class, or [data-scroll-edges]. */
+.ui-scrollx {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-more-right] {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
+}
+
+[data-more-left] {
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px);
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px);
+}
+
+[data-more-left][data-more-right] {
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), #000 28px, #000 calc(100% - 28px), rgba(0, 0, 0, 0.2));
+}
+
+/* ---------- 44px hit areas ----------
+   On a touch screen a small control's target grows to 44px around its
+   centre; nothing moves and nothing is drawn. `.ui-hit` is the utility for an
+   app's own controls; the kit's own small controls get it here. Inside a
+   horizontal scroller the scroller clips the vertical part of the box, so a
+   strip of small buttons wants a little block padding of its own. */
+@media (pointer: coarse) {
+  :is(.ui-hit, .ui-segmented-btn, .ui-listbtn, .ui-profilehero-link, .ui-datenav-datebtn, .ui-watchlist-remove) {
+    position: relative;
+  }
+  :is(.ui-hit, .ui-segmented-btn, .ui-listbtn, .ui-profilehero-link, .ui-datenav-datebtn, .ui-watchlist-remove)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+  .ui-tip-btn::before { inset: -14px; }
+  .ui-fa-session-del { opacity: 1; }
+}
+
+/* A row's delete that only appears on hover cannot be found without one. */
+@media (hover: none) {
+  .ui-fa-session-del { opacity: 1; }
+}
+
 .ui-table {
   width: 100%;
   border-collapse: collapse;
@@ -1985,9 +2039,16 @@ button.ui-matchup--link {
 .ui-sb-editorwrap {
   position: relative;
   padding: 0.75rem;
+  min-width: 0;
 }
 
+/* A long SQL line scrolls inside the editor rather than running off the
+   card: the editor is held to its box, and CodeMirror's own scroller takes
+   the overflow. Without the min-width the editor grew to its longest line and
+   the card's overflow cut it at the right edge. */
 .ui-sb-editor {
+  min-width: 0;
+  max-width: 100%;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -2017,6 +2078,24 @@ button.ui-matchup--link {
   right: 1rem;
   z-index: 10;
   box-shadow: var(--shadow-sm);
+}
+
+.ui-sb-editor .cm-editor { max-width: 100%; }
+.ui-sb-editor .cm-scroller { overflow-x: auto; overscroll-behavior-x: contain; }
+
+/* On a phone the floating Run sat over the last line of SQL, which on a
+   narrow editor is most of a line. It goes under the editor, right-aligned,
+   at a thumb's height. */
+@media (max-width: 639px) {
+  .ui-sb-editorwrap { display: flex; flex-direction: column; }
+  .ui-sb-runbtn--floating {
+    position: static;
+    align-self: flex-end;
+    margin-top: var(--space-2);
+    min-height: 44px;
+    padding-inline: var(--space-4);
+    box-shadow: none;
+  }
 }
 
 .ui-sb-error {
@@ -4072,6 +4151,7 @@ button.ui-statustile:hover { border-color: var(--border-strong); }
 }
 
 .ui-error-icon {
+  display: inline-flex;
   font-size: calc(1.5rem + var(--fs-bump, 0px));
   line-height: 1;
   color: var(--sev-error);
@@ -4808,6 +4888,19 @@ samp {
   );
 }
 
+/* In the light theme --bg is near white, and the scrim above laid 60–95%
+   white over the venue photo: on the game page's hero it read as a washed-out
+   grey card. The hero has the height to let the photo through at the top and
+   still put the score on a solid enough ground at the foot. */
+:root:not([data-theme="dark"]) .ui-matchup--hero .ui-matchup-scrim {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 30%, transparent),
+    color-mix(in srgb, var(--bg) 62%, transparent) 45%,
+    color-mix(in srgb, var(--bg) 92%, transparent)
+  );
+}
+
 .ui-matchup-head {
   position: relative;
   z-index: 1;
@@ -5024,6 +5117,41 @@ samp {
   transform: scale(1);
 }
 .ui-fa-panel--drag { transform: scale(1.02); cursor: grabbing; }
+
+/* ---------- The phone sheet ----------
+   Under 640px the assistant is a bottom sheet: full width, opaque, standing
+   on the tab bar (the component sets top/bottom from the measured bar and the
+   keyboard), over a scrim that closes it. It was a floating window there too,
+   and on a phone that meant page text through a translucent panel, the
+   composer on top of the tab bar and resize grips as stray bars on its edges. */
+.ui-fa-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: color-mix(in srgb, #000 45%, transparent);
+  touch-action: none;
+}
+.ui-fa-panel--sheet {
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: none;
+  background-color: var(--surface);
+  backdrop-filter: none;
+  border-width: 1px 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 -12px 32px -12px rgba(0, 0, 0, 0.45);
+  transition: none;
+}
+.ui-fa-panel--sheet .ui-fa-header { background: var(--surface-2); }
+.ui-fa-panel--sheet .ui-fa-hdrbtn { min-height: 44px; min-width: 44px; padding: 0 var(--space-2); font-size: calc(13px + var(--fs-bump, 0px)); }
+.ui-fa-panel--sheet .ui-fa-header-row { padding: 0 0.25rem 0 1rem; }
+.ui-fa-panel--sheet .ui-fa-messages { overscroll-behavior: contain; }
+/* Nothing else floats over the open sheet — another assistant's button sat
+   on its Send. */
+body:has(.ui-fa-panel--sheet) .ui-assistant-fab { display: none; }
+/* No tab bar under it: the home indicator is. */
+.ui-fa-panel--flush .ui-fa-composer { padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)); }
 .ui-fa-panel--active { border-color: color-mix(in srgb, var(--brand) 40%, transparent); box-shadow: 0 28px 70px -15px rgba(0, 0, 0, 0.6); }
 
 .ui-fa-resize-w { position: absolute; left: 0; top: 0.75rem; bottom: 0.75rem; width: 0.75rem; cursor: ew-resize; z-index: 10; display: flex; align-items: center; justify-content: center; touch-action: none; }
@@ -5057,7 +5185,7 @@ samp {
 .ui-fa-title { font-size: calc(14px + var(--fs-bump, 0px)); font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ui-fa-context { font-size: calc(11px + var(--fs-bump, 0px)); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .ui-fa-header-actions { display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0; }
-.ui-fa-hdrbtn { font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); padding: 0.25rem 0.5rem; border-radius: 0.25rem; transition: color 0.15s ease, background 0.15s ease; }
+.ui-fa-hdrbtn { border: 0; background: transparent; font: inherit; font-size: calc(11px + var(--fs-bump, 0px)); color: var(--muted); padding: 0.25rem 0.5rem; border-radius: 0.25rem; transition: color 0.15s ease, background 0.15s ease; }
 .ui-fa-hdrbtn:hover { color: var(--text); background: var(--border); }
 
 .ui-fa-opacity-row { padding: 0 0.75rem 0.5rem; display: flex; align-items: center; gap: 0.625rem; }
@@ -5159,7 +5287,7 @@ samp {
 .ui-fa-mention-glyph { --mg: var(--muted); font-weight: 600; flex-shrink: 0; color: var(--mg); }
 .ui-fa-mention-glyph--player { --mg: var(--brand); }
 .ui-fa-mention-glyph--team { --mg: var(--chart-3); }
-.ui-fa-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 0.875rem; font-size: calc(15px + var(--fs-bump, 0px)); color: var(--text); outline: none; resize: none; overflow: hidden; line-height: 1.625; font-size: calc(16px + var(--fs-bump, 0px)); transition: box-shadow 0.15s ease, border-color 0.15s ease; }
+.ui-fa-textarea { display: block; font-family: inherit; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.75rem 0.875rem; font-size: calc(15px + var(--fs-bump, 0px)); color: var(--text); outline: none; resize: none; overflow: hidden; line-height: 1.625; font-size: calc(16px + var(--fs-bump, 0px)); transition: box-shadow 0.15s ease, border-color 0.15s ease; }
 /* One line, ended with an ellipsis: in a narrow panel the hint wrapped and
    its second line was cut off by the one-row field ("Use @ to / mention"). */
 .ui-fa-textarea::placeholder { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -5455,7 +5583,9 @@ a.ui-news-chip::before { content: ""; position: absolute; inset: -4px 0; }
 /* A player named inside AI prose. The name sits on the link colour and the
    headshot is small enough to run inline with the sentence; both apps used to
    decide this for themselves, at different sizes and different colours. */
-.ui-autolink-player { display: inline-flex; vertical-align: text-bottom; gap: 0.25rem; }
+.ui-autolink-player { display: inline-flex; align-items: center; vertical-align: text-bottom; gap: 0.25rem; }
+/* A face taller than the line sits on its middle, not hung from its foot. */
+.ui-autolink-player--lg { vertical-align: middle; gap: var(--space-2); }
 .ui-autolink-player .ui-player-name { color: var(--brand-light); font-size: inherit; }
 .ui-autolink-player:hover .ui-player-name { color: var(--text); }
 
