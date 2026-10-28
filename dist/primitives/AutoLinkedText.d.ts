@@ -39,9 +39,14 @@ interface Props {
      * this for AI text where nothing knows the cast in advance.
      */
     resolveFromProse?: boolean;
+    /**
+     * The linked player's face, in px. 16 sits inside a line of body prose; a
+     * roomier line — a play feed, a recap — reads better with 24.
+     */
+    avatarSize?: number;
 }
 /** AI-prose renderer: bolds numbers and turns known player/team names into
     links. Pass `players` (the entities already in scope) for deterministic
     linking; without it, only `links` apply. */
-export declare function AutoLinkedText({ text, players, renderPlayerLink, playerHref, wrapPlayer, links, className, resolveFromProse, }: Props): import("react").JSX.Element;
+export declare function AutoLinkedText({ text, players, renderPlayerLink, playerHref, wrapPlayer, links, className, resolveFromProse, avatarSize, }: Props): import("react").JSX.Element;
 export {};

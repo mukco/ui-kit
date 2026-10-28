@@ -29,4 +29,6 @@ export declare const IconDownload: (p: IconProps) => import("react").JSX.Element
 export declare const IconTrophy: (p: IconProps) => import("react").JSX.Element;
 /** A CRT screen: the look button's hint that the next look is Phosphor. */
 export declare const IconCrt: (p: IconProps) => import("react").JSX.Element;
+/** Something went wrong: Lucide's triangle-alert. */
+export declare const IconAlert: (p: IconProps) => import("react").JSX.Element;
 export {};

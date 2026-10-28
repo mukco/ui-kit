@@ -2,8 +2,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 const MIN_OPACITY = 0.25;
 const DEFAULT_OPACITY = 0.9;
-// Used only to pick touch-friendly starting sizes. The panel is a floating,
-// draggable, resizable window at every width — it is not a mode.
+// Under this width the panel is a bottom sheet (see FloatingAssistant); above
+// it, a floating, draggable, resizable window.
 export const MOBILE_BREAKPOINT = 640;
 export function isMobileViewport() {
     return typeof window !== "undefined" && window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches;
@@ -169,6 +169,32 @@ function loadOpacity(prefix) {
         /* ignore */
     }
     return DEFAULT_OPACITY;
+}
+/** True while the viewport is phone-width; follows rotation and resizes. */
+function useMobileViewport() {
+    const [mobile, setMobile] = useState(isMobileViewport);
+    useEffect(() => {
+        if (typeof window === "undefined" || !window.matchMedia)
+            return;
+        const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+        const sync = () => setMobile(mq.matches);
+        sync();
+        mq.addEventListener?.("change", sync);
+        return () => mq.removeEventListener?.("change", sync);
+    }, []);
+    return mobile;
+}
+/**
+ * Where the phone sheet goes. With the keyboard up it fills what the keyboard
+ * leaves visible (`available`, from the top of the visual viewport, which iOS
+ * scrolls when it focuses the input); otherwise it stands on the tab bar
+ * (`inset`) and stops a thumb's reach short of the top, where the scrim shows
+ * and a tap closes it.
+ */
+export function sheetGeometry({ available, viewportTop = 0, inset = 0 }) {
+    if (available)
+        return { top: viewportTop, bottom: "auto", height: available };
+    return { top: "calc(env(safe-area-inset-top, 0px) + 3rem)", bottom: inset, height: "auto" };
 }
 /** The height a shown Phosphor tab bar covers at the foot of the screen; 0 without one. */
 export function tabBarInset() {
@@ -387,6 +413,13 @@ export function FloatingAssistant({ pathname, deriveContext, onAsk, title = "Ass
     // leaves visible. It is deliberately not `height`: `height` is persisted, and
     // a keyboard must not permanently shrink the panel the user sized.
     const [keyboardH, setKeyboardH] = useState(null);
+    // Where the visible viewport starts while the keyboard is up: iOS scrolls
+    // the layout viewport to keep the focused input in view.
+    const [viewportTop, setViewportTop] = useState(0);
+    // A phone gets a bottom sheet: opaque, full width, above the tab bar, no
+    // drag, no resize grips, no transparency slider. Those are a pointer's
+    // affordances; on a phone they were stray bars on the panel's edges.
+    const mobile = useMobileViewport();
     // What a shown tab bar covers, read when the panel opens and when the
     // window changes (rotation, the skin) rather than on every render: it is
     // a layout read, and a drag renders every frame.
@@ -413,10 +446,18 @@ export function FloatingAssistant({ pathname, deriveContext, onAsk, title = "Ass
         const vv = window.visualViewport;
         if (!vv)
             return;
-        const sync = () => setKeyboardH(vv.height < window.innerHeight - 80 ? vv.height : null);
+        const sync = () => {
+            const up = vv.height < window.innerHeight - 80;
+            setKeyboardH(up ? vv.height : null);
+            setViewportTop(up ? vv.offsetTop : 0);
+        };
         sync();
         vv.addEventListener("resize", sync);
-        return () => vv.removeEventListener("resize", sync);
+        vv.addEventListener("scroll", sync);
+        return () => {
+            vv.removeEventListener("resize", sync);
+            vv.removeEventListener("scroll", sync);
+        };
     }, []);
     useLayoutEffect(() => {
         if (minimized)
@@ -687,17 +728,26 @@ export function FloatingAssistant({ pathname, deriveContext, onAsk, title = "Ass
     if (minimized) {
         return _jsx(Launcher, { title: title, onOpen: () => setMinimized(false) });
     }
-    return (_jsxs("aside", { ref: panelRef, className: `ui-fa-panel ${dragging ? "ui-fa-panel--drag" : ""} ${dragging || resizing ? "ui-fa-panel--active" : ""}`, style: {
-            ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : inset }),
-            transformOrigin: "center",
-            // Lifting the panel nudges it more opaque so it reads as "above" the page.
-            backgroundColor: `color-mix(in srgb, var(--surface) ${Math.round(Math.min(1, (dragging || resizing) ? opacity + 0.05 : opacity) * 100)}%, transparent)`,
-        }, children: [_jsxs(_Fragment, { children: [_jsx("button", { type: "button", "aria-label": "Resize width", onPointerDown: e => startResizing(e, { w: true, h: false }), className: "ui-fa-resize-w", children: _jsx("span", { className: `ui-fa-resize-grip ui-fa-resize-grip--v${resizing ? " ui-fa-resize-grip--active" : ""}` }) }), _jsx("button", { type: "button", "aria-label": "Resize height", onPointerDown: e => startResizing(e, { w: false, h: true }), className: "ui-fa-resize-h", children: _jsx("span", { className: `ui-fa-resize-grip ui-fa-resize-grip--h${resizing ? " ui-fa-resize-grip--active" : ""}` }) }), _jsx("button", { type: "button", "aria-label": "Resize", onPointerDown: e => startResizing(e, { w: true, h: true }), className: "ui-fa-resize-corner" })] }), _jsxs("div", { className: "ui-fa-header", children: [_jsxs("div", { onPointerDown: startDragging, className: "ui-fa-header-row ui-fa-header-row--drag", children: [_jsxs("div", { className: "ui-fa-title-wrap", children: [_jsx("div", { className: "ui-fa-title", children: activeSession?.title ?? title }), context?.pageType != null && (_jsxs("div", { className: "ui-fa-context", children: ["Context: ", String(context.pageType)] }))] }), _jsxs("div", { className: "ui-fa-header-actions", children: [_jsx("button", { type: "button", onPointerDown: e => e.stopPropagation(), onClick: () => setSessionPanel((v) => !v), title: "Chat history", className: "ui-fa-hdrbtn", children: "History" }), _jsx("button", { type: "button", onPointerDown: e => e.stopPropagation(), onClick: createSession, title: "New chat", className: "ui-fa-hdrbtn", children: "+ New" }), _jsx("button", { type: "button", onPointerDown: e => e.stopPropagation(), onClick: () => setMinimized(true), title: "Minimize", "aria-label": "Minimize assistant", className: "ui-fa-hdrbtn", children: _jsx("svg", { width: 14, height: 14, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2.2, children: _jsx("path", { strokeLinecap: "round", d: "M5 12h14" }) }) })] })] }), _jsxs("div", { onPointerDown: e => e.stopPropagation(), className: "ui-fa-opacity-row", title: "Panel transparency", children: [_jsxs("svg", { className: "ui-fa-opacity-icon", width: 14, height: 14, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 1.6, "aria-hidden": "true", children: [_jsx("circle", { cx: "12", cy: "12", r: "8.5" }), _jsx("path", { d: "M12 3.5a8.5 8.5 0 0 0 0 17z", fill: "currentColor", stroke: "none" })] }), _jsx("input", { type: "range", min: Math.round(MIN_OPACITY * 100), max: 100, step: 1, value: Math.round(opacity * 100), onChange: e => setOpacity(Number(e.target.value) / 100), "aria-label": "Panel transparency", className: "ui-fa-opacity-range", style: { "--op-fill": `${((opacity * 100 - MIN_OPACITY * 100) / (100 - MIN_OPACITY * 100)) * 100}%` } })] }), sessionPanelOpen && (_jsxs("div", { className: "ui-fa-sessions", children: [_jsx("div", { className: "ui-fa-session-list", children: sessions.map((s) => (_jsxs("div", { className: `ui-fa-session-row${s.id === activeId ? " ui-fa-session-row--active" : ""}`, onClick: () => switchSession(s.id), children: [_jsxs("div", { className: "ui-fa-session-info", children: [_jsx("p", { className: "ui-fa-session-title", children: s.title ?? "New chat" }), _jsx("p", { className: "ui-fa-session-date", children: fmtSessionDate(s.createdAt) })] }), _jsx("button", { type: "button", onClick: e => { e.stopPropagation(); deleteSession(s.id); }, className: "ui-fa-session-del", title: "Delete chat", children: "\u00D7" })] }, s.id))) }), sessions.length > 1 && (_jsx("div", { className: "ui-fa-session-footer", children: _jsx("button", { type: "button", onClick: () => {
-                                        if (window.confirm(`Delete all ${sessions.length} chats?`)) {
-                                            const fresh = blankSession(welcome);
-                                            setSessions([fresh]);
-                                            setActiveId(fresh.id);
-                                            setSessionPanel(false);
-                                        }
-                                    }, className: "ui-fa-session-delall", children: "Delete all chats" }) }))] }))] }), _jsxs("div", { ref: scrollRef, className: "ui-fa-messages", children: [messages.map((m, idx) => (_jsx("div", { className: `ui-fa-msg-row ui-fa-msg-row--${m.role === "user" ? "user" : "assistant"}`, children: m.role === "user" ? (_jsx("div", { className: "ui-fa-bubble-user", children: renderMarkdown ? renderMarkdown(m.text) : _jsx("div", { className: "ui-fa-plaintext", children: m.text }) })) : (_jsx(AssistantMessage, { m: m, renderMarkdown: renderMarkdown, renderChart: renderChart, messageActions: messageActions, onOpenSandbox: onOpenSandbox })) }, idx))), pending && (_jsx("div", { className: "ui-fa-thinking", children: "Thinking..." })), _jsx("div", { ref: bottomRef })] }), _jsx(AssistantComposer, { onSubmit: submitQuestion, isPending: pending, prefill: composerPrefill, onPrefillConsumed: () => setComposerPrefill(null), mentionSearch: mentionSearch, placeholder: mentionSearch ? "Ask about this page… Use @ to mention" : "Ask about this page…" })] }));
+    const sheetFlush = mobile && !keyboardH && inset === 0;
+    return (_jsxs(_Fragment, { children: [mobile && (_jsx("div", { className: "ui-fa-scrim", "aria-hidden": "true", style: { bottom: keyboardH ? 0 : inset }, onClick: () => setMinimized(true) })), _jsxs("aside", { ref: panelRef, "aria-label": mobile ? title : undefined, className: mobile
+                    ? `ui-fa-panel ui-fa-panel--sheet${sheetFlush ? " ui-fa-panel--flush" : ""}`
+                    : `ui-fa-panel ${dragging ? "ui-fa-panel--drag" : ""} ${dragging || resizing ? "ui-fa-panel--active" : ""}`, onKeyDown: mobile ? (e) => { if (e.key === "Escape")
+                    setMinimized(true); } : undefined, style: mobile
+                    ? sheetGeometry({ available: keyboardH, viewportTop, inset })
+                    : {
+                        ...panelGeometry({ position, width, height, available: keyboardH, inset: keyboardH ? 0 : inset }),
+                        transformOrigin: "center",
+                        // Lifting the panel nudges it more opaque so it reads as "above" the page.
+                        backgroundColor: `color-mix(in srgb, var(--surface) ${Math.round(Math.min(1, (dragging || resizing) ? opacity + 0.05 : opacity) * 100)}%, transparent)`,
+                    }, children: [!mobile && _jsxs(_Fragment, { children: [_jsx("button", { type: "button", "aria-label": "Resize width", onPointerDown: e => startResizing(e, { w: true, h: false }), className: "ui-fa-resize-w", children: _jsx("span", { className: `ui-fa-resize-grip ui-fa-resize-grip--v${resizing ? " ui-fa-resize-grip--active" : ""}` }) }), _jsx("button", { type: "button", "aria-label": "Resize height", onPointerDown: e => startResizing(e, { w: false, h: true }), className: "ui-fa-resize-h", children: _jsx("span", { className: `ui-fa-resize-grip ui-fa-resize-grip--h${resizing ? " ui-fa-resize-grip--active" : ""}` }) }), _jsx("button", { type: "button", "aria-label": "Resize", onPointerDown: e => startResizing(e, { w: true, h: true }), className: "ui-fa-resize-corner" })] }), _jsxs("div", { className: "ui-fa-header", children: [_jsxs("div", { onPointerDown: mobile ? undefined : startDragging, className: mobile ? "ui-fa-header-row" : "ui-fa-header-row ui-fa-header-row--drag", children: [_jsxs("div", { className: "ui-fa-title-wrap", children: [_jsx("div", { className: "ui-fa-title", children: activeSession?.title ?? title }), context?.pageType != null && (_jsxs("div", { className: "ui-fa-context", children: ["Context: ", String(context.pageType)] }))] }), _jsxs("div", { className: "ui-fa-header-actions", children: [_jsx("button", { type: "button", onPointerDown: e => e.stopPropagation(), onClick: () => setSessionPanel((v) => !v), title: "Chat history", className: "ui-fa-hdrbtn", children: "History" }), _jsx("button", { type: "button", onPointerDown: e => e.stopPropagation(), onClick: createSession, title: "New chat", className: "ui-fa-hdrbtn", children: "+ New" }), _jsx("button", { type: "button", onPointerDown: e => e.stopPropagation(), onClick: () => setMinimized(true), title: "Minimize", "aria-label": "Minimize assistant", className: "ui-fa-hdrbtn", children: _jsx("svg", { width: 14, height: 14, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 2.2, children: _jsx("path", { strokeLinecap: "round", d: "M5 12h14" }) }) })] })] }), !mobile && _jsxs("div", { onPointerDown: e => e.stopPropagation(), className: "ui-fa-opacity-row", title: "Panel transparency", children: [_jsxs("svg", { className: "ui-fa-opacity-icon", width: 14, height: 14, fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", strokeWidth: 1.6, "aria-hidden": "true", children: [_jsx("circle", { cx: "12", cy: "12", r: "8.5" }), _jsx("path", { d: "M12 3.5a8.5 8.5 0 0 0 0 17z", fill: "currentColor", stroke: "none" })] }), _jsx("input", { type: "range", min: Math.round(MIN_OPACITY * 100), max: 100, step: 1, value: Math.round(opacity * 100), onChange: e => setOpacity(Number(e.target.value) / 100), "aria-label": "Panel transparency", className: "ui-fa-opacity-range", style: { "--op-fill": `${((opacity * 100 - MIN_OPACITY * 100) / (100 - MIN_OPACITY * 100)) * 100}%` } })] }), sessionPanelOpen && (_jsxs("div", { className: "ui-fa-sessions", children: [_jsx("div", { className: "ui-fa-session-list", children: sessions.map((s) => (_jsxs("div", { className: `ui-fa-session-row${s.id === activeId ? " ui-fa-session-row--active" : ""}`, onClick: () => switchSession(s.id), children: [_jsxs("div", { className: "ui-fa-session-info", children: [_jsx("p", { className: "ui-fa-session-title", children: s.title ?? "New chat" }), _jsx("p", { className: "ui-fa-session-date", children: fmtSessionDate(s.createdAt) })] }), _jsx("button", { type: "button", onClick: e => { e.stopPropagation(); deleteSession(s.id); }, className: "ui-fa-session-del", title: "Delete chat", children: "\u00D7" })] }, s.id))) }), sessions.length > 1 && (_jsx("div", { className: "ui-fa-session-footer", children: _jsx("button", { type: "button", onClick: () => {
+                                                if (window.confirm(`Delete all ${sessions.length} chats?`)) {
+                                                    const fresh = blankSession(welcome);
+                                                    setSessions([fresh]);
+                                                    setActiveId(fresh.id);
+                                                    setSessionPanel(false);
+                                                }
+                                            }, className: "ui-fa-session-delall", children: "Delete all chats" }) }))] }))] }), _jsxs("div", { ref: scrollRef, className: "ui-fa-messages", children: [messages.map((m, idx) => (_jsx("div", { className: `ui-fa-msg-row ui-fa-msg-row--${m.role === "user" ? "user" : "assistant"}`, children: m.role === "user" ? (_jsx("div", { className: "ui-fa-bubble-user", children: renderMarkdown ? renderMarkdown(m.text) : _jsx("div", { className: "ui-fa-plaintext", children: m.text }) })) : (_jsx(AssistantMessage, { m: m, renderMarkdown: renderMarkdown, renderChart: renderChart, messageActions: messageActions, onOpenSandbox: onOpenSandbox })) }, idx))), pending && (_jsx("div", { className: "ui-fa-thinking", children: "Thinking..." })), _jsx("div", { ref: bottomRef })] }), _jsx(AssistantComposer, { onSubmit: submitQuestion, isPending: pending, prefill: composerPrefill, onPrefillConsumed: () => setComposerPrefill(null), mentionSearch: mentionSearch, 
+                        // A phone's composer is about 25 characters wide; the long form was
+                        // cut to "Ask about this page… Use @ t".
+                        placeholder: mobile ? (mentionSearch ? "Ask, or @ to mention" : "Ask about this page") : mentionSearch ? "Ask about this page… Use @ to mention" : "Ask about this page…" })] })] }));
 }

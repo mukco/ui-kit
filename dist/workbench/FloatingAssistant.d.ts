@@ -9,6 +9,26 @@ export declare function panelGeometry({ position, width, height, available, inse
     maxWidth: string;
     maxHeight: string;
 };
+/**
+ * Where the phone sheet goes. With the keyboard up it fills what the keyboard
+ * leaves visible (`available`, from the top of the visual viewport, which iOS
+ * scrolls when it focuses the input); otherwise it stands on the tab bar
+ * (`inset`) and stops a thumb's reach short of the top, where the scrim shows
+ * and a tap closes it.
+ */
+export declare function sheetGeometry({ available, viewportTop, inset }: {
+    available?: number | null;
+    viewportTop?: number;
+    inset?: number;
+}): {
+    top: number;
+    bottom: string;
+    height: number;
+} | {
+    top: string;
+    bottom: number;
+    height: string;
+};
 /** The height a shown Phosphor tab bar covers at the foot of the screen; 0 without one. */
 export declare function tabBarInset(): number;
 export declare function clampPosition(x: any, y: any, w: any, h: any): {

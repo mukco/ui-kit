@@ -4,6 +4,9 @@ import { sportsIdentity } from "../sports/config";
 import { PlayerLink } from "../sports/PlayerLink";
 import { extractCandidates, matchKey } from "../sports/playerNames";
 import { cn } from "../cn";
+// A face taller than this outgrows a line of body text, so it is centred on
+// the line rather than hung from its foot (.ui-autolink-player--lg).
+const LINE_AVATAR_MAX = 18;
 const NUM_SPLIT = /(\b\d+\.?\d*%?|\.\d+\b)/g;
 function renderWithNumbers(text, keyPrefix) {
     return text.split(NUM_SPLIT).map((part, i) => /^\d/.test(part) || part.startsWith(".")
@@ -13,7 +16,7 @@ function renderWithNumbers(text, keyPrefix) {
 /** AI-prose renderer: bolds numbers and turns known player/team names into
     links. Pass `players` (the entities already in scope) for deterministic
     linking; without it, only `links` apply. */
-export function AutoLinkedText({ text, players = null, renderPlayerLink, playerHref, wrapPlayer, links = [], className, resolveFromProse = false, }) {
+export function AutoLinkedText({ text, players = null, renderPlayerLink, playerHref, wrapPlayer, links = [], className, resolveFromProse = false, avatarSize = 16, }) {
     const identity = sportsIdentity();
     const [proseIds, setProseIds] = useState({});
     // Open mode. Only runs when there is no known set to link by membership in.
@@ -90,7 +93,7 @@ export function AutoLinkedText({ text, players = null, renderPlayerLink, playerH
                 }
                 // One rendering of a player named in AI prose, for every app: the
                 // headshot, the name, the app's own router link.
-                return (_jsx(PlayerLink, { player: { id: playerId, name: part }, size: 16, photoSize: 48, stopPropagation: true, className: "ui-autolink-player", href: playerHref ? playerHref(playerId) : undefined, wrap: wrapPlayer }, `pl-${i}`));
+                return (_jsx(PlayerLink, { player: { id: playerId, name: part }, size: avatarSize, photoSize: Math.max(48, avatarSize * 2), stopPropagation: true, className: avatarSize > LINE_AVATAR_MAX ? "ui-autolink-player ui-autolink-player--lg" : "ui-autolink-player", href: playerHref ? playerHref(playerId) : undefined, wrap: wrapPlayer }, `pl-${i}`));
             }
             const named = linkMap[part];
             if (named?.href) {

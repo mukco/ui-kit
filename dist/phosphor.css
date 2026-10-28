@@ -259,6 +259,10 @@
 
 /* The page's assistant button and update toast follow the windows. */
 :root[data-skin="phosphor"] :is(.ui-fa-launcher, .ui-updatetoast-card, .ui-fa-panel, .ui-confirm) { border-radius: 0; border: 2px solid var(--amber); box-shadow: 4px 4px 0 #000; }
+/* The phone sheet is a window's top edge only: it runs edge to edge and
+   stands on the tab bar's own rule. */
+:root[data-skin="phosphor"] .ui-fa-panel--sheet { border-width: 2px 0 0; box-shadow: 0 -4px 0 #000; }
+:root[data-skin="phosphor"] .ui-fa-scrim { background: color-mix(in srgb, #000 60%, transparent); }
 
 
 /* ---- the phone: the tab bar along the foot (TabBar) -------------------- */
@@ -553,6 +557,7 @@ body:has(.ph-more) :is(.ui-fa-launcher, .ui-assistant-fab) { display: none; }
 :root[data-skin="phosphor"] .ui-sb-iconbtn--danger::before { content: ""; display: inline-block; width: 14px; height: 14px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-close) center / contain no-repeat; mask: var(--px-close) center / contain no-repeat; }
 
 :root[data-skin="phosphor"] .ui-error-icon::before { content: ""; display: inline-block; width: 40px; height: 40px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-warning-diamond) center / contain no-repeat; mask: var(--px-warning-diamond) center / contain no-repeat; }
+:root[data-skin="phosphor"] .ui-error-icon > svg { display: none; }
 
 :root[data-skin="phosphor"] .ui-empty-icon::before { content: ""; display: inline-block; width: 40px; height: 40px; vertical-align: middle; background-color: currentColor; -webkit-mask: var(--px-sport) center / contain no-repeat; mask: var(--px-sport) center / contain no-repeat; }
 
